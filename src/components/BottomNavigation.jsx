@@ -11,7 +11,7 @@ export default function BottomNavigation({ setIsAddBookPopupActive }) {
     }
 
     return (
-        <nav className="w-full px-6 pt-4 pb-[54px] flex gap-4 justify-between items-end bg-cream border-t border-tan"> 
+        <nav className="w-full px-6 py-4 flex gap-4 justify-between items-end bg-cream border-t border-tan"> 
             <button className={`${activeNavigationItem === "Home" ? "text-espresso" : "text-taupe"} flex-1 flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-beige/60 hover:text-espresso transition-all duration-300 p-2 rounded-3xl`}>
                 <HugeiconsIcon
                     icon={Home05Icon}

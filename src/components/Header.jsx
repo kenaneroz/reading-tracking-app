@@ -15,7 +15,7 @@ export default function Header({ isSearchBoxVisible, setSearchBoxVisibility, set
 
 
     return (
-        <header className="px-6 pt-[97px] pb-6 flex justify-between items-center bg-espresso rounded-b-3xl">
+        <header className="p-6 pt-16 flex justify-between items-center bg-espresso rounded-b-3xl">
             <div className="flex items-center gap-3">
                 <img 
                     src="/profile-photo.jpg" 
