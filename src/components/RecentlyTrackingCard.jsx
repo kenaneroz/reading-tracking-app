@@ -1,7 +1,16 @@
 import ProgressBar from "./ProgressBar"
 import PrimaryButton from "./PrimaryButton"
 
-export default function RecentlyTrackingCard({ cover, title, author, currentPage, totalPages, showPositionUpdatePopup  }) {
+export default function RecentlyTrackingCard({ id, title, author, cover, currentPage, totalPages, setIsPositionUpdatePopupActive }) {
+    function handleSelectedBook() {
+
+    }
+
+    function showPositionUpdatePopup() {
+        setIsPositionUpdatePopupActive(true)
+    }
+
+
     return (
         <div
             className="flex gap-4 items-center bg-beige rounded-[20px] p-5 border border-tan mt-4"
@@ -10,6 +19,7 @@ export default function RecentlyTrackingCard({ cover, title, author, currentPage
                 src={cover}
                 alt=""
                 className="w-20 aspect-5/8 rounded-[10px] object-cover cursor-pointer"
+                onClick={handleSelectedBook}
             />
 
             <div className="flex-1">

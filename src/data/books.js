@@ -60,8 +60,8 @@ export const books = [
         genre: "Classic",
         cover: "/the-little-prince.jpg",
 
-        status: "Wishlist",
-        currentPage: 0,
+        status: "Reading",
+        currentPage: 24,
         totalPages: 96,
         isFavorite: false,
 

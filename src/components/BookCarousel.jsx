@@ -1,7 +1,7 @@
 import BookCard from "./BookCard"
 
 
-export default function BookCarousel({ filteredBooks }) {
+export default function BookCarousel({ filteredBooks, setSelectedBook }) {
 
     return (
         <div
@@ -13,10 +13,11 @@ export default function BookCarousel({ filteredBooks }) {
                 filteredBooks.map((book, index) => (
                     <BookCard 
                         key={book.id}
-                        cover={book.cover}
+                        id={book.id}
                         title={book.title}
-                        totalPages={book.totalPages}
+                        cover={book.cover}
                         currentPage={book.currentPage}
+                        totalPages={book.totalPages}
                         isFirst={index === 0}
                     />
                 ))

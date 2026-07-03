@@ -9,15 +9,12 @@ import RecentlyTrackingCard from "../components/RecentlyTrackingCard"
 import PositionUpdatePopup from "../components/PositionUpdatePopup"
 import BottomNavigation from "../components/BottomNavigation"
 import AddBook from "../components/AddBook"
-
 import { HugeiconsIcon } from "@hugeicons/react";
 import { GalleryHorizontalEndIcon, Search02Icon } from "@hugeicons/core-free-icons";
 
 
 
-export default function HomeScreen() {
-    const [books, setBooks] = useState(initialBooks)
-
+export default function HomeScreen({ books, setBooks }) {
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false) 
     const [activeSortControl, setActiveSortControl] = useState("Recently added")
@@ -149,12 +146,17 @@ export default function HomeScreen() {
                     <h2 className="h4 text-espresso">Recently Tracking</h2>
 
                     <RecentlyTrackingCard
-                        cover={recentlyTrackingBook.cover}
+                        id={recentlyTrackingBook.id}
                         title={recentlyTrackingBook.title}
                         author={recentlyTrackingBook.author}
+                        genre={recentlyTrackingBook.genre}
+                        cover={recentlyTrackingBook.cover}
+                        status={recentlyTrackingBook.status}
                         currentPage={recentlyTrackingBook.currentPage}
                         totalPages={recentlyTrackingBook.totalPages}
-                        showPositionUpdatePopup={() => setIsPositionUpdatePopupActive(true)}
+                        dateAdded={recentlyTrackingBook.dateAdded}
+                        updatedAt={recentlyTrackingBook.updatedAt}
+                        setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
                     />
 
                     {
