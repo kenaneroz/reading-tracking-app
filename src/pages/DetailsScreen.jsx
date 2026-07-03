@@ -25,14 +25,27 @@ export default function DetailsScreen({ books, setBooks }) {
                     <h2 className="text-espreso h4">Reading Activity</h2>
                     <button className="text-taupe text-body-sm">Show more</button>
                 </div>
-                <ReadingActivityCard />
+                <ReadingActivityCard readingActivity={book.readingActivity} currentPage={book.currentPage} totalPages={book.totalPages} />
             </div>
             <div className="mt-8 mx-6 pb-6">
                 <div className="flex justify-between">
                     <h2 className="text-espreso h4">Personal notes</h2>
                     <button className="text-taupe text-body-sm">Show more</button>
                 </div>
-                <PersonalNotesCard />
+
+                <div className="mt-4">   
+                    <div className="flex flex-col gap-4">
+                        {
+                            book.notes.map(n => (
+                                <PersonalNotesCard note={n.note} page={n.page} date={n.date} />
+                            ))
+                        }
+                    </div>
+
+                    <button className="cursor-pointer w-full h-13 px-6 rounded-[26px] text-taupe text-body mt-4 border border-tan border-dashed">Add notes</button>
+                </div>
+
+                
             </div>
 
             { isEditPopupOpen &&
