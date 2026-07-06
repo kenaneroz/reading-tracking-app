@@ -1,5 +1,5 @@
 export default function BookInfoCard({ genre, totalPages, dateAdded }) {
-    const date = new Date(dateAdded).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "2-digit" })
+    const date = new Date(dateAdded).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 
     return (
         <div className="bg-beige p-5 rounded-[20px] border border-tan flex flex-col gap-5 mt-6 mx-6">

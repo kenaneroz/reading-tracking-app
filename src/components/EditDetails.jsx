@@ -8,8 +8,8 @@ import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 
-export default function EditDetails({ id, title, author, genre, cover, status, currentPage, totalPages, setBooks, setIsEditPopupOpen }) {
-    const genreOptions = ["Romance", "Science Fiction", "Fantasy", "Mystery", "Thriller", "Non-Fiction", "Biography", "Self-Help", "History", "Poetry"]
+export default function EditDetails({ id, title, author, genre, cover, status, currentPage, totalPages, booksLength, setBooks, setIsEditPopupOpen }) {
+    const genreOptions = ["Romance", "Science Fiction", "Fantasy", "Mystery", "Thriller", "Non-Fiction", "Biography", "Self-Help", "History", "Poetry", "Classic"]
 
     const [formData, setFormData] = useState({
         id: id,
@@ -57,6 +57,7 @@ export default function EditDetails({ id, title, author, genre, cover, status, c
         return Object.values(newErrorMessages).every(error => error === "")
     }
 
+
     function handleEdit() {
         if(!validate()) return
 
@@ -72,7 +73,7 @@ export default function EditDetails({ id, title, author, genre, cover, status, c
             dateAdded: formData.dateAdded,
             updatedAt: Date.now()
         }
-        setBooks(prev => prev.map(book => book.id === id ? newBook : book))
+        setBooks(prev => prev.map((book, index) => book.id === id ? {...newBook, readingActivity: [...book.readingActivity, {id: book.readingActivity.length, previousPage: book.currentPage, currentPage: newBook.currentPage, date: Date.now()}], notes: book.notes} : book))
         hideEditMenuPopup()
     }
 
@@ -147,6 +148,7 @@ export default function EditDetails({ id, title, author, genre, cover, status, c
                         <Select 
                             id="genre"
                             label="Genre"
+                            value={formData.genre}
                             options={genreOptions}
                             errorMessage={errorMessages.genre}
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}

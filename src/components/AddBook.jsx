@@ -40,7 +40,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
             author: "",
             totalPages: "",
             currentPage: "",
-            genre: ""
+            genre: "",
         }
 
         if (!formData.title.trim()) newErrorMessages.title = "Title is required"
@@ -58,6 +58,18 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
     function handleAddBook() {
         if(!validate()) return
 
+        const initialReadingActivity = formData.currentPage > 0 ?
+        [
+            {
+                id: 0,
+                previousPage: 0,
+                currentPage: formData.currentPage,
+                date: Date.now(),
+            }
+        ]
+        :
+        []
+
         const newBook = {
             id: books.length + 1,
             cover: formData.cover,
@@ -68,7 +80,9 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
             genre: formData.genre,
             status: Number(formData.currentPage) === 0 ? "Wishlist" : Number(formData.currentPage) === Number(formData.totalPages) ? "Finished" : "Reading",
             dateAdded: Date.now(),
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
+            readingActivity: initialReadingActivity,
+            notes: []
         }
         setBooks(prev => [...prev, newBook])
         hideAddBookPopup()
@@ -122,6 +136,17 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                         <div className="flex gap-2">
                             <div className="flex-1">
                                 <NumberInput
+                                    id="currentPage"
+                                    label="Current page"
+                                    placeholder="0"
+                                    min={0}
+                                    errorMessage={errorMessages.currentPage}
+                                    value={formData.currentPage}
+                                    onChange={(e) => setFormData(prev => ({...prev, currentPage: e.target.value}))}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <NumberInput
                                     id="totalPages"
                                     label="Total pages"
                                     placeholder="1"
@@ -131,23 +156,12 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                                     onChange={(e) => setFormData(prev => ({...prev, totalPages: e.target.value}))}
                                 />
                             </div>
-
-                            <div className="flex-1">
-                                <NumberInput
-                                    id="currentPage"
-                                    label="Current page"
-                                    placeholder="1"
-                                    min={1}
-                                    errorMessage={errorMessages.currentPage}
-                                    value={formData.currentPage}
-                                    onChange={(e) => setFormData(prev => ({...prev, currentPage: e.target.value}))}
-                                />
-                            </div>
                         </div>
 
                         <Select 
                             id="genre"
                             label="Genre"
+                            value={formData.genre}
                             options={genreOptions}
                             errorMessage={errorMessages.genre}
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}

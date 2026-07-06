@@ -7,12 +7,14 @@ import PersonalNotesCard from "../components/PersonalNotesCard"
 import { useParams } from "react-router-dom"
 import EditDetails from "../components/EditDetails"
 import { useState } from "react"
+import ReadingActivityPopup from "../components/ReadingActivityPopup"
 
 export default function DetailsScreen({ books, setBooks }) {
     const { id } = useParams()
     const book = books.find(book => book.id === Number(id))
 
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
+    const [isReadingActivityPopupOpen, setIsReadingActivityPopupOpen] = useState(false)
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
@@ -23,19 +25,24 @@ export default function DetailsScreen({ books, setBooks }) {
             <div className="mt-8 mx-6">
                 <div className="flex justify-between">
                     <h2 className="text-espreso h4">Reading Activity</h2>
-                    <button className="text-taupe text-body-sm">Show more</button>
+                    <button className="text-taupe text-body-sm cursor-pointer hover:text-espresso transition-all duration-300"
+                        onClick={() => setIsReadingActivityPopupOpen(true)}
+                    >View all</button>
                 </div>
                 <ReadingActivityCard readingActivity={book.readingActivity} currentPage={book.currentPage} totalPages={book.totalPages} />
             </div>
             <div className="mt-8 mx-6 pb-6">
                 <div className="flex justify-between">
                     <h2 className="text-espreso h4">Personal notes</h2>
-                    <button className="text-taupe text-body-sm">Show more</button>
+                    <button className="text-taupe text-body-sm">View all</button>
                 </div>
 
                 <div className="mt-4">   
                     <div className="flex flex-col gap-4">
                         {
+                            book.notes.length === 0 ?
+                            <p className="text-body-sm text-taupe text-center">You haven't added any notes yet</p>
+                            :
                             book.notes.map(n => (
                                 <PersonalNotesCard note={n.note} page={n.page} date={n.date} />
                             ))
@@ -49,7 +56,11 @@ export default function DetailsScreen({ books, setBooks }) {
             </div>
 
             { isEditPopupOpen &&
-                <EditDetails id={book.id} title={book.title} author={book.author} genre={book.genre} cover={book.cover} status={book.status} currentPage={book.currentPage} totalPages={book.totalPages} setBooks={setBooks} setIsEditPopupOpen={setIsEditPopupOpen} />
+                <EditDetails id={book.id} title={book.title} author={book.author} genre={book.genre} cover={book.cover} status={book.status} currentPage={book.currentPage} totalPages={book.totalPages} booksLength={books.length} setBooks={setBooks} setIsEditPopupOpen={setIsEditPopupOpen} />
+            }
+
+            { isReadingActivityPopupOpen &&
+                <ReadingActivityPopup setIsReadingActivityPopupOpen={setIsReadingActivityPopupOpen} readingActivity={book.readingActivity} totalPages={book.totalPages} />                
             }
         </div>
     )

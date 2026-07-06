@@ -12,7 +12,7 @@ export default function NumberInput({ label, id, errorMessage, value, onChange, 
                 name={id}
                 value={value}
                 onChange={onChange}
-                className="text-taupe h-15 flex items-center gap-4 mt-2 bg-beige/60 border border-tan px-4 rounded-[17px] outline-none focus:outline focus:outline-1 focus:outline-espresso appearance-none w-full"
+                className={`h-15 flex items-center gap-4 mt-2 bg-beige/60 border border-tan px-4 rounded-[17px] outline-none focus:outline focus:outline-1 focus:outline-espresso appearance-none w-full ${value === "" ? "text-taupe" : "text-espresso"}`}
             >
                 <option 
                     value=""
