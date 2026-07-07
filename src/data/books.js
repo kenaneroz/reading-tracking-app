@@ -72,6 +72,18 @@ export const books = [
                 note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                 page: "16",
                 date: 1774337040000,
+            }, 
+            {
+                id: 1,
+                note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                page: "130",
+                date: 1774454400000,
+            },
+            {
+                id: 2,
+                note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                page: "296",
+                date: 1774530000000,
             }
         ]
     }

@@ -8,6 +8,8 @@ import { useParams } from "react-router-dom"
 import EditDetails from "../components/EditDetails"
 import { useState } from "react"
 import ReadingActivityPopup from "../components/ReadingActivityPopup"
+import AllNotes from "../components/AllNotes"
+import AddNote from "../components/AddNote"
 
 export default function DetailsScreen({ books, setBooks }) {
     const { id } = useParams()
@@ -15,9 +17,11 @@ export default function DetailsScreen({ books, setBooks }) {
 
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
     const [isReadingActivityPopupOpen, setIsReadingActivityPopupOpen] = useState(false)
+    const [isAllNotesPopupOpen, setIsAllNotesPopupOpen] = useState(false)
+    const [isAddNotePopupOpen, setIsAddNotePopupOpen] = useState(false)
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
+        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
             <DetailsHeader book={book} setBooks={setBooks} setIsEditPopupOpen={setIsEditPopupOpen} />
             <DetailsHero title={book.title} author={book.author} cover={book.cover} status={book.status} />
             <ProgressCard currentPage={book.currentPage} totalPages={book.totalPages} setIsEditPopupOpen={setIsEditPopupOpen} />
@@ -34,7 +38,9 @@ export default function DetailsScreen({ books, setBooks }) {
             <div className="mt-8 mx-6 pb-6">
                 <div className="flex justify-between">
                     <h2 className="text-espreso h4">Personal notes</h2>
-                    <button className="text-taupe text-body-sm">View all</button>
+                    <button className="text-taupe text-body-sm hover:text-espresso transition-all duration-300 cursor-pointer"
+                        onClick={() => setIsAllNotesPopupOpen(true)}
+                    >View all</button>
                 </div>
 
                 <div className="mt-4">   
@@ -43,16 +49,24 @@ export default function DetailsScreen({ books, setBooks }) {
                             book.notes.length === 0 ?
                             <p className="text-body-sm text-taupe text-center">You haven't added any notes yet</p>
                             :
-                            book.notes.map(n => (
+                            book.notes.slice(-3).reverse().map(n => (
                                 <PersonalNotesCard note={n.note} page={n.page} date={n.date} />
                             ))
                         }
                     </div>
 
-                    <button className="cursor-pointer w-full h-13 px-6 rounded-[26px] text-taupe text-body mt-4 border border-tan border-dashed">Add notes</button>
+                    <button className="cursor-pointer w-full h-13 px-6 rounded-[26px] text-taupe text-body mt-4 border border-tan border-dashed hover:bg-tan transition-all duration-300"
+                        onClick={() => setIsAddNotePopupOpen(true)}
+                    >Add notes</button>
                 </div>
 
-                
+                { isAllNotesPopupOpen &&
+                    <AllNotes notes={book.notes} setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} />
+                }
+
+                { isAddNotePopupOpen &&
+                    <AddNote id={book.id} notes={book.notes} totalPages={book.totalPages} setBooks={setBooks} setIsAddNotePopupOpen={setIsAddNotePopupOpen} />
+                }
             </div>
 
             { isEditPopupOpen &&
