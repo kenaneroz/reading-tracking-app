@@ -69,19 +69,19 @@ export const books = [
         notes: [
             {
                 id: 0,
-                note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                note: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.",
                 page: "16",
                 date: 1774337040000,
             }, 
             {
                 id: 1,
-                note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                note: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione.",
                 page: "130",
                 date: 1774454400000,
             },
             {
                 id: 2,
-                note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                note: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque.",
                 page: "296",
                 date: 1774530000000,
             }

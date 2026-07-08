@@ -10,6 +10,8 @@ import { useState } from "react"
 import ReadingActivityPopup from "../components/ReadingActivityPopup"
 import AllNotes from "../components/AllNotes"
 import AddNote from "../components/AddNote"
+import EditNote from "../components/EditNote"
+import ConfirmDeletePopup from "../components/ConfirmDeletePopup"
 
 export default function DetailsScreen({ books, setBooks }) {
     const { id } = useParams()
@@ -19,6 +21,10 @@ export default function DetailsScreen({ books, setBooks }) {
     const [isReadingActivityPopupOpen, setIsReadingActivityPopupOpen] = useState(false)
     const [isAllNotesPopupOpen, setIsAllNotesPopupOpen] = useState(false)
     const [isAddNotePopupOpen, setIsAddNotePopupOpen] = useState(false)
+    const [selectedNoteId, setSelectedNoteId] = useState(null)
+    const [isEditNotePopupOpen, setIsEditNotePopupOpen] = useState(false)
+    const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false)
+
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
@@ -50,7 +56,7 @@ export default function DetailsScreen({ books, setBooks }) {
                             <p className="text-body-sm text-taupe text-center">You haven't added any notes yet</p>
                             :
                             book.notes.slice(-3).reverse().map(n => (
-                                <PersonalNotesCard note={n.note} page={n.page} date={n.date} />
+                                <PersonalNotesCard setBooks={setBooks} id={n.id} note={n.note} page={n.page} date={n.date} totalPages={book.totalPages} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
                             ))
                         }
                     </div>
@@ -61,7 +67,7 @@ export default function DetailsScreen({ books, setBooks }) {
                 </div>
 
                 { isAllNotesPopupOpen &&
-                    <AllNotes notes={book.notes} setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} />
+                    <AllNotes notes={book.notes} setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
                 }
 
                 { isAddNotePopupOpen &&
@@ -75,6 +81,21 @@ export default function DetailsScreen({ books, setBooks }) {
 
             { isReadingActivityPopupOpen &&
                 <ReadingActivityPopup setIsReadingActivityPopupOpen={setIsReadingActivityPopupOpen} readingActivity={book.readingActivity} totalPages={book.totalPages} />                
+            }
+
+            { isEditNotePopupOpen &&
+                <EditNote book={book} selectedNoteId={selectedNoteId} setBooks={setBooks} setIsEditNotePopupOpen={setIsEditNotePopupOpen} setIsDeleteConfirmPopupOpen={setIsDeleteConfirmPopupOpen} />
+            }
+
+            { isDeleteConfirmPopupOpen &&
+                <ConfirmDeletePopup cancel={() => setIsDeleteConfirmPopupOpen(false)} 
+                    delete_={() => {
+                        setBooks(prev => prev.map(b => b.id === book.id ? {...b, notes: b.notes.filter(n => n.id !== selectedNoteId)} : b))
+                        setIsDeleteConfirmPopupOpen(false)
+                        setIsEditNotePopupOpen(false)
+                    }} 
+                    message="Are you sure you want to delete this note? This action cannot be undone."
+                />
             }
         </div>
     )

@@ -2,9 +2,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import PersonalNotesCard from "./PersonalNotesCard";
 
-export default function AllNotes({ notes, setIsAllNotesPopupOpen }) {
+export default function AllNotes({ notes, setIsAllNotesPopupOpen, setSelectedNoteId, setIsEditNotePopupOpen }) {
     return (
-        <div className="fixed bg-espresso/40 inset-0 z-50">
+        <div className="fixed bg-espresso/40 inset-0 z-30">
             <div className="p-6 bg-beige border border-tan rounded-[20px] fixed left-6 right-6 top-6 bottom-6 md:max-w-[392px] md:max-h-[908px] overflow-y-auto">
 
                 <HugeiconsIcon
@@ -26,7 +26,7 @@ export default function AllNotes({ notes, setIsAllNotesPopupOpen }) {
                         <p className="text-taupe text-body-sm">You haven't added any notes yet</p>
                         :
                         notes.slice().reverse().map((n, index) => (
-                            <PersonalNotesCard note={n.note} page={n.page} date={n.date} />
+                            <PersonalNotesCard id={n.id} note={n.note} page={n.page} date={n.date} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
                         ))
                     }
                 </div>

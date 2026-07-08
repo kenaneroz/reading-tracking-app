@@ -1,9 +1,11 @@
 import ProgressBar from "./ProgressBar"
 import PrimaryButton from "./PrimaryButton"
+import { useNavigate } from "react-router-dom"
 
 export default function RecentlyTrackingCard({ id, title, author, cover, currentPage, totalPages, setIsPositionUpdatePopupActive }) {
+    const navigate = useNavigate()
     function handleSelectedBook() {
-
+        navigate(`book/${id}`)
     }
 
     function showPositionUpdatePopup() {
