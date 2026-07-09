@@ -143,7 +143,7 @@ export default function HomeScreen({ books, setBooks }) {
                 </section>
 
                 <section className="px-4 pb-6">
-                    <h2 className="h4 text-espresso">Recently Tracking</h2>
+                    <h2 className="h4 text-espresso">Latest activity</h2>
 
                     <RecentlyTrackingCard
                         id={recentlyTrackingBook.id}

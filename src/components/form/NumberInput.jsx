@@ -1,4 +1,6 @@
 export default function NumberInput({ label, id, placeholder, errorMessage, value, onChange, min, max }) {
+
+
     return (
         <div>
             {label && (
@@ -16,6 +18,8 @@ export default function NumberInput({ label, id, placeholder, errorMessage, valu
                     placeholder={placeholder}
                     min={min}
                     max={max}
+                    step={1}
+                    onKeyDown={(e) => ["e", "E", "-", "+", "."].includes(e.key) && e.preventDefault()}
                     onChange={onChange}
                     className="w-full h-full text-espresso text-body outline-none"
                 />

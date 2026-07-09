@@ -45,8 +45,9 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
 
         if (!formData.title.trim()) newErrorMessages.title = "Title is required"
         if (!formData.author.trim()) newErrorMessages.author = "Author is required"
-        if (!formData.totalPages || formData.totalPages < 1) newErrorMessages.totalPages = "Enter a valid page count"
-        if(formData.currentPage < 0 || formData.currentPage > formData.totalPages) newErrorMessages.currentPage = "Enter a valid current page"
+        if (!formData.totalPages || Number(formData.totalPages) < 1) newErrorMessages.totalPages = "Enter a valid page count"
+        if (Number(formData.totalPages) > 5000) newErrorMessages.totalPages = "Max limit: 5000"
+        if(Number(formData.currentPage) < 0 || Number(formData.currentPage) > Number(formData.totalPages)) newErrorMessages.currentPage = "Enter a valid current page"
         if (!formData.genre) newErrorMessages.genre = "Please select a genre"
         if (!formData.cover) newErrorMessages.cover = "Please upload a cover image"
 
@@ -140,6 +141,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                                     label="Current page"
                                     placeholder="0"
                                     min={0}
+                                    max={Number(formData.totalPages)}
                                     errorMessage={errorMessages.currentPage}
                                     value={formData.currentPage}
                                     onChange={(e) => setFormData(prev => ({...prev, currentPage: e.target.value}))}
@@ -151,6 +153,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                                     label="Total pages"
                                     placeholder="1"
                                     min={1}
+                                    max={Number(formData.totalPages)}
                                     errorMessage={errorMessages.totalPages}
                                     value={formData.totalPages}
                                     onChange={(e) => setFormData(prev => ({...prev, totalPages: e.target.value}))}
