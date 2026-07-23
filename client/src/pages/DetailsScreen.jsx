@@ -79,7 +79,7 @@ export default function DetailsScreen({ books, setBooks, loading, updateBook, de
                                 <PersonalNotesCard 
                                     setBooks={setBooks} 
                                     id={note._id} 
-                                    note={note.content} 
+                                    content={note.content} 
                                     page={note.page} 
                                     date={note.date} 
                                     totalPages={book.totalPages} 

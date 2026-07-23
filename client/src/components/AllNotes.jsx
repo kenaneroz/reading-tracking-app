@@ -26,7 +26,7 @@ export default function AllNotes({ notes, setIsAllNotesPopupOpen, setSelectedNot
                         <p className="text-taupe text-body-sm">You haven't added any notes yet</p>
                         :
                         notes.slice().reverse().map((n, index) => (
-                            <PersonalNotesCard id={n.id} note={n.note} page={n.page} date={n.date} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
+                            <PersonalNotesCard id={n._id} content={n.content} page={n.page} date={n.date} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
                         ))
                     }
                 </div>

@@ -1,6 +1,6 @@
 export default function DetailsHero({ title, author, cover, status }) {
     return (
-        <div>
+        <div className="px-6 text-center">
             <div className="w-full h-48 relative">
                 <div className="h-full w-full bg-linear-to-b from-transparent to-cream absolute inset-0 z-10"></div>
                 <img src="/background.jpg" className="h-full w-full object-cover absolute inset-0 z-0" />
