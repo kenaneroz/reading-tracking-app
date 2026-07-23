@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL
+
 export async function getBook(id) {
     try {
-        const response = await fetch(`http://localhost:3000/books/${id}`)
+        const response = await fetch(`${API_URL}/books/${id}`)
 
         const result = await response.json()
 
@@ -16,7 +18,7 @@ export async function getBook(id) {
 
 export async function getBooks() {
     try {
-        const response = await fetch("http://localhost:3000/books/")
+        const response = await fetch(`${API_URL}/books/`)
 
         const result = await response.json()
 
@@ -33,7 +35,7 @@ export async function getBooks() {
 export async function addBook(data) {
     try {
         const response = await fetch(
-            "http://localhost:3000/books",
+            `${API_URL}`,
             {
                 method: "POST",
                 headers: {
@@ -58,7 +60,7 @@ export async function addBook(data) {
 export async function updateBook(id, data) {
     try {
         const response = await fetch(
-            `http://localhost:3000/books/${id}`,
+            `${API_URL}/books/${id}`,
             {
                 method: "PATCH",
                 headers: {
@@ -83,7 +85,7 @@ export async function updateBook(id, data) {
 export async function deleteBook(id) {
     try {
         const response = await fetch(
-            `http://localhost:3000/books/${id}`,
+            `${API_URL}/books/${id}`,
             { method: "DELETE" }
         )
 
@@ -102,7 +104,7 @@ export async function deleteBook(id) {
 export async function addNoteService(id, data) {
     try {
         const response = await fetch(
-            `http://localhost:3000/books/${id}/notes`,
+            `${API_URL}/books/${id}/notes`,
             {
                 method: "POST",
                 headers: {
@@ -127,7 +129,7 @@ export async function addNoteService(id, data) {
 export async function updateNoteService(id, noteId, data) {
     try {
         const response = await fetch(
-            `http://localhost:3000/books/${id}/notes/${noteId}`,
+            `${API_URL}/books/${id}/notes/${noteId}`,
             {
                 method: "PATCH",
                 headers: {
@@ -150,7 +152,7 @@ export async function updateNoteService(id, noteId, data) {
 export async function deleteNoteService(id, noteId) {
     try {
         const response = await fetch(
-            `http://localhost:3000/books/${id}/notes/${noteId}`,
+            `${API_URL}/books/${id}/notes/${noteId}`,
             {
                 method: "DELETE"
             }
