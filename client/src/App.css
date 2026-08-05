@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
 
 @import "tailwindcss";
 
@@ -11,46 +10,51 @@
   --color-coffee: #5C4A3A;
   --color-taupe: #8D7F73;
   --color-tan: #DDD3C4;
-  --color-danger: #C0392B;  
+  --color-red: #A8422E;  
 }
 
 @utility h1 {
-  font-family: "Merriweather", serif;
+  font-family: "Manrope", sans-serif;
   font-size: 32px;
   line-height: 44px;
+  font-weight: 600;
 }
 @utility h2 {
-  font-family: "Merriweather", serif;
+  font-family: "Manrope", sans-serif;
   font-size: 28px;
   line-height: 36px;
+  font-weight: 600;
 }
 @utility h3 {
-  font-family: "Merriweather", serif;
+  font-family: "Manrope", sans-serif;
   font-size: 24px;
   line-height: 32px;
+  font-weight: 600;
 }
 @utility h4 {
-  font-family: "Merriweather", serif;
+  font-family: "Manrope", sans-serif;
   font-size: 20px;
   line-height: 28px;
+  font-weight: 600;
 }
 @utility h5 {
-  font-family: "Merriweather", serif;
+  font-family: "Manrope", sans-serif;
   font-size: 16px;
   line-height: 24px;
+  font-weight: 600;
 }
 @utility text-body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 16px;
   line-height: 24px;
 }
 @utility text-body-sm {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 14px;
   line-height: 22px;
 }
 @utility text-body-xs {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 12px;
   line-height: 16px;
 }

@@ -13,7 +13,7 @@ export default function ConfirmDeletePopup({ cancel, delete_, message }) {
                         onClick={cancel}
                     >Cancel</button>
                     <button type="button" 
-                        className="flex-1 bg-danger text-cream py-3 rounded-xl cursor-pointer text-body hover:bg-danger/80 transition-all duration-300"
+                        className="flex-1 bg-red text-cream py-3 rounded-xl cursor-pointer text-body hover:bg-red/80 transition-all duration-300"
                         onClick={delete_}
                     >Delete</button>
                 </div>

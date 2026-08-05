@@ -13,6 +13,7 @@ import {
   updateNoteService,
   deleteNoteService
 } from "./services/bookService.js"
+import StatisticsScreen from './pages/StatisticsScreen'
 
 function App() {
   const [books, setBooks] = useState([])
@@ -40,6 +41,7 @@ function App() {
 
       fetchBooks()
   }, [])
+
 
   return (
     <BrowserRouter>
@@ -71,7 +73,16 @@ function App() {
               deleteNoteService={deleteNoteService}
             />
           } 
-          />
+        />
+
+        <Route
+          path="/statistics"
+          element={
+            <StatisticsScreen 
+              books={books}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
     
