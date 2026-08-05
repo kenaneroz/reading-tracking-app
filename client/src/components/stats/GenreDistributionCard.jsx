@@ -2,20 +2,16 @@ import { useState } from "react"
 import HorizontalDivider from "./HorizontalDivider"
 import { BarChart, Bar, XAxis, YAxis, Cell, LabelList, ResponsiveContainer } from "recharts"
 
-export default function GenreDistributionCard({ filteredBooks }) {
+export default function GenreDistributionCard({ totalBooks, genreCounts }) {
     const [isOthersVisible, setIsOthersVisible] = useState(false)
 
-    const genreCounts = {}
-    filteredBooks.forEach(book => {
-        genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1
-    })
     const totalGenres = Object.keys(genreCounts).length
 
     let sortedGenreDistribution = Object.entries(genreCounts)
         .map(([genre, count]) => ({
             genre,
             count,
-            percent: Math.round((count / filteredBooks.length) * 100)
+            percent: Math.round((count / totalBooks) * 100)
         }))
         .sort((a, b) => b.count - a.count)
 
@@ -30,7 +26,7 @@ export default function GenreDistributionCard({ filteredBooks }) {
             {
                 genre: "Others",
                 count: otherCount,
-                percent: Math.round((otherCount / filteredBooks.length) * 100)
+                percent: Math.round((otherCount / totalBooks) * 100)
             },
         ]
     } else {
