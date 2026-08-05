@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react"
+
 import StatsHeader from "../components/stats/StatsHeader"
 import DateFilterPill from "../components/stats/DateFilterPill"
 import CardShell from "../components/stats/CardShell"
@@ -5,8 +7,8 @@ import SummaryCard from "../components/stats/SummaryCard"
 import StatusDistributionCard from "../components/stats/StatusDistributionCard"
 import GenreDistributionCard from "../components/stats/GenreDistributionCard"
 import CompletedByMonthCard from "../components/stats/CompletedByMonthCard"
-
-import { useState, useEffect } from "react"
+import LongestBookCard from "../components/stats/LongestBookCard"
+import LongestStreak from "../components/stats/LongestStreak"
 
 import { Car, LibrariesIcon, NoteIcon } from "@hugeicons/core-free-icons"
 
@@ -69,6 +71,37 @@ export default function StatisticsScreen({ books }) {
         { month: "Dec", count: 0 }
     ]
 
+    let longestBook = filteredBooks[0] || null
+
+    function getStreak(readingActivity) {
+        const uniqueDays = [...new Set(
+            readingActivity.map(activity => {
+                const date = new Date(activity.date)
+                date.setHours(0, 0, 0, 0)
+                return date.getTime()
+            })
+            )].sort((a, b) => a - b)
+
+        let longestStreak = 0
+        let currentStreak = 1
+
+        for (let i = 1; i < uniqueDays.length; i++) {
+            const diff = uniqueDays[i] - uniqueDays[i - 1]
+
+            if (diff === 24 * 60 * 60 * 1000) {
+                currentStreak++
+            } else {
+                longestStreak = Math.max(longestStreak, currentStreak)
+                currentStreak = 1
+            }
+        }
+
+        return Math.max(longestStreak, currentStreak)
+    }
+
+    let longestStreak = filteredBooks.length > 0 ? getStreak(filteredBooks[0].readingActivity) : null
+    let longestStreakBookId = filteredBooks[0]._id || null
+
     filteredBooks.forEach(book => {
         // Status distribution
         if (book.status === "Finished") statusDistributionData[0].count++
@@ -81,6 +114,14 @@ export default function StatisticsScreen({ books }) {
         // Completed by month
         const month = new Date(book.createdAt).getMonth()
         countsByMonth[month].count += 1
+
+        if (book.totalPages > longestBook.totalPages) longestBook = book
+
+        const newStreak = getStreak(book.readingActivity)
+        if (newStreak > longestStreak) {
+            longestStreak = newStreak
+            longestStreakBookId = book._id
+        }
     })
 
     statusDistributionData.forEach(status => {
@@ -89,7 +130,6 @@ export default function StatisticsScreen({ books }) {
                 ? Math.round((status.count / totalBooks) * 100)
                 : 0
     })
-
 
 
     return (
@@ -147,8 +187,27 @@ export default function StatisticsScreen({ books }) {
             </div>
 
             <div className="px-5 mt-4">
+                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                    <LongestBookCard
+                        id={longestBook._id}
+                        cover={longestBook.cover}
+                        title={longestBook.title}
+                        totalPages={longestBook.totalPages}
+                    />
+                </CardShell>
+            </div>
 
+            <div className="px-5 mt-4">
+                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                    <LongestStreak 
+                        id={longestStreakBookId}
+                        streak={longestStreak} 
+                    />
+                </CardShell>
+            </div>
 
+            <div className="px-5 mt-4">
+           
             </div>
         </div>
     )
