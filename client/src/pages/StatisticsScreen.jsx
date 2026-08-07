@@ -10,8 +10,9 @@ import CompletedByMonthCard from "../components/stats/CompletedByMonthCard"
 import LongestBookCard from "../components/stats/LongestBookCard"
 import LongestStreak from "../components/stats/LongestStreak"
 import RatingCard from "../components/stats/RatingCard"
+import FormatDistributionCard from "../components/stats/FormatDistributionCard"
 
-import { Car, LibrariesIcon, NoteIcon } from "@hugeicons/core-free-icons"
+import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
 
 export default function StatisticsScreen({ books }) {
     const [activeDateFilter, setActiveDateFilter] = useState("All time")
@@ -101,7 +102,7 @@ export default function StatisticsScreen({ books }) {
     }
 
     let longestStreak = filteredBooks.length > 0 ? getStreak(filteredBooks[0].readingActivity) : null
-    let longestStreakBookId = filteredBooks[0]._id || null
+    let longestStreakBookId = filteredBooks[0]?._id || null
 
     let ratingDistribution = [
         { rating: 1, count: 0, percent: 0 },
@@ -112,6 +113,13 @@ export default function StatisticsScreen({ books }) {
     ]
     let totalRatedBooks = 0
     let rating = 0
+
+    let formatDistribution = [
+        {icon: BookOpen02Icon, name: "Physical", count: 0, percent: 0, color: "#4B382A", colorClass: "bg-espresso" },
+        {icon: SmartPhone01Icon, name: "E-book", count: 0, percent: 0, color: "#A8422E", colorClass: "bg-red" },
+        {icon: FileHeadphoneIcon, name: "Audiobook", count: 0, percent: 0, color: "#8D7F73", colorClass: "bg-taupe" },
+        {icon: Pdf01Icon, name: "PDF", count: 0, percent: 0, color: "#C08A2E", colorClass: "bg-yellow" }
+    ]
 
     filteredBooks.forEach(book => {
         // Status distribution
@@ -139,6 +147,11 @@ export default function StatisticsScreen({ books }) {
             totalRatedBooks++
             rating += book.rating
         }
+
+        if (book.format === "Physical") formatDistribution[0].count++
+        else if (book.format === "E-book") formatDistribution[1].count++
+        else if (book.format === "Audiobook") formatDistribution[2].count++
+        else if (book.format === "PDF") formatDistribution[3].count++
     })
 
     statusDistributionData.forEach(status => {
@@ -158,7 +171,7 @@ export default function StatisticsScreen({ books }) {
 
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-scroll">
+        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-scroll py-6">
             <StatsHeader />
 
             <div className="mt-6 mb-5 px-5">
@@ -232,13 +245,19 @@ export default function StatisticsScreen({ books }) {
             </div>
 
             <div className="px-5 mt-4">
-                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                <CardShell>
                     <RatingCard 
                         totalBooks={totalBooks}
                         ratingDistribution={ratingDistribution}
                         totalRatedBooks={totalRatedBooks}
                         rating={rating}
                     />
+                </CardShell>                
+            </div>
+
+            <div className="px-5 mt-4">
+                <CardShell>
+                    <FormatDistributionCard data={formatDistribution} />
                 </CardShell>                
             </div>
         </div>

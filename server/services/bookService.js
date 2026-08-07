@@ -24,7 +24,8 @@ export async function createBookService(data) {
         cover,
         currentPage,
         totalPages,
-        rating
+        rating,
+        format
     } = data
 
     const startingPage = currentPage ?? 0
@@ -45,6 +46,7 @@ export async function createBookService(data) {
         currentPage: startingPage,
         totalPages,
         rating,
+        format,
         readingActivity
     })
     
@@ -65,7 +67,8 @@ export async function updateBookService(id, data) {
         cover,
         currentPage,
         totalPages,
-        rating
+        rating,
+        format
     } = data
 
     const currentPage_ = currentPage ?? book.currentPage
@@ -91,6 +94,10 @@ export async function updateBookService(id, data) {
         book.cover = cover.trim()
     }
 
+    if (format !== undefined) {
+        book.format = format.trim()
+    }
+
     if(currentPage !== undefined && currentPage !== book.currentPage) {
         book.readingActivity.push({
             previousPage: book.currentPage,
@@ -104,6 +111,10 @@ export async function updateBookService(id, data) {
 
     if (totalPages !== undefined) {
         book.totalPages = totalPages
+    }
+
+    if (rating !== undefined) {
+        book.rating = rating
     }
 
     const updatedBook = await book.save()

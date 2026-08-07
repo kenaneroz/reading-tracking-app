@@ -10,7 +10,7 @@ export default function RatingCard({ totalBooks, ratingDistribution, totalRatedB
                 <h2 className="h4 text-espresso">Rating</h2>
                 { totalRatedBooks > 0 &&
                     <p className="text-body-sm text-taupe">
-                        Wiew {totalRatedBooks} {totalRatedBooks > 1 ? "ratings" : "rating"}
+                        View {totalRatedBooks} {totalRatedBooks > 1 ? "ratings" : "rating"}
                     </p>
                 }
             </div>

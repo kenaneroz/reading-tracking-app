@@ -1,5 +1,6 @@
 import AppError from "../errors/AppError.js"
 import { validGenres } from "../constants/genres.js"
+import { validFormats } from "../constants/formats.js"
 
 export default function validateCreateBook(req, res, next) {
     const { 
@@ -9,7 +10,8 @@ export default function validateCreateBook(req, res, next) {
         cover, 
         currentPage, 
         totalPages,
-        rating
+        rating,
+        format
     } = req.body
 
     if (
@@ -17,7 +19,8 @@ export default function validateCreateBook(req, res, next) {
         author == null ||
         genre == null ||
         cover == null ||
-        totalPages == null
+        totalPages == null ||
+        format == null
     ) {
         throw new AppError("You must fill in the required fields", 400)
     }
@@ -26,7 +29,8 @@ export default function validateCreateBook(req, res, next) {
         typeof title !== "string" || 
         typeof author !== "string" ||
         typeof genre !== "string" ||
-        typeof cover !== "string"
+        typeof cover !== "string" ||
+        typeof format !== "string"
     ) {
         throw new AppError("Field/s must be text values", 400)
     }
@@ -35,7 +39,8 @@ export default function validateCreateBook(req, res, next) {
         title.trim() === "" ||
         author.trim() === "" ||
         genre.trim() === "" ||
-        cover.trim() === ""
+        cover.trim() === "" ||
+        format.trim() === ""
     ) {
         throw new AppError("You must fill in the required fields", 400)
     }
@@ -62,8 +67,12 @@ export default function validateCreateBook(req, res, next) {
         throw new AppError("Current page cannot exceed total pages", 400)
     }
     
-    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+    if (typeof(rating) === "number" && (Number(rating) < 1 || Number(rating) > 5)) {
         throw new AppError("Rating must be a number between 1 and 5", 400)
+    }
+
+    if (!validFormats.includes(format)) {
+        throw new AppError("Invalid format", 400)
     }
 
     next()

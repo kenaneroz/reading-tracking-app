@@ -1,5 +1,6 @@
 import AppError from "../errors/AppError.js"
 import { validGenres } from "../constants/genres.js"
+import { validFormats } from "../constants/formats.js"
 
 export default function validateUpdateBook(req, res, next) {
     const allowedFields = [
@@ -9,7 +10,8 @@ export default function validateUpdateBook(req, res, next) {
         "cover",
         "currentPage",
         "totalPages",
-        "rating"
+        "rating",
+        "format"
     ]
 
     const requestFields = Object.keys(req.body)
@@ -30,7 +32,8 @@ export default function validateUpdateBook(req, res, next) {
         cover, 
         currentPage, 
         totalPages,
-        rating
+        rating,
+        format
     } = req.body
 
 
@@ -78,8 +81,16 @@ export default function validateUpdateBook(req, res, next) {
         }
     }
 
-    if (typeof rating !== "number" || rating < 1 || rating > 5) {
-        throw new AppError("Rating must be a number between 1 and 5", 400)
+    if (rating !== undefined) {
+        if (typeof(rating) === "number" && (Number(rating) < 1 || Number(rating) > 5)) {
+            throw new AppError("Rating must be a number between 1 and 5", 400)
+        }
+    }
+
+    if (format !== undefined) {
+        if (!validFormats.includes(format)) {
+            throw new AppError("Invalid format", 400)
+        }
     }
 
     next()

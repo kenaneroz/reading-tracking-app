@@ -1,6 +1,6 @@
 export default function StatsHeader() {
     return (
-        <div className="px-5 pt-6">
+        <div className="px-5">
             <h1 className="h1 text-espresso">Stats overview</h1>
 
             <p className="text-body text-coffee pt-2">

@@ -18,6 +18,13 @@ const genres = [
     "Other"
 ]
 
+const formats = [
+    "Physical",
+    "E-book",
+    "Audiobook",
+    "PDF"
+]
+
 const readingActivitySchema = new mongoose.Schema({
     previousPage: {
         type: Number,
@@ -90,6 +97,12 @@ const bookSchema = new mongoose.Schema(
             default: null,
             min: 1,
             max: 5
+        },
+        format: {
+            type: String,
+            required: true,
+            trim: true,
+            enum: formats
         },
         readingActivity: [readingActivitySchema],
         notes: [noteSchema],
