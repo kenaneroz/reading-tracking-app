@@ -9,6 +9,7 @@ import GenreDistributionCard from "../components/stats/GenreDistributionCard"
 import CompletedByMonthCard from "../components/stats/CompletedByMonthCard"
 import LongestBookCard from "../components/stats/LongestBookCard"
 import LongestStreak from "../components/stats/LongestStreak"
+import RatingCard from "../components/stats/RatingCard"
 
 import { Car, LibrariesIcon, NoteIcon } from "@hugeicons/core-free-icons"
 
@@ -102,6 +103,16 @@ export default function StatisticsScreen({ books }) {
     let longestStreak = filteredBooks.length > 0 ? getStreak(filteredBooks[0].readingActivity) : null
     let longestStreakBookId = filteredBooks[0]._id || null
 
+    let ratingDistribution = [
+        { rating: 1, count: 0, percent: 0 },
+        { rating: 2, count: 0, percent: 0 },
+        { rating: 3, count: 0, percent: 0 },
+        { rating: 4, count: 0, percent: 0 },
+        { rating: 5, count: 0, percent: 0 }
+    ]
+    let totalRatedBooks = 0
+    let rating = 0
+
     filteredBooks.forEach(book => {
         // Status distribution
         if (book.status === "Finished") statusDistributionData[0].count++
@@ -122,6 +133,12 @@ export default function StatisticsScreen({ books }) {
             longestStreak = newStreak
             longestStreakBookId = book._id
         }
+
+        if (book.rating) {
+            ratingDistribution[book.rating - 1].count++
+            totalRatedBooks++
+            rating += book.rating
+        }
     })
 
     statusDistributionData.forEach(status => {
@@ -130,6 +147,14 @@ export default function StatisticsScreen({ books }) {
                 ? Math.round((status.count / totalBooks) * 100)
                 : 0
     })
+
+    if (totalRatedBooks > 0) {
+        ratingDistribution.forEach(r => {
+            r.percent = Math.round((r.count / totalRatedBooks) * 100)
+            console.log(r.count)
+        })
+        rating = (rating / totalRatedBooks).toFixed(1)
+    }    
 
 
     return (
@@ -207,7 +232,14 @@ export default function StatisticsScreen({ books }) {
             </div>
 
             <div className="px-5 mt-4">
-           
+                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                    <RatingCard 
+                        totalBooks={totalBooks}
+                        ratingDistribution={ratingDistribution}
+                        totalRatedBooks={totalRatedBooks}
+                        rating={rating}
+                    />
+                </CardShell>                
             </div>
         </div>
     )

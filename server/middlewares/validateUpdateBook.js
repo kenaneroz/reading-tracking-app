@@ -8,7 +8,8 @@ export default function validateUpdateBook(req, res, next) {
         "genre",
         "cover",
         "currentPage",
-        "totalPages"
+        "totalPages",
+        "rating"
     ]
 
     const requestFields = Object.keys(req.body)
@@ -28,7 +29,8 @@ export default function validateUpdateBook(req, res, next) {
         genre, 
         cover, 
         currentPage, 
-        totalPages 
+        totalPages,
+        rating
     } = req.body
 
 
@@ -74,6 +76,10 @@ export default function validateUpdateBook(req, res, next) {
         if (totalPages < 1) {
             throw new AppError("Total pages must be at least 1", 400)
         }
+    }
+
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+        throw new AppError("Rating must be a number between 1 and 5", 400)
     }
 
     next()

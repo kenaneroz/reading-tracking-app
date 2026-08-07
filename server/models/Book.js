@@ -85,6 +85,12 @@ const bookSchema = new mongoose.Schema(
             required: true,
             min: 1
         },
+        rating: {
+            type: Number,
+            default: null,
+            min: 1,
+            max: 5
+        },
         readingActivity: [readingActivitySchema],
         notes: [noteSchema],
         createdAt: Number,

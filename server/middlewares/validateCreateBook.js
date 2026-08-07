@@ -8,7 +8,8 @@ export default function validateCreateBook(req, res, next) {
         genre, 
         cover, 
         currentPage, 
-        totalPages 
+        totalPages,
+        rating
     } = req.body
 
     if (
@@ -59,6 +60,10 @@ export default function validateCreateBook(req, res, next) {
 
     if (startingPage > totalPages) {
         throw new AppError("Current page cannot exceed total pages", 400)
+    }
+    
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+        throw new AppError("Rating must be a number between 1 and 5", 400)
     }
 
     next()

@@ -12,7 +12,7 @@ export default function LongestStreak({ id, streak }) {
         >
             <div>
                 <p className="text-body-sm text-taupe">Longest streak</p>
-                <p className="h1 text-espresso mt-4">{streak} <span className="text-taupe text-body">{streak > 1 ? "days" : "day"}</span></p>
+                <p className="h1 text-espresso mt-4">{streak} <span className="text-taupe text-body font-normal">{streak > 1 ? "days" : "day"}</span></p>
             </div>
 
             <HugeiconsIcon 

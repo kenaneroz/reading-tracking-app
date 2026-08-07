@@ -23,7 +23,8 @@ export async function createBookService(data) {
         genre,
         cover,
         currentPage,
-        totalPages
+        totalPages,
+        rating
     } = data
 
     const startingPage = currentPage ?? 0
@@ -43,6 +44,7 @@ export async function createBookService(data) {
         cover,
         currentPage: startingPage,
         totalPages,
+        rating,
         readingActivity
     })
     
@@ -62,7 +64,8 @@ export async function updateBookService(id, data) {
         genre,
         cover,
         currentPage,
-        totalPages
+        totalPages,
+        rating
     } = data
 
     const currentPage_ = currentPage ?? book.currentPage
