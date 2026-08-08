@@ -44,8 +44,8 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
             </div>
 
             <div className="w-full mt-5 h-35">
-                {topGenres.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                { topGenres.length > 0
+                    ? <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             data={topGenres}
                             layout="vertical"
@@ -86,11 +86,13 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
-                ) : (
-                    <p className="text-body text-coffee w-full h-full flex justify-center items-center">
-                        No data available
-                    </p>
-                )}
+                    : <div className="w-full h-full flex flex-col justify-center text-center">
+                        <p className="text-body-sm text-coffee font-medium">No books yet</p>
+                        <p className="mt-1 text-body-sm text-taupe">
+                            Add books to your library to see their genre distribution.
+                        </p>
+                    </div>
+                }
             </div>
 
             { totalGenres > 5 &&

@@ -2,37 +2,41 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 
 import HorizontalDivider from "./HorizontalDivider"
 
-export default function StatusDistributionCard({ data }) {
+export default function StatusDistributionCard({ totalBooks, data }) {
     return (
         <>
             <h2 className="h4 text-espresso">Status distribution</h2>
 
             <div className="h-40 w-full flex justify-center items-center my-5">
-                {
-                    (data[0].count === 0 && data[1].count === 0 && data[2].count === 0)
-                        ? <p className="text-body text-coffee">No data available</p>
-                        : <ResponsiveContainer width="100%" height={160}>
-                            <PieChart>
-                                <Pie
-                                    data={data}                             
-                                    dataKey="count"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}   // this is what creates the "donut" hole
-                                    outerRadius={80}
-                                    paddingAngle={2}   // small gap between segments
-                                    startAngle={90}
-                                    endAngle={-270}    // clockwise from 12 o'clock
-                                >
-                                    { 
-                                        data.map((entry, index) => (
-                                            <Cell key={index} fill={entry.color} />
-                                        ))
-                                    }
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
+                { totalBooks > 0
+                    ? <ResponsiveContainer width="100%" height={160}>
+                        <PieChart>
+                            <Pie
+                                data={data}                             
+                                dataKey="count"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}   // this is what creates the "donut" hole
+                                outerRadius={80}
+                                paddingAngle={2}   // small gap between segments
+                                startAngle={90}
+                                endAngle={-270}    // clockwise from 12 o'clock
+                            >
+                                { 
+                                    data.map((entry, index) => (
+                                        <Cell key={index} fill={entry.color} />
+                                    ))
+                                }
+                            </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+                    : <div className="text-center">
+                        <p className="text-body-sm text-coffee font-medium">No books yet</p>
+                        <p className="mt-1 text-body-sm text-taupe">
+                            Add books to your library to see their status distribution.
+                        </p>
+                    </div>
                 }
             </div>
 

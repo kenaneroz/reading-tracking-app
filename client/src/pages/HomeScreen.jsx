@@ -18,7 +18,6 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
     const [searchValue, setSearchValue] = useState("")
     const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
-    const [isAddBookPopupActive, setIsAddBookPopupActive] = useState(false)
 
     const [recentlyTrackingBook, setRecentlyTrackingBook] = useState(() =>
         books && books.length > 0
@@ -168,16 +167,11 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
                 </section>
             </div>
 
-            <BottomNavigation setIsAddBookPopupActive={setIsAddBookPopupActive} />
-
-            {isAddBookPopupActive && (
-                <AddBook
-                    setIsAddBookPopupActive={setIsAddBookPopupActive}
-                    books={books}
-                    setBooks={setBooks}
-                    addBook={addBook}
-                />
-            )}
+            <BottomNavigation
+                books={books}
+                setBooks={setBooks}
+                addBook={addBook}
+            />
         </div>
     )
 }

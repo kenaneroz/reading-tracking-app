@@ -80,6 +80,8 @@ function App() {
           element={
             <StatisticsScreen 
               books={books}
+              addBook={addBook}
+              setBooks={setBooks}
             />
           }
         />

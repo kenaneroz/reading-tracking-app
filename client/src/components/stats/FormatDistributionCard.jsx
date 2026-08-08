@@ -3,37 +3,41 @@ import HorizontalDivider from "./HorizontalDivider"
 
 import { HugeiconsIcon } from '@hugeicons/react'
 
-export default function FormatDistributionCard({ data }) {
+export default function FormatDistributionCard({ totalBooks, data }) {
     return (
         <div className="">
             <h2 className="h4 text-espresso">Format distribution</h2>
             
             <div className="h-40 w-full flex justify-center items-center mt-5">
-                {
-                    (data[0].count === 0 && data[1].count === 0 && data[2].count === 0 && data[3].count === 0)
-                        ? <p className="text-body-sm text-coffee">You haven't added any books yet.</p>
-                        : <ResponsiveContainer width="100%" height={160}>
-                            <PieChart>
-                                <Pie
-                                    data={data}                             
-                                    dataKey="count"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}   // this is what creates the "donut" hole
-                                    outerRadius={80}
-                                    paddingAngle={2}   // small gap between segments
-                                    startAngle={90}
-                                    endAngle={-270}    // clockwise from 12 o'clock
-                                >
-                                    { 
-                                        data.map((entry, index) => (
-                                            <Cell key={index} fill={entry.color} />
-                                        ))
-                                    }
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
+                { totalBooks > 0
+                    ? <ResponsiveContainer width="100%" height={160}>
+                        <PieChart>
+                            <Pie
+                                data={data}                             
+                                dataKey="count"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}   // this is what creates the "donut" hole
+                                outerRadius={80}
+                                paddingAngle={2}   // small gap between segments
+                                startAngle={90}
+                                endAngle={-270}    // clockwise from 12 o'clock
+                            >
+                                { 
+                                    data.map((entry, index) => (
+                                        <Cell key={index} fill={entry.color} />
+                                    ))
+                                }
+                            </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+                    : <div className="mt-4 text-center">
+                        <p className="text-body-sm text-coffee font-medium">No books yet</p>
+                        <p className="mt-1 text-body-sm text-taupe">
+                            Add books to see how your library is distributed by format.
+                        </p>
+                    </div>
                 }
             </div>
 

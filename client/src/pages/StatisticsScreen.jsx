@@ -11,10 +11,11 @@ import LongestBookCard from "../components/stats/LongestBookCard"
 import LongestStreak from "../components/stats/LongestStreak"
 import RatingCard from "../components/stats/RatingCard"
 import FormatDistributionCard from "../components/stats/FormatDistributionCard"
+import BottomNavigation from "../components/BottomNavigation"
 
 import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
 
-export default function StatisticsScreen({ books }) {
+export default function StatisticsScreen({ books, setBooks, addBook }) {
     const [activeDateFilter, setActiveDateFilter] = useState("All time")
     const [customDateRange, setCustomDateRange] = useState({ startDate: "", endDate: "" })
 
@@ -105,11 +106,11 @@ export default function StatisticsScreen({ books }) {
     let longestStreakBookId = filteredBooks[0]?._id || null
 
     let ratingDistribution = [
-        { rating: 1, count: 0, percent: 0 },
-        { rating: 2, count: 0, percent: 0 },
-        { rating: 3, count: 0, percent: 0 },
-        { rating: 4, count: 0, percent: 0 },
-        { rating: 5, count: 0, percent: 0 }
+        { rating: 1, count: 0, percent: 0, books: [] },
+        { rating: 2, count: 0, percent: 0, books: [] },
+        { rating: 3, count: 0, percent: 0, books: [] },
+        { rating: 4, count: 0, percent: 0, books: [] },
+        { rating: 5, count: 0, percent: 0, books: [] }
     ]
     let totalRatedBooks = 0
     let rating = 0
@@ -146,6 +147,11 @@ export default function StatisticsScreen({ books }) {
             ratingDistribution[book.rating - 1].count++
             totalRatedBooks++
             rating += book.rating
+            ratingDistribution[book.rating - 1].books.push({
+                id: book._id,
+                cover: book.cover,
+                title: book.title
+            })
         }
 
         if (book.format === "Physical") formatDistribution[0].count++
@@ -169,97 +175,111 @@ export default function StatisticsScreen({ books }) {
         rating = (rating / totalRatedBooks).toFixed(1)
     }    
 
-
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-scroll py-6">
-            <StatsHeader />
+        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
+            <div className="flex-1 bg-cream overflow-y-auto py-6">
+                <div className="px-5">
+                    <StatsHeader />
+                </div>
 
-            <div className="mt-6 mb-5 px-5">
-                <DateFilterPill 
-                    activeDateFilter={activeDateFilter}
-                    setActiveDateFilter={setActiveDateFilter}
-                    customDateRange={customDateRange}
-                    setCustomDateRange={setCustomDateRange}
-                />
-            </div>
-
-            <div className="w-full flex gap-3 px-5">
-                <CardShell customClasses="flex-1 hover:scale-[1.01] transition-all duration-300">
-                    <SummaryCard 
-                        label="Total books"
-                        icon={LibrariesIcon}
-                        value={totalBooks}
-                        caption="in your library"
+                <div className="mt-6 mb-5 px-5">
+                    <DateFilterPill 
+                        activeDateFilter={activeDateFilter}
+                        setActiveDateFilter={setActiveDateFilter}
+                        customDateRange={customDateRange}
+                        setCustomDateRange={setCustomDateRange}
                     />
-                </CardShell>
-                
-                <CardShell customClasses="flex-1 hover:scale-[1.01] transition-all duration-300">
-                    <SummaryCard 
-                        label="Total pages"
-                        icon={NoteIcon}
-                        value={totalPages}
-                        caption="pages turned"
-                    />                
-                </CardShell>
+                </div>
+
+                <div className="w-full flex gap-3 px-5">
+                    <CardShell customClasses="flex-1 hover:scale-[1.01] transition-all duration-300">
+                        <SummaryCard 
+                            label="Total books"
+                            icon={LibrariesIcon}
+                            value={totalBooks}
+                            caption="in your library"
+                        />
+                    </CardShell>
+                    
+                    <CardShell customClasses="flex-1 hover:scale-[1.01] transition-all duration-300">
+                        <SummaryCard 
+                            label="Total pages"
+                            icon={NoteIcon}
+                            value={totalPages}
+                            caption="pages turned"
+                        />                
+                    </CardShell>
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell>
+                        <StatusDistributionCard 
+                            totalBooks={totalBooks}
+                            data={statusDistributionData} 
+                        />
+                    </CardShell>    
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell>
+                        <GenreDistributionCard 
+                            totalBooks={totalBooks}
+                            genreCounts={genreCounts} 
+                        />
+                    </CardShell>
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell>
+                        <CompletedByMonthCard 
+                            totalBooks={totalBooks}
+                            countsByMonth={countsByMonth} 
+                        />
+                    </CardShell>
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                        <LongestBookCard book={longestBook} />
+                    </CardShell>
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
+                        <LongestStreak 
+                            totalBooks={totalBooks}
+                            id={longestStreakBookId}
+                            streak={longestStreak} 
+                        />
+                    </CardShell>
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell>
+                        <RatingCard 
+                            totalBooks={totalBooks}
+                            ratingDistribution={ratingDistribution}
+                            totalRatedBooks={totalRatedBooks}
+                            rating={rating}
+                        />
+                    </CardShell>                
+                </div>
+
+                <div className="px-5 mt-4">
+                    <CardShell>
+                        <FormatDistributionCard 
+                            totalBooks={totalBooks}
+                            data={formatDistribution} 
+                        />
+                    </CardShell>                
+                </div>
             </div>
 
-            <div className="px-5 mt-4">
-                <CardShell>
-                    <StatusDistributionCard data={statusDistributionData} />
-                </CardShell>    
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell>
-                    <GenreDistributionCard 
-                        totalBooks={totalBooks}
-                        genreCounts={genreCounts} 
-                    />
-                </CardShell>
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell>
-                    <CompletedByMonthCard countsByMonth={countsByMonth} />
-                </CardShell>
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
-                    <LongestBookCard
-                        id={longestBook._id}
-                        cover={longestBook.cover}
-                        title={longestBook.title}
-                        totalPages={longestBook.totalPages}
-                    />
-                </CardShell>
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
-                    <LongestStreak 
-                        id={longestStreakBookId}
-                        streak={longestStreak} 
-                    />
-                </CardShell>
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell>
-                    <RatingCard 
-                        totalBooks={totalBooks}
-                        ratingDistribution={ratingDistribution}
-                        totalRatedBooks={totalRatedBooks}
-                        rating={rating}
-                    />
-                </CardShell>                
-            </div>
-
-            <div className="px-5 mt-4">
-                <CardShell>
-                    <FormatDistributionCard data={formatDistribution} />
-                </CardShell>                
-            </div>
+            <BottomNavigation
+                books={books}
+                setBooks={setBooks}
+                addBook={addBook}
+            />
         </div>
     )
 }
