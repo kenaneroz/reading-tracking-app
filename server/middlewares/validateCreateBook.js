@@ -1,6 +1,7 @@
 import AppError from "../errors/AppError.js"
-import { validGenres } from "../constants/genres.js"
-import { validFormats } from "../constants/formats.js"
+import { GENRE_OPTIONS } from "../../shared/constants/genreOptions.js"
+import { RATING_OPTIONS } from "../../shared/constants/ratingOptions.js"
+import { FORMAT_OPTIONS } from "../../shared/constants/formatOptions.js"
 
 export default function validateCreateBook(req, res, next) {
     const { 
@@ -45,7 +46,7 @@ export default function validateCreateBook(req, res, next) {
         throw new AppError("You must fill in the required fields", 400)
     }
 
-    if (!validGenres.includes(genre)) {
+    if (!GENRE_OPTIONS.includes(genre)) {
         throw new AppError("Invalid genre", 400)
     }
 
@@ -67,11 +68,11 @@ export default function validateCreateBook(req, res, next) {
         throw new AppError("Current page cannot exceed total pages", 400)
     }
     
-    if (typeof(rating) === "number" && (Number(rating) < 1 || Number(rating) > 5)) {
+    if (typeof(rating) !== "number" && !RATING_OPTIONS.includes(rating) && (Number(rating) < 1 || Number(rating) > 5)) {
         throw new AppError("Rating must be a number between 1 and 5", 400)
     }
 
-    if (!validFormats.includes(format)) {
+    if (!FORMAT_OPTIONS.includes(format)) {
         throw new AppError("Invalid format", 400)
     }
 

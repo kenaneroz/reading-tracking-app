@@ -51,7 +51,13 @@ export default function DetailsScreen({ books, setBooks, loading, updateBook, de
                 totalPages={book.totalPages} 
                 setIsEditPopupOpen={setIsEditPopupOpen}
             />
-            <BookInfoCard genre={book.genre} totalPages={book.totalPages} createdAt={book.createdAt} />
+            <BookInfoCard 
+                genre={book.genre} 
+                totalPages={book.totalPages} 
+                createdAt={book.createdAt} 
+                format={book.format}
+                rating={book.rating}
+            />
             <div className="mt-8 mx-6">
                 <div className="flex justify-between">
                     <h2 className="text-espreso h4">Reading Activity</h2>

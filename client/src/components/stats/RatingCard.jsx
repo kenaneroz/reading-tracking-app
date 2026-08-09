@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 
 import Modal from "./Modal"
 
-export default function RatingCard({ totalBooks, ratingDistribution, totalRatedBooks, rating }) {
+export default function RatingCard({ totalFilteredBooks, ratingDistribution, totalRatedBooks, rating }) {
     const navigate = useNavigate()
     const [showRatings, setShowRatings] = useState(false)
 
@@ -38,7 +38,7 @@ export default function RatingCard({ totalBooks, ratingDistribution, totalRatedB
                 </div>
 
                 <p className="text-body-xs text-taupe mt-2">
-                    {totalRatedBooks} of {totalBooks} rated
+                    {totalRatedBooks} of {totalFilteredBooks} rated
                 </p>
             </div>
 
@@ -88,7 +88,7 @@ export default function RatingCard({ totalBooks, ratingDistribution, totalRatedB
                             .map(r => (
                                 <div key={r.rating}>
                                     <p className="h5 text-espresso">
-                                        {r.rating} {r.rating > 1 ? "stars" : "star"}
+                                        {r.rating} {r.rating > 1 ? "stars" : "star"} <span className="text-taupe font-normal">({r.count})</span>
                                     </p>
 
                                     <div className="flex flex-col gap-3 mt-3">

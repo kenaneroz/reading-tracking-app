@@ -2,14 +2,15 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 import HorizontalDivider from "./HorizontalDivider"
 
 import { HugeiconsIcon } from '@hugeicons/react'
+import EmptyState from "./EmptyState"
 
-export default function FormatDistributionCard({ totalBooks, data }) {
+export default function FormatDistributionCard({ totalFilteredBooks, data }) {
     return (
         <div className="">
             <h2 className="h4 text-espresso">Format distribution</h2>
             
             <div className="h-40 w-full flex justify-center items-center mt-5">
-                { totalBooks > 0
+                { totalFilteredBooks > 0
                     ? <ResponsiveContainer width="100%" height={160}>
                         <PieChart>
                             <Pie
@@ -32,12 +33,7 @@ export default function FormatDistributionCard({ totalBooks, data }) {
                             </Pie>
                         </PieChart>
                     </ResponsiveContainer>
-                    : <div className="mt-4 text-center">
-                        <p className="text-body-sm text-coffee font-medium">No books yet</p>
-                        <p className="mt-1 text-body-sm text-taupe">
-                            Add books to see how your library is distributed by format.
-                        </p>
-                    </div>
+                    : <EmptyState />
                 }
             </div>
 

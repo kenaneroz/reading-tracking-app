@@ -1,4 +1,6 @@
-export default function BookInfoCard({ genre, totalPages, createdAt }) {
+import HorizontalDivider from "../components/shared/HorizontalDivider.jsx"
+
+export default function BookInfoCard({ genre, totalPages, rating, format, createdAt }) {
     const date = new Date(createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 
     return (
@@ -8,14 +10,28 @@ export default function BookInfoCard({ genre, totalPages, createdAt }) {
                 <p className="text-espresso font-semibold text-body-sm">{totalPages}</p>
             </div>
 
-            <div className="w-full border-t border-tan/80"></div>
+            <HorizontalDivider />
 
             <div className="flex justify-between">
                 <p className="text-taupe text-body-sm">Genre</p>
                 <p className="text-espresso font-semibold text-body-sm">{genre}</p>
             </div>
 
-            <div className="w-full border-t border-tan/80"></div>
+            <HorizontalDivider />
+
+            <div className="flex justify-between">
+                <p className="text-taupe text-body-sm">Rating</p>
+                <p className="text-espresso font-semibold text-body-sm">{rating || "Not rated yet"}</p>
+            </div>
+
+            <HorizontalDivider />
+
+            <div className="flex justify-between">
+                <p className="text-taupe text-body-sm">Format</p>
+                <p className="text-espresso font-semibold text-body-sm">{format}</p>
+            </div>
+
+            <HorizontalDivider />
 
             <div className="flex justify-between">
                 <p className="text-taupe text-body-sm">Date added</p>

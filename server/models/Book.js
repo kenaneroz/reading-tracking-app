@@ -1,29 +1,8 @@
 import mongoose from "mongoose"
 
-const genres = [
-    "Romance",
-    "Fantasy",
-    "Science Fiction",
-    "Mystery",
-    "Thriller",
-    "Horror",
-    "Historical Fiction",
-    "Classics",
-    "Biography",
-    "History",
-    "Philosophy",
-    "Psychology",
-    "Self Help",
-    "Poetry",
-    "Other"
-]
-
-const formats = [
-    "Physical",
-    "E-book",
-    "Audiobook",
-    "PDF"
-]
+import { GENRE_OPTIONS } from "../../shared/constants/genreOptions.js"
+import { RATING_OPTIONS } from "../../shared/constants/ratingOptions.js"
+import { FORMAT_OPTIONS } from "../../shared/constants/formatOptions.js"
 
 const readingActivitySchema = new mongoose.Schema({
     previousPage: {
@@ -75,7 +54,7 @@ const bookSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-            enum: genres
+            enum: GENRE_OPTIONS
         },
         cover: {
             type: String,
@@ -96,13 +75,14 @@ const bookSchema = new mongoose.Schema(
             type: Number,
             default: null,
             min: 1,
-            max: 5
+            max: 5,
+            enum: RATING_OPTIONS
         },
         format: {
             type: String,
             required: true,
             trim: true,
-            enum: formats
+            enum: FORMAT_OPTIONS
         },
         readingActivity: [readingActivitySchema],
         notes: [noteSchema],

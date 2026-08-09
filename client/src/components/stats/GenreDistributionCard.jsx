@@ -1,8 +1,9 @@
 import { useState } from "react"
 import HorizontalDivider from "./HorizontalDivider"
 import { BarChart, Bar, XAxis, YAxis, Cell, LabelList, ResponsiveContainer } from "recharts"
+import EmptyState from "./EmptyState"
 
-export default function GenreDistributionCard({ totalBooks, genreCounts }) {
+export default function GenreDistributionCard({ totalFilteredBooks, genreCounts }) {
     const [isOthersVisible, setIsOthersVisible] = useState(false)
 
     const totalGenres = Object.keys(genreCounts).length
@@ -11,7 +12,7 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
         .map(([genre, count]) => ({
             genre,
             count,
-            percent: Math.round((count / totalBooks) * 100)
+            percent: Math.round((count / totalFilteredBooks) * 100)
         }))
         .sort((a, b) => b.count - a.count)
 
@@ -26,7 +27,7 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
             {
                 genre: "Others",
                 count: otherCount,
-                percent: Math.round((otherCount / totalBooks) * 100)
+                percent: Math.round((otherCount / totalFilteredBooks) * 100)
             },
         ]
     } else {
@@ -44,7 +45,7 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
             </div>
 
             <div className="w-full mt-5 h-35">
-                { topGenres.length > 0
+                {topGenres.length > 0
                     ? <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             data={topGenres}
@@ -86,12 +87,7 @@ export default function GenreDistributionCard({ totalBooks, genreCounts }) {
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
-                    : <div className="w-full h-full flex flex-col justify-center text-center">
-                        <p className="text-body-sm text-coffee font-medium">No books yet</p>
-                        <p className="mt-1 text-body-sm text-taupe">
-                            Add books to your library to see their genre distribution.
-                        </p>
-                    </div>
+                    : <EmptyState />
                 }
             </div>
 

@@ -8,16 +8,20 @@ import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 
-export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addBook }) {
-    const genreOptions = ["Romance", "Science Fiction", "Fantasy", "Mystery", "Thriller", "Non-Fiction", "Biography", "Self-Help", "History", "Poetry"]
+import { GENRE_OPTIONS } from "../../../shared/constants/genreOptions.js"
+import { RATING_OPTIONS } from "../../../shared/constants/ratingOptions.js"
+import { FORMAT_OPTIONS } from "../../../shared/constants/formatOptions.js"
 
+export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addBook }) {
     const [formData, setFormData] = useState({
-        cover: null,
+        cover: "",
         title: "",
         author: "",
         totalPages: "",
         currentPage: "",
-        genre: ""
+        genre: "",
+        rating: "",
+        format: ""
     })
 
     function hideAddBookPopup() {
@@ -32,7 +36,9 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                 cover: formData.cover,
                 genre: formData.genre,
                 currentPage: formData.currentPage,
-                totalPages: formData.totalPages
+                totalPages: formData.totalPages,
+                rating: formData.rating,
+                format: formData.format
             }
         )
 
@@ -116,9 +122,27 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             id="genre"
                             label="Genre"
                             value={formData.genre}
-                            options={genreOptions}
+                            options={GENRE_OPTIONS}
                             errorMessage=""
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}
+                        />
+
+                        <Select 
+                            id="rating"
+                            label="Rating"
+                            value={formData.rating}
+                            options={RATING_OPTIONS}
+                            errorMessage=""
+                            onChange={(e) => setFormData(prev => ({...prev, rating: Number(e.target.value)}))}
+                        />
+
+                        <Select 
+                            id="format"
+                            label="Format"
+                            value={formData.format}
+                            options={FORMAT_OPTIONS}
+                            errorMessage=""
+                            onChange={(e) => setFormData(prev => ({...prev, format: e.target.value}))}
                         />
                     </div>
 

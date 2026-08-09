@@ -31,7 +31,7 @@ export default function DetailsHeader({ book, setBooks, updateBook, deleteBook, 
     return (
         <div className="w-full flex justify-between items-center absolute left-0 z-50 px-6 pt-6">
             <button className="cursor-pointer text-cream"
-                onClick={returnHome}
+                onClick={() => navigate(-1)}
             >
                 <HugeiconsIcon icon={ArrowLeft02Icon} size={24} strokeWidth={1.5} />
             </button>

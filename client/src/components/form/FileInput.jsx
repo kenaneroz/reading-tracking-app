@@ -37,8 +37,13 @@ export default function FileInput({ label, id, placeholder, errorMessage, onChan
                     </div>
                     :
                     <>
-                        <HugeiconsIcon icon={ImageAdd02Icon} size={24} strokeWidth={1.5} />                   
-                        <p className="text-coffee text-body-sm mt-2">{placeholder}</p>
+                        <HugeiconsIcon 
+                            icon={ImageAdd02Icon} 
+                            size={24} 
+                            strokeWidth={1.5} 
+                            className="text-taupe"
+                        />                   
+                        <p className="text-taupe text-body-sm mt-2">{placeholder}</p>
                     </>
 
                 }

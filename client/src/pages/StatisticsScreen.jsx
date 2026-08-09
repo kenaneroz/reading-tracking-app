@@ -48,8 +48,9 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
 
             return true
         })
-
-    const totalBooks = filteredBooks.length
+    
+    const totalBooks = books.length
+    const totalFilteredBooks = filteredBooks.length
     const totalPages = filteredBooks.reduce((total, book) => total + book.totalPages, 0)
 
     const statusDistributionData = [
@@ -132,8 +133,10 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
         genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1
 
         // Completed by month
-        const month = new Date(book.createdAt).getMonth()
-        countsByMonth[month].count += 1
+        if (book.status === "Finished") {
+            const month = new Date(book.readingActivity.at(-1).date).getMonth()
+            countsByMonth[month].count += 1
+        }
 
         if (book.totalPages > longestBook.totalPages) longestBook = book
 
@@ -162,8 +165,8 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
 
     statusDistributionData.forEach(status => {
         status.percent = 
-            totalBooks 
-                ? Math.round((status.count / totalBooks) * 100)
+            totalFilteredBooks 
+                ? Math.round((status.count / totalFilteredBooks) * 100)
                 : 0
     })
 
@@ -196,7 +199,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                         <SummaryCard 
                             label="Total books"
                             icon={LibrariesIcon}
-                            value={totalBooks}
+                            value={totalFilteredBooks}
                             caption="in your library"
                         />
                     </CardShell>
@@ -214,7 +217,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell>
                         <StatusDistributionCard 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             data={statusDistributionData} 
                         />
                     </CardShell>    
@@ -223,7 +226,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell>
                         <GenreDistributionCard 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             genreCounts={genreCounts} 
                         />
                     </CardShell>
@@ -232,7 +235,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell>
                         <CompletedByMonthCard 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             countsByMonth={countsByMonth} 
                         />
                     </CardShell>
@@ -247,7 +250,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell customClasses="cursor-pointer hover:scale-[1.01] transition-all duration-300">
                         <LongestStreak 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             id={longestStreakBookId}
                             streak={longestStreak} 
                         />
@@ -257,7 +260,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell>
                         <RatingCard 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             ratingDistribution={ratingDistribution}
                             totalRatedBooks={totalRatedBooks}
                             rating={rating}
@@ -268,7 +271,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
                 <div className="px-5 mt-4">
                     <CardShell>
                         <FormatDistributionCard 
-                            totalBooks={totalBooks}
+                            totalFilteredBooks={totalFilteredBooks}
                             data={formatDistribution} 
                         />
                     </CardShell>                

@@ -1,4 +1,4 @@
-export const validGenres = [
+export const GENRE_OPTIONS = [
     "Romance",
     "Fantasy",
     "Science Fiction",

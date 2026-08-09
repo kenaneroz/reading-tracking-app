@@ -9,9 +9,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { useParams } from "react-router-dom"
 
-export default function EditDetails({ book, setBooks, setIsEditPopupOpen, updateBook }) {
-    const genreOptions = ["Romance", "Science Fiction", "Fantasy", "Mystery", "Thriller", "Non-Fiction", "Biography", "Self-Help", "History", "Poetry", "Classic"]
+import { GENRE_OPTIONS } from "../../../shared/constants/genreOptions.js"
+import { RATING_OPTIONS } from "../../../shared/constants/ratingOptions.js"
+import { FORMAT_OPTIONS } from "../../../shared/constants/formatOptions.js"
 
+export default function EditDetails({ book, setBooks, setIsEditPopupOpen, updateBook }) {
     const [formData, setFormData] = useState({
         title: book.title,
         author: book.author,
@@ -19,6 +21,8 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
         cover: book.cover,
         currentPage: book.currentPage,
         totalPages: book.totalPages,
+        rating: book.rating,
+        format: book.format
     })
 
     async function handleUpdate() {
@@ -122,9 +126,27 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             id="genre"
                             label="Genre"
                             value={formData.genre}
-                            options={genreOptions}
+                            options={GENRE_OPTIONS}
                             errorMessage=""
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}
+                        />
+
+                        <Select 
+                            id="rating"
+                            label="Rating"
+                            value={formData.rating}
+                            options={RATING_OPTIONS}
+                            errorMessage=""
+                            onChange={(e) => setFormData(prev => ({...prev, rating: Number(e.target.value)}))}
+                        />
+
+                        <Select 
+                            id="format"
+                            label="Format"
+                            value={formData.format}
+                            options={FORMAT_OPTIONS}
+                            errorMessage=""
+                            onChange={(e) => setFormData(prev => ({...prev, format: e.target.value}))}
                         />
                     </div>
 

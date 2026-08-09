@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { HugeiconsIcon } from '@hugeicons/react'
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons'
+import EmptyState from './EmptyState'
 
 export default function LongestBookCard({ book }) {
     const navigate = useNavigate()
@@ -10,10 +11,10 @@ export default function LongestBookCard({ book }) {
         <>
             <p className="text-body-sm text-taupe">Longest book</p>
             { book 
-                ? <div className="flex justify-between items-center"
+                ? <div className="flex justify-between items-center mt-4"
                     onClick={() => navigate(`/book/${book._id}`)}
                 >
-                    <div className="flex items-center gap-3 mt-4">
+                    <div className="flex items-center gap-3">
                         <img 
                             src={book.cover} 
                             alt="" 
@@ -33,12 +34,7 @@ export default function LongestBookCard({ book }) {
                         className="text-taupe"
                     />
                 </div>
-                : <div className="mt-4 text-center">
-                    <p className="text-body-sm text-coffee font-medium">No books yet</p>
-                    <p className="mt-1 text-body-sm text-taupe">
-                        Add books to discover the longest book in your library.
-                    </p>
-                </div>
+                : <EmptyState customClasses="mt-4" />
             }
         </>
     )
