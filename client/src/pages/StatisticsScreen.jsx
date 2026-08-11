@@ -146,7 +146,7 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
             longestStreakBookId = book._id
         }
 
-        if (book.rating) {
+        if (book.rating && book.rating !== "Not rated") {
             ratingDistribution[book.rating - 1].count++
             totalRatedBooks++
             rating += book.rating
@@ -177,6 +177,13 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
         })
         rating = (rating / totalRatedBooks).toFixed(1)
     }    
+
+    formatDistribution.forEach(format => {
+        format.percent = 
+            totalFilteredBooks 
+                ? Math.round((format.count / totalFilteredBooks) * 100)
+                : 0
+    })
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">

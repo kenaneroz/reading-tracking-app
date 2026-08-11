@@ -137,8 +137,9 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             value={formData.rating}
                             options={RATING_OPTIONS}
                             errorMessage=""
-                            onChange={(e) => setFormData(prev => ({...prev, rating: Number(e.target.value)}))}
+                            onChange={(e) => setFormData(prev => ({...prev, rating: e.target.value}))}
                         />
+
 
                         <Select 
                             id="format"

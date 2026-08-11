@@ -68,7 +68,8 @@ export async function updateBookService(id, data) {
         currentPage,
         totalPages,
         rating,
-        format
+        format,
+        readingActivity
     } = data
 
     const currentPage_ = currentPage ?? book.currentPage
@@ -76,6 +77,10 @@ export async function updateBookService(id, data) {
 
     if (currentPage_ > totalPages_) {
         throw new AppError("Current page cannot exceed total pages", 400)
+    }
+
+    if (currentPage_ < book.currentPage) {
+        throw new AppError("Current page cannot be less than the previous page", 400)
     }
 
     if (title !== undefined) {

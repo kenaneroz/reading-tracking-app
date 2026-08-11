@@ -3,7 +3,7 @@ import {
     getBookService,
     createBookService,
     updateBookService,
-    deleteBookService
+    deleteBookService,
 } from "../services/bookService.js"
 
 import {
@@ -11,6 +11,11 @@ import {
     updateNoteService,
     deleteNoteService
 } from "../services/noteService.js"
+
+import {
+  deleteLatestReadingActivityService,
+  updateLatestReadingActivityService
+} from "../services/readingActivityService.js"
 
 export async function getBook(req, res) {
     const book = await getBookService(req.params.id)
@@ -89,5 +94,25 @@ export async function deleteNote(req, res) {
         success: true,
         message: "Note deleted successfully",
         data: deletedNote
+    })
+}
+
+export async function updateLatestReadingActivity(req, res) {
+    const latestReadingActivity = await updateLatestReadingActivityService(req.params.id, req.body)
+
+    res.json({
+        success: true,
+        message: "Latest reading activity updated successfully",
+        data: latestReadingActivity
+    })
+}
+
+export async function deleteLatestReadingActivity(req, res) {
+    const latestReadingActivity = await deleteLatestReadingActivityService(req.params.id)
+
+    res.json({
+        success: true,
+        message: "Latest reading activity deleted successfully",
+        data: latestReadingActivity
     })
 }

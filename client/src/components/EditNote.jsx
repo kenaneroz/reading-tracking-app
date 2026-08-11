@@ -58,7 +58,7 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIs
                 <div className="flex justify-between">
                     <HugeiconsIcon icon={Cancel01Icon} size={24} strokeWidth={1.5} className="cursor-pointer" onClick={() => setIsEditNotePopupOpen(false)} />
                     <button 
-                        className="bg-danger/60 text-beige px-4 py-2 rounded-xl text-body-sm hover:bg-danger transition-all duration-300 cursor-pointer"
+                        className="bg-red/60 text-beige px-4 py-2 rounded-xl text-body-sm hover:bg-red transition-all duration-300 cursor-pointer"
                         onClick={handleDeleteNote}
                     >Delete</button>
                 </div>

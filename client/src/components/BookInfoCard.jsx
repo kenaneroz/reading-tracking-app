@@ -21,7 +21,7 @@ export default function BookInfoCard({ genre, totalPages, rating, format, create
 
             <div className="flex justify-between">
                 <p className="text-taupe text-body-sm">Rating</p>
-                <p className="text-espresso font-semibold text-body-sm">{rating || "Not rated yet"}</p>
+                <p className="text-espresso font-semibold text-body-sm">{(rating && rating !== "Not rated") ? rating : "Not rated yet"}</p>
             </div>
 
             <HorizontalDivider />

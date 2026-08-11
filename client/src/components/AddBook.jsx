@@ -37,11 +37,9 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                 genre: formData.genre,
                 currentPage: formData.currentPage,
                 totalPages: formData.totalPages,
-                rating: formData.rating,
                 format: formData.format
             }
         )
-
         setBooks(prev => [...prev, newBook])
         hideAddBookPopup()
     }

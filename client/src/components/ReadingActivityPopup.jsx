@@ -2,7 +2,7 @@ import ProgressBar from "./ProgressBar"
 
 import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons";
 
 export default function ReadingActivityPopup({ setIsReadingActivityPopupOpen, readingActivity, totalPages }) {
     return (
@@ -24,10 +24,9 @@ export default function ReadingActivityPopup({ setIsReadingActivityPopupOpen, re
 
                 <div className="mt-8 flex flex-col gap-3">
                     {
-                        readingActivity.length === 0 ?
-                        <p className="text-taupe text-body-sm">You do not have any reading activities yet</p>
-                        :
-                        readingActivity.slice().reverse().map((r, index) => (
+                        readingActivity.length === 0
+                        ? <p className="text-taupe text-body-sm">You do not have any reading activities yet</p>
+                        : readingActivity.slice().reverse().map((r, index) => (
                             <div className="flex items-center gap-4 bg-cream/60 px-6 py-2 rounded-2xl border border-tan/60">
                                 <div className="shrink-0">
                                     <p className="text-espresso font-medium text-body-sm">{new Date(r.date).toLocaleDateString("en-US", { month: "long", day: "numeric" })}</p>
@@ -35,10 +34,10 @@ export default function ReadingActivityPopup({ setIsReadingActivityPopupOpen, re
                                 </div>
                                 <div className="flex-1"><ProgressBar currentPage={r.currentPage} totalPages={totalPages} /></div>
                                 <div className="shrink-0 text-right">
-                                    <p className="text-espresso font-medium text-body-sm whitespace-nowrap mt-1">{Number(r.currentPage) - Number(r.previousPage)} pages</p>
+                                    <p className="text-espresso font-medium text-body-sm whitespace-nowrap mt-1">+{Number(r.currentPage) - Number(r.previousPage)} pages</p>
                                     <p className="text-taupe text-body-xs">p. {r.currentPage}</p>
                                 </div>
-                            </div>
+                            </div>                            
                         ))
                     }
                 </div>

@@ -72,10 +72,8 @@ const bookSchema = new mongoose.Schema(
             min: 1
         },
         rating: {
-            type: Number,
+            type: String,
             default: null,
-            min: 1,
-            max: 5,
             enum: RATING_OPTIONS
         },
         format: {

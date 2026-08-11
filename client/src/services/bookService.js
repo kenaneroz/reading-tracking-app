@@ -35,7 +35,7 @@ export async function getBooks() {
 export async function addBook(data) {
     try {
         const response = await fetch(
-            `${API_URL}`,
+            `${API_URL}/books`,
             {
                 method: "POST",
                 headers: {
@@ -153,6 +153,50 @@ export async function deleteNoteService(id, noteId) {
     try {
         const response = await fetch(
             `${API_URL}/books/${id}/notes/${noteId}`,
+            {
+                method: "DELETE"
+            }
+        )
+
+        const result = await response.json()
+
+        if (!response.ok) throw new Error(result.message || "Something went wrong")
+
+        return result.data
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function updateLatestReadingActivityService(id, data) {
+    try {
+        const response = await fetch(
+            `${API_URL}/books/${id}/reading-activity/latest`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        )
+
+        const result = await response.json()
+
+        if (!response.ok) {
+            throw new Error(result.message || "Something went wrong")
+        }
+
+        return result.data
+    } catch (error) {
+        throw error
+    }  
+}
+
+export async function deleteLatestReadingActivityService(id) {
+    try {
+        const response = await fetch(
+            `${API_URL}/books/${id}/reading-activity/latest`,
             {
                 method: "DELETE"
             }

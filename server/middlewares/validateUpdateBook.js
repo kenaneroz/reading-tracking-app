@@ -12,7 +12,8 @@ export default function validateUpdateBook(req, res, next) {
         "currentPage",
         "totalPages",
         "rating",
-        "format"
+        "format",
+        "readingActivity",
     ]
 
     const requestFields = Object.keys(req.body)
@@ -70,6 +71,7 @@ export default function validateUpdateBook(req, res, next) {
         if (currentPage < 0) {
             throw new AppError("Current page cannot be negative", 400)
         }
+        
     }
 
     if (totalPages !== undefined) {
@@ -83,8 +85,8 @@ export default function validateUpdateBook(req, res, next) {
     }
 
     if (rating !== undefined) {
-        if (typeof(rating) !== "number" && !RATING_OPTIONS.includes(rating) && (Number(rating) < 1 || Number(rating) > 5)) {
-            throw new AppError("Rating must be a number between 1 and 5", 400)
+        if (!RATING_OPTIONS.includes(rating)) {
+            throw new AppError("Choose a valid rating option", 400)
         }
     }
 

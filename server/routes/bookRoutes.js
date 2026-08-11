@@ -8,13 +8,16 @@ import {
     deleteBook,
     createNote,
     updateNote,
-    deleteNote
+    deleteNote,
+    deleteLatestReadingActivity,
+    updateLatestReadingActivity
 } from "../controllers/bookController.js"
 
 import validateCreateBook from "../middlewares/validateCreateBook.js"
 import validateUpdateBook from "../middlewares/validateUpdateBook.js"
 import validateCreateNote from "../middlewares/validateCreateNote.js"
 import validateUpdateNote from "../middlewares/validateUpdateNote.js"
+import validateUpdateActivity from "../middlewares/validateUpdateActivity.js"
 
 const router = express.Router()
 
@@ -40,6 +43,11 @@ router
         updateNote
     )
     .delete("/:id/notes/:noteId", deleteNote)
+    .patch("/:id/reading-activity/latest", 
+        validateUpdateActivity,
+        updateLatestReadingActivity
+    )
+    .delete("/:id/reading-activity/latest", deleteLatestReadingActivity)
 
 export default router
 

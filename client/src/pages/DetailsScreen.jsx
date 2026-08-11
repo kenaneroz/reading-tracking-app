@@ -13,18 +13,20 @@ import EditNote from "../components/EditNote"
 import ConfirmDeletePopup from "../components/ConfirmDeletePopup"
 import EditDetails from "../components/EditDetails"
 
-export default function DetailsScreen({ books, setBooks, loading, updateBook, deleteBook, addNoteService, updateNoteService, deleteNoteService }) {
+export default function DetailsScreen({
+    books,
+    setBooks,
+    loading,
+    updateBook,
+    deleteBook,
+    addNoteService,
+    updateNoteService,
+    deleteNoteService,
+    deleteLatestReadingActivityService,
+    updateLatestReadingActivityService
+}) {
     const { id } = useParams()
-
-    if (loading) return <span></span>
- 
-    const book = books.find(book => book._id === id)
-
     const navigate = useNavigate()
-    if (!book) return <div>
-        <p>Book not found</p>
-        <button className="cursor-pointer">Return home screen</button>
-    </div>
 
     const [isReadingActivityPopupOpen, setIsReadingActivityPopupOpen] = useState(false)
     const [isAllNotesPopupOpen, setIsAllNotesPopupOpen] = useState(false)
@@ -34,7 +36,26 @@ export default function DetailsScreen({ books, setBooks, loading, updateBook, de
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
     const [selectedNoteId, setSelectedNoteId] = useState(null)
 
-    if (loading) return <span></span>
+    const book = books.find(book => book._id === id)
+
+    if (loading) {
+        return <span></span>
+    }
+
+    if (!book) {
+        return (
+            <div>
+                <p>Book not found</p>
+
+                <button
+                    className="cursor-pointer"
+                    onClick={() => navigate("/")}
+                >
+                    Return home screen
+                </button>
+            </div>
+        )
+    }
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
@@ -65,7 +86,14 @@ export default function DetailsScreen({ books, setBooks, loading, updateBook, de
                         onClick={() => setIsReadingActivityPopupOpen(true)}
                     >View all</button>
                 </div>
-                <ReadingActivityCard readingActivity={book.readingActivity} currentPage={book.currentPage} totalPages={book.totalPages} />
+                <ReadingActivityCard 
+                    readingActivity={book.readingActivity} 
+                    currentPage={book.currentPage} 
+                    totalPages={book.totalPages} 
+                    id={id} setBooks={setBooks} 
+                    deleteLatestReadingActivityService={deleteLatestReadingActivityService}
+                    updateLatestReadingActivityService={updateLatestReadingActivityService}
+                />
             </div>
             <div className="mt-8 mx-6 pb-6">
                 <div className="flex justify-between">
