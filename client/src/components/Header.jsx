@@ -24,7 +24,7 @@ export default function Header({ isSearchBoxVisible, setSearchBoxVisibility, set
                 />
 
                 <div>
-                    <p className="text-body text-cream/60">Hello, Ellison 👋 </p>
+                    <p className="text-body text-cream/60">Hello, Selda 👋 </p>
                     <h1 className="h3 text-cream pt-1">Welcome back!</h1>    
                 </div>                
             </div>
