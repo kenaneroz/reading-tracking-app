@@ -1,15 +1,31 @@
-export default function NumberInput({ label, id, placeholder, errorMessage, value, onChange, min, max }) {
+import ErrorMessage from "../shared/ErrorMessage"
 
+export default function NumberInput({ 
+    label, 
+    id, 
+    placeholder, 
+    errorMessage, 
+    value, 
+    onChange, 
+    min, 
+    max 
+}) {
+    const inputBorder = errorMessage
+        ? "border-red"
+        : "border-tan focus-within:outline focus-within:outline-1 focus-within:outline-espresso"
 
     return (
         <div>
-            {label && (
-                <label htmlFor={id} className="text-espresso text-body-sm font-medium">
+            {label &&
+                <label 
+                    htmlFor={id} 
+                    className="text-espresso text-body-sm font-medium"
+                >
                     {label}
                 </label>
-            )}
+            }
 
-            <div className={`${!errorMessage || errorMessage === "" ? "border-tan focus-within:outline focus-within:outline-1 focus-within:outline-espresso" : "border-red-600"} w-full h-15 flex items-center gap-4 mt-2 bg-beige/60 border px-4 rounded-[17px]`}>
+            <div className={`${inputBorder} w-full h-15 flex items-center gap-4 mt-2 bg-beige/60 border px-4 rounded-[17px]`}>
                 <input 
                     type="number" 
                     id={id}
@@ -25,9 +41,7 @@ export default function NumberInput({ label, id, placeholder, errorMessage, valu
                 />
             </div>
 
-            {errorMessage !== "" &&
-                <p className="text-red-600 text-body-sm mt-1">{errorMessage}</p>
-            }
+            <ErrorMessage message={errorMessage} />
         </div>
-    );
+    )
 }

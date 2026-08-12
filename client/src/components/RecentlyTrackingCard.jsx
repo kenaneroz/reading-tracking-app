@@ -1,8 +1,35 @@
 import ProgressBar from "./ProgressBar"
 import PrimaryButton from "./PrimaryButton"
 import { useNavigate } from "react-router-dom"
+import PositionUpdatePopup from "./PositionUpdatePopup"
+import { useEffect, useState } from "react"
 
-export default function RecentlyTrackingCard({ id, title, author, cover, currentPage, totalPages, setIsPositionUpdatePopupActive }) {
+export default function RecentlyTrackingCard({ 
+    id, 
+    title, 
+    author, 
+    cover, 
+    currentPage, 
+    totalPages, 
+    setBooks,
+    updateBook
+}) {
+    const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
+
+    useEffect(() => {
+        if (isPositionUpdatePopupActive) {
+            const scrollY = window.scrollY
+            document.body.style.position = "fixed"
+            document.body.style.top = `-${scrollY}px`
+            document.body.style.width = "100%"
+        } else {
+            const scrollY = document.body.style.top
+            document.body.style.position = ""
+            document.body.style.top = ""
+            window.scrollTo(0, parseInt(scrollY || "0") * -1)
+        }
+    }, [isPositionUpdatePopupActive])
+
     const navigate = useNavigate()
     function handleSelectedBook() {
         navigate(`book/${id}`)
@@ -71,6 +98,17 @@ export default function RecentlyTrackingCard({ id, title, author, cover, current
                     />
                 </div>
             </div>
+
+            { isPositionUpdatePopupActive &&
+                <PositionUpdatePopup
+                    id={id}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
+                    setBooks={setBooks}
+                    updateBook={updateBook}
+                />
+            }
         </div>
     )
 }

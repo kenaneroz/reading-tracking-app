@@ -5,7 +5,6 @@ import BookCarousel from "../components/BookCarousel"
 import SortControl from "../components/SortControl"
 import TextInput from "../components/form/TextInput"
 import RecentlyTrackingCard from "../components/RecentlyTrackingCard"
-import PositionUpdatePopup from "../components/PositionUpdatePopup"
 import BottomNavigation from "../components/BottomNavigation"
 import AddBook from "../components/AddBook"
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -19,7 +18,6 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
     const [activeSortControl, setActiveSortControl] = useState("Recently added")
     const [searchValue, setSearchValue] = useState("")
     const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false)
-    const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
 
     const [recentlyTrackingBook, setRecentlyTrackingBook] = useState(() =>
         books && books.length > 0
@@ -34,19 +32,6 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
         )
     }, [books])
 
-    useEffect(() => {
-        if (isPositionUpdatePopupActive) {
-            const scrollY = window.scrollY
-            document.body.style.position = "fixed"
-            document.body.style.top = `-${scrollY}px`
-            document.body.style.width = "100%"
-        } else {
-            const scrollY = document.body.style.top
-            document.body.style.position = ""
-            document.body.style.top = ""
-            window.scrollTo(0, parseInt(scrollY || "0") * -1)
-        }
-    }, [isPositionUpdatePopupActive])
 
     if (loading) return <span></span>
 
@@ -147,24 +132,13 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
                             id={recentlyTrackingBook._id}
                             title={recentlyTrackingBook.title}
                             author={recentlyTrackingBook.author}
-                            genre={recentlyTrackingBook.genre}
                             cover={recentlyTrackingBook.cover}
                             currentPage={recentlyTrackingBook.currentPage}
                             totalPages={recentlyTrackingBook.totalPages}
-                            setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
-                        /> :
-                        <span></span>
-                    }
-
-                    { isPositionUpdatePopupActive &&
-                        <PositionUpdatePopup
-                            id={recentlyTrackingBook._id}
-                            currentPage={recentlyTrackingBook.currentPage}
-                            totalPages={recentlyTrackingBook.totalPages}
-                            setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
                             setBooks={setBooks}
                             updateBook={updateBook}
-                        />
+                        /> :
+                        <span></span>
                     }
                 </section>
             </div>
