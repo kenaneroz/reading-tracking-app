@@ -11,6 +11,8 @@ import AddBook from "../components/AddBook"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { GalleryHorizontalEndIcon, Search02Icon } from "@hugeicons/core-free-icons";
 
+import { getBookStatus } from "../utils/bookUtils.js"
+
 export default function HomeScreen({ books, setBooks, loading, addBook, updateBook }) {
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false)
@@ -50,7 +52,7 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
 
     const lowerCaseSearchValue = searchValue.toLowerCase()
     const filteredBooks = books
-        .filter(book => activeStatusFilter === "All" || book.status === activeStatusFilter)
+        .filter(book => activeStatusFilter === "All" || getBookStatus(book.currentPage, book.totalPages) === activeStatusFilter)
         .filter(book =>
             book.title.toLowerCase().includes(lowerCaseSearchValue) ||
             book.author.toLowerCase().includes(lowerCaseSearchValue)

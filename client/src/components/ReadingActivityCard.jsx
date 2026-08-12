@@ -4,6 +4,7 @@ import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import NumberInput from "./form/NumberInput";
 import PrimaryButton from "./PrimaryButton";
+import ConfirmDeletePopup from "./ConfirmDeletePopup";
 
 export default function ReadingActivityCard({ 
     readingActivity, 
@@ -16,6 +17,7 @@ export default function ReadingActivityCard({
 }) {
     const [isOpen, setIsOpen] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
+    const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] = useState(false)
 
     const uniqueDays = new Set(
         readingActivity.map(activity => 
@@ -112,11 +114,24 @@ export default function ReadingActivityCard({
                                                 type="button"
                                                 role="tab"
                                                 className="text-taupe cursor-pointer rounded-full text-body-sm text-left hover:text-espresso transition-all duration-300"
-                                                onClick={handleDelete}
+                                                onClick={() => {
+                                                    setIsOpen(false)
+                                                    setIsConfirmDeletePopupOpen(true)
+                                                }}
                                             >
                                                 Delete
                                             </button>
                                         </div>
+                                    }
+                                    {isConfirmDeletePopupOpen &&
+                                        <ConfirmDeletePopup 
+                                            cancel={() => setIsConfirmDeletePopupOpen(false)}
+                                            delete_={() => {
+                                                setIsConfirmDeletePopupOpen(false)
+                                                handleDelete()
+                                            }}
+                                            message="This action cannot be undone."
+                                        />
                                     }
                                     {isPositionUpdatePopupActive &&
                                         <div className="fixed bg-espresso/40 inset-0 z-50">

@@ -26,14 +26,7 @@ function App() {
           try {
               const books = await getBooks()
 
-              const books_ = books.map(book => {
-                  return book.currentPage === 0
-                      ? { ...book, status: "Wishlist" }
-                      : book.currentPage === book.totalPages
-                          ? { ...book, status: "Finished" }
-                          : { ...book, status: "Reading" }
-              })
-              setBooks(books_)
+              setBooks(books)
           } catch (error) {
               console.log(error.message)
           } finally {

@@ -13,6 +13,8 @@ import EditNote from "../components/EditNote"
 import ConfirmDeletePopup from "../components/ConfirmDeletePopup"
 import EditDetails from "../components/EditDetails"
 
+import { getBookStatus } from "../utils/bookUtils.js"
+
 export default function DetailsScreen({
     books,
     setBooks,
@@ -66,7 +68,12 @@ export default function DetailsScreen({
                 deleteBook={deleteBook} 
                 setIsEditPopupOpen={setIsEditPopupOpen}
             />
-            <DetailsHero title={book.title} author={book.author} cover={book.cover} status={book.status} />
+            <DetailsHero 
+                title={book.title} 
+                author={book.author} 
+                cover={book.cover} 
+                status={getBookStatus(book.currentPage, book.totalPages)} 
+            />
             <ProgressCard 
                 currentPage={book.currentPage} 
                 totalPages={book.totalPages} 

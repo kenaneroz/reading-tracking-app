@@ -15,6 +15,8 @@ import BottomNavigation from "../components/BottomNavigation"
 
 import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
 
+import { getBookStatus } from "../utils/bookUtils.js"
+
 export default function StatisticsScreen({ books, setBooks, addBook }) {
     const [activeDateFilter, setActiveDateFilter] = useState("All time")
     const [customDateRange, setCustomDateRange] = useState({ startDate: "", endDate: "" })
@@ -124,16 +126,18 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
     ]
 
     filteredBooks.forEach(book => {
+        const status = getBookStatus(book.currentPage, book.totalPages)
+
         // Status distribution
-        if (book.status === "Finished") statusDistributionData[0].count++
-        else if (book.status === "Reading") statusDistributionData[1].count++
-        else if (book.status === "Wishlist") statusDistributionData[2].count++
+        if (status === "Finished") statusDistributionData[0].count++
+        else if (status === "Reading") statusDistributionData[1].count++
+        else if (status === "Wishlist") statusDistributionData[2].count++
 
         // Genre distribution
         genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1
 
         // Completed by month
-        if (book.status === "Finished") {
+        if (status === "Finished") {
             const month = new Date(book.readingActivity.at(-1).date).getMonth()
             countsByMonth[month].count += 1
         }
