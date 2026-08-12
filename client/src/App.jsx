@@ -12,8 +12,6 @@ import {
   addNoteService,
   updateNoteService,
   deleteNoteService,
-  deleteLatestReadingActivityService,
-  updateLatestReadingActivityService
 } from "./services/bookService.js"
 import StatisticsScreen from './pages/StatisticsScreen'
 
@@ -66,8 +64,6 @@ function App() {
               addNoteService={addNoteService}
               updateNoteService={updateNoteService}
               deleteNoteService={deleteNoteService}
-              deleteLatestReadingActivityService={deleteLatestReadingActivityService}
-              updateLatestReadingActivityService={updateLatestReadingActivityService}
             />
           } 
         />

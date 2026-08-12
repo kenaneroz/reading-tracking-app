@@ -24,8 +24,6 @@ export default function DetailsScreen({
     addNoteService,
     updateNoteService,
     deleteNoteService,
-    deleteLatestReadingActivityService,
-    updateLatestReadingActivityService
 }) {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -98,8 +96,6 @@ export default function DetailsScreen({
                     currentPage={book.currentPage} 
                     totalPages={book.totalPages} 
                     id={id} setBooks={setBooks} 
-                    deleteLatestReadingActivityService={deleteLatestReadingActivityService}
-                    updateLatestReadingActivityService={updateLatestReadingActivityService}
                 />
             </div>
             <div className="mt-8 mx-6 pb-6">

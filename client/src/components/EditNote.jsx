@@ -8,8 +8,14 @@ import AddNote from "./AddNote";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import { useParams } from "react-router-dom";
 
-export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIsDeleteConfirmPopupOpen, updateNoteService, selectedNoteId, deleteNoteService }) {
+import {
+    updateNoteService,
+    deleteNoteService
+} from "../services/bookService.js"
+
+export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIsDeleteConfirmPopupOpen, selectedNoteId }) {
     const note = book.notes.find(note => note._id === selectedNoteId)
+    const [errors, setErrors] = useState({})
 
     const [formData, setFormData] = useState({
         content: note.content,
@@ -17,22 +23,27 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIs
     })
 
     async function handleUpdateNote() {
-        const n = await updateNoteService(book._id, selectedNoteId, formData)
-
-        setBooks(prev => prev.map(b => 
-            b._id === book._id
-            ? { 
-                ...b,  
-                notes: b.notes.map(note => 
-                    note._id === selectedNoteId
-                    ? { ...n }
-                    : note
-                )
-            }
-            : b
-        ))
-
-        setIsEditNotePopupOpen(false)
+        try {
+            const n = await updateNoteService(book._id, selectedNoteId, formData)
+    
+            setBooks(prev => prev.map(b => 
+                b._id === book._id
+                ? { 
+                    ...b,  
+                    notes: b.notes.map(note => 
+                        note._id === selectedNoteId
+                        ? { ...n }
+                        : note
+                    )
+                }
+                : b
+            ))
+    
+            setIsEditNotePopupOpen(false)
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
     }
 
     async function handleDeleteNote() {
@@ -67,7 +78,7 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIs
                     <Textarea 
                         label="Content" 
                         placeholder="Content" 
-                        errorMessage="" 
+                        errorMessage={errors.content}
                         value={formData.content} 
                         onChange={(e) => setFormData(prev => ({...prev, content: e. target.value}))}
                     />
@@ -79,7 +90,7 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, setIs
                         placeholder="Page number" 
                         min={0} 
                         max={book.totalPages} 
-                        errorMessage="" 
+                        errorMessage={errors.page}
                         value={formData.page} 
                         onChange={(e) => setFormData(prev => ({...prev, page: Number(e.target.value)}))} 
                     />

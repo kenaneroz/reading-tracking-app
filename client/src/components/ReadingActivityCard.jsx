@@ -6,18 +6,22 @@ import NumberInput from "./form/NumberInput";
 import PrimaryButton from "./PrimaryButton";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 
+import {
+  deleteLatestReadingActivityService,
+  updateLatestReadingActivityService
+} from "../services/bookService.js"
+
 export default function ReadingActivityCard({ 
     readingActivity, 
     currentPage, 
     totalPages, 
     id, 
     setBooks, 
-    deleteLatestReadingActivityService,
-    updateLatestReadingActivityService
 }) {
     const [isOpen, setIsOpen] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
     const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] = useState(false)
+    const [errors, setErrors] = useState({})
 
     const uniqueDays = new Set(
         readingActivity.map(activity => 
@@ -29,6 +33,8 @@ export default function ReadingActivityCard({
     let [newCurrentPage, setNewCurrentPage] = useState(currentPage)
 
     async function handleEdit() {
+        if (currentPage === newCurrentPage) return
+
         try {
             const updatedBook = await updateLatestReadingActivityService(id, {
                 currentPage: newCurrentPage,
@@ -43,7 +49,8 @@ export default function ReadingActivityCard({
             setIsOpen(false)
             setIsPositionUpdatePopupActive(false)
         } catch (error) {
-            console.error(error.message)
+            setErrors(error.errors || {})
+            console.error(error)
         }
     }
 
@@ -103,6 +110,7 @@ export default function ReadingActivityCard({
                                                 role="tab"
                                                 className="text-taupe cursor-pointer rounded-full text-body-sm text-left hover:text-espresso transition-all duration-300"
                                                 onClick={() => {
+                                                    setErrors({})
                                                     setIsOpen(false)
                                                     setNewCurrentPage(currentPage)
                                                     setIsPositionUpdatePopupActive(true)
@@ -160,15 +168,15 @@ export default function ReadingActivityCard({
                                                             placeholder="Enter your current position"
                                                             value={newCurrentPage}
                                                             onChange={(e) => setNewCurrentPage(Number(e.target.value))}
-                                                            errorMessage=""
+                                                            errorMessage={errors.currentPage}
                                                         />
                                                     </div>
 
                                                     <div className="mt-8">
                                                         <PrimaryButton 
                                                             className="mt-8"
-                                                            label="Update progress"
-                                                            onClick={() => newCurrentPage === 0 ? handleDelete() : handleEdit()}
+                                                            label="Update"
+                                                            onClick={handleEdit}
                                                         />
                                                     </div>
                                                 </div>

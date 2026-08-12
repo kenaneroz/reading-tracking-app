@@ -12,20 +12,29 @@ export async function createNoteService(id, data) {
 
     if (page !== undefined && page !== null) {
         if (page > book.totalPages) {
-            throw new AppError("Page cannot exceed total pages", 400)
+            throw new AppError(
+                "Validation failed",
+                400,
+                {
+                    page: "Page cannot exceed total pages"
+                }
+            )
         }
     }
 
     const newNote = {
         content: content.trim()
     }
-    if (page !== undefined) newNote.page = page
-    
+
+    if (page !== undefined) {
+        newNote.page = page
+    }
+
     book.notes.push(newNote)
 
     const updatedBook = await book.save()
 
-    return updatedBook.notes[updatedBook.notes.length - 1] 
+    return updatedBook.notes[updatedBook.notes.length - 1]
 }
 
 export async function updateNoteService(id, noteId, data) {
@@ -42,17 +51,29 @@ export async function updateNoteService(id, noteId, data) {
     }
 
     const { content, page } = data
-    
+
     if (page !== undefined && page !== null) {
         if (page > book.totalPages) {
-            throw new AppError("Page cannot exceed total pages", 400)
+            throw new AppError(
+                "Validation failed",
+                400,
+                {
+                    page: "Page cannot exceed total pages"
+                }
+            )
         }
     }
 
-    if (content !== undefined) note.content = content.trim()
-    if (page === null) note.page = null
-    else if (page !== undefined) note.page = page 
-    
+    if (content !== undefined) {
+        note.content = content.trim()
+    }
+
+    if (page === null) {
+        note.page = null
+    } else if (page !== undefined) {
+        note.page = page
+    }
+
     await book.save()
 
     return note

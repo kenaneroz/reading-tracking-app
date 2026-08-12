@@ -5,32 +5,38 @@ import NumberInput from "./form/NumberInput";
 import PrimaryButton from "./PrimaryButton";
 import { useEffect, useState } from "react";
 
+
 export default function PositionUpdatePopup({ id, currentPage, totalPages, setIsPositionUpdatePopupActive, setBooks, updateBook }) {
     const [newCurrentPage, setNewCurrentPage] = useState(currentPage)
+    const [errors, setErrors] = useState({})
 
     function hidePositionUpdatePopup() {
         setIsPositionUpdatePopupActive(false)
     }
 
     async function updatePosition() {
-        const updatedBook = await updateBook(id, { currentPage: newCurrentPage })
+        if (currentPage === newCurrentPage) return
 
-        setBooks(prev => (
-            prev.map(book =>
-                book._id === id 
-                ? {
-                    ...updatedBook,
-                    status: newCurrentPage === 0
-                    ? "Wishlist"
-                    : newCurrentPage === book.totalPages
-                        ? "Finished"
-                        : "Reading"
-                }
-                : book
+        try {
+            setErrors({})
+
+            const updatedBook = await updateBook(id, {
+                currentPage: newCurrentPage
+            })
+
+            setBooks(prev =>
+                prev.map(book =>
+                    book._id === id
+                        ? updatedBook
+                        : book
+                )
             )
-        ))
 
-        hidePositionUpdatePopup()
+            hidePositionUpdatePopup()
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
     }
 
 
@@ -60,7 +66,7 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
                             max={totalPages}
                             placeholder="Enter your current position"
                             value={newCurrentPage}
-                            errorMessage=""
+                            errorMessage={errors.currentPage}
                             onChange={(e) => setNewCurrentPage(Number(e.target.value))}
                         />
                     </div>

@@ -24,6 +24,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
         rating: book.rating,
         format: book.format
     })
+    const [errors, setErrors] = useState({})
 
     async function handleUpdate() {
         const changedFields = {}
@@ -34,24 +35,24 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
             }
         })
 
-        const updatedBook = await updateBook(book._id, changedFields)
+        if (Object.keys(changedFields).length === 0) return
 
-        setBooks(prevBooks =>
-            prevBooks.map(book =>
-                book._id === updatedBook._id
-                    ? {
-                        ...updatedBook,
-                        status: updatedBook.currentPage === 0
-                        ? "Wishlist"
-                        : updatedBook.currentPage === updatedBook.totalPages 
-                            ? "Finished" 
-                            : "Reading"
-                    }
-                    : book
+        try {
+            const updatedBook = await updateBook(book._id, changedFields)
+    
+            setBooks(prevBooks =>
+                prevBooks.map(book =>
+                    book._id === updatedBook._id
+                        ? updatedBook
+                        : book
+                )
             )
-        )
-
-        setIsEditPopupOpen(false)
+    
+            setIsEditPopupOpen(false)
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
     }
 
     return (
@@ -73,7 +74,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                         id="cover"
                         label="Cover Image"
                         placeholder="Tap to change the cover"
-                        errorMessage=""
+                        errorMessage={errors.cover}
                         onChange={(file) => setFormData(prev => ({...prev, cover: URL.createObjectURL(file)}))}
                     />
 
@@ -82,7 +83,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             id="title"
                             label="Title"
                             placeholder="Title"
-                            errorMessage=""
+                            errorMessage={errors.title}
                             value={formData.title}
                             onChange={(e) => setFormData(prev => ({...prev, title: e.target.value}))}
                         />
@@ -91,7 +92,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             id="author"
                             label="Author"
                             placeholder="Enter author's name"
-                            errorMessage=""
+                            errorMessage={errors.author}
                             value={formData.author}
                             onChange={(e) => setFormData(prev => ({...prev, author: e.target.value}))}
                         />
@@ -103,7 +104,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                                     label="Current page"
                                     placeholder="1"
                                     min={1}
-                                    errorMessage=""
+                                    errorMessage={errors.currentPage}
                                     value={formData.currentPage}
                                     onChange={(e) => setFormData(prev => ({...prev, currentPage: Number(e.target.value)}))}
                                 />
@@ -115,7 +116,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                                     label="Total pages"
                                     placeholder="1"
                                     min={1}
-                                    errorMessage=""
+                                    errorMessage={errors.totalPages}
                                     value={formData.totalPages}
                                     onChange={(e) => setFormData(prev => ({...prev, totalPages: Number(e.target.value)}))}
                                 />
@@ -127,7 +128,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             label="Genre"
                             value={formData.genre}
                             options={GENRE_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.genre}
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}
                         />
 
@@ -136,7 +137,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             label="Rating"
                             value={formData.rating}
                             options={RATING_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.rating}
                             onChange={(e) => setFormData(prev => ({...prev, rating: e.target.value}))}
                         />
 
@@ -146,7 +147,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen, update
                             label="Format"
                             value={formData.format}
                             options={FORMAT_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.format}
                             onChange={(e) => setFormData(prev => ({...prev, format: e.target.value}))}
                         />
                     </div>

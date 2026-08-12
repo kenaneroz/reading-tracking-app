@@ -6,7 +6,7 @@ export async function updateLatestReadingActivityService(id, data) {
 
     if (!book) {
         throw new AppError(
-            "Book not found", 
+            "Book not found",
             404
         )
     }
@@ -15,24 +15,42 @@ export async function updateLatestReadingActivityService(id, data) {
 
     if (!latestActivity) {
         throw new AppError(
-            "No reading activity found", 
+            "No reading activity found",
             404
         )
     }
 
     const { currentPage } = data
 
+    if (
+        book.readingActivity.length === 1 &&
+        currentPage === latestActivity.previousPage
+    ) {
+        book.readingActivity = []
+        book.currentPage = currentPage
+
+        const updatedBook = await book.save()
+
+        return updatedBook
+    }
+
     if (currentPage < latestActivity.previousPage) {
         throw new AppError(
-            "Current page cannot be less than the previous page of the latest reading activity",
-            400
+            "Validation failed",
+            400,
+            {
+                currentPage: "Current page cannot be less than the previous page"
+            }
         )
     }
 
     if (currentPage > book.totalPages) {
         throw new AppError(
-            "Current page cannot exceed total pages",
-            400
+            "Validation failed",
+            400,
+            {
+                currentPage: "Current page cannot exceed total pages"
+            }
         )
     }
 

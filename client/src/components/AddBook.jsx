@@ -13,12 +13,14 @@ import { RATING_OPTIONS } from "../../../shared/constants/ratingOptions.js"
 import { FORMAT_OPTIONS } from "../../../shared/constants/formatOptions.js"
 
 export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addBook }) {
+    const [errors, setErrors] = useState({})
+
     const [formData, setFormData] = useState({
         cover: "",
         title: "",
         author: "",
-        totalPages: "",
-        currentPage: "",
+        totalPages: null,
+        currentPage: null,
         genre: "",
         rating: "",
         format: ""
@@ -29,19 +31,24 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
     }
 
     async function handleAddBook() {
-        const newBook = await addBook(
-            {
-                title: formData.title,
-                author: formData.author,
-                cover: formData.cover,
-                genre: formData.genre,
-                currentPage: formData.currentPage,
-                totalPages: formData.totalPages,
-                format: formData.format
-            }
-        )
-        setBooks(prev => [...prev, newBook])
-        hideAddBookPopup()
+        try {
+            const newBook = await addBook(
+                {
+                    title: formData.title,
+                    author: formData.author,
+                    cover: formData.cover,
+                    genre: formData.genre,
+                    currentPage: formData.currentPage,
+                    totalPages: formData.totalPages,
+                    format: formData.format
+                }
+            )
+            setBooks(prev => [...prev, newBook])
+            hideAddBookPopup()
+        } catch (error) {
+           setErrors(error.errors || {})
+           console.log(error)
+        }
     }
     
     return (
@@ -66,7 +73,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                         id="cover"
                         label="Cover Image"
                         placeholder="Tap to upload"
-                        errorMessage=""
+                        errorMessage={errors.cover}
                         onChange={(file) => setFormData(prev => ({...prev, cover: URL.createObjectURL(file)}))}
                     />
 
@@ -75,7 +82,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             id="title"
                             label="Title"
                             placeholder="e.g. The Quiet Mind"
-                            errorMessage=""
+                            errorMessage={errors.title}
                             value={formData.title}
                             onChange={(e) => setFormData(prev => ({...prev, title: e.target.value}))}
                         />
@@ -84,7 +91,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             id="author"
                             label="Author"
                             placeholder="Enter author's name"
-                            errorMessage=""
+                            errorMessage={errors.author}
                             value={formData.author}
                             onChange={(e) => setFormData(prev => ({...prev, author: e.target.value}))}
                         />
@@ -97,7 +104,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                                     placeholder="0"
                                     min={0}
                                     max={Number(formData.totalPages)}
-                                    errorMessage=""
+                                    errorMessage={errors.currentPage}
                                     value={formData.currentPage}
                                     onChange={(e) => setFormData(prev => ({...prev, currentPage: Number(e.target.value)}))}
                                 />
@@ -109,7 +116,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                                     placeholder="1"
                                     min={1}
                                     max={Number(formData.totalPages)}
-                                    errorMessage=""
+                                    errorMessage={errors.totalPages}
                                     value={formData.totalPages}
                                     onChange={(e) => setFormData(prev => ({...prev, totalPages: Number(e.target.value)}))}
                                 />
@@ -121,7 +128,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             label="Genre"
                             value={formData.genre}
                             options={GENRE_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.genre}
                             onChange={(e) => setFormData(prev => ({...prev, genre: e.target.value}))}
                         />
 
@@ -130,7 +137,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             label="Rating"
                             value={formData.rating}
                             options={RATING_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.rating}
                             onChange={(e) => setFormData(prev => ({...prev, rating: Number(e.target.value)}))}
                         />
 
@@ -139,7 +146,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks, addB
                             label="Format"
                             value={formData.format}
                             options={FORMAT_OPTIONS}
-                            errorMessage=""
+                            errorMessage={errors.format}
                             onChange={(e) => setFormData(prev => ({...prev, format: e.target.value}))}
                         />
                     </div>

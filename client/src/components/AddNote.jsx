@@ -6,30 +6,37 @@ import NumberInput from "./form/NumberInput";
 import PrimaryButton from "./PrimaryButton";
 import { useState } from "react";
 
-export default function AddNote({ id, notes, totalPages, setBooks, setIsAddNotePopupOpen, addNoteService }) {
+import { addNoteService } from "../services/bookService";
+
+export default function AddNote({ id, notes, totalPages, setBooks, setIsAddNotePopupOpen }) {
     const [formData, setFormData] = useState({
         content: "",
         page: null
     })
-
+    const [errors, setErrors] = useState({})
+console.log(errors)
     function hidePopup() {
         setIsAddNotePopupOpen(false)
     }
 
     async function handleAddNote() {
-        const newNote = await addNoteService(id, formData)
-
-        setBooks(prev => prev.map(book =>
-            book._id === id 
-            ? { 
-                ...book, 
-                notes: [...book.notes, newNote]
-            }
-            : book
-        ))
-        console.log(newNote)
-
-        hidePopup()
+        try {
+            const newNote = await addNoteService(id, formData)
+    
+            setBooks(prev => prev.map(book =>
+                book._id === id 
+                ? { 
+                    ...book, 
+                    notes: [...book.notes, newNote]
+                }
+                : book
+            ))
+    
+            hidePopup()
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
     }
 
     return (
@@ -42,7 +49,7 @@ export default function AddNote({ id, notes, totalPages, setBooks, setIsAddNoteP
                         id={notes.length} 
                         label="Content" 
                         placeholder="Content" 
-                        errorMessage="" 
+                        errorMessage={errors.content}
                         value={formData.content} 
                         onChange={(e) => setFormData(prev => ({...prev, content: e.target.value}))} 
                     />
@@ -53,7 +60,7 @@ export default function AddNote({ id, notes, totalPages, setBooks, setIsAddNoteP
                         label="Page number" 
                         placeholder="Page number" 
                         min={0} max={totalPages} 
-                        errorMessage="" 
+                        errorMessage={errors.page}
                         value={formData.page} 
                         onChange={(e) => setFormData(prev => ({...prev, page: Number(e.target.value)}))} 
                     />

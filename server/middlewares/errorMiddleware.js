@@ -9,11 +9,14 @@ export default function errorMiddleware(error, req, res, next) {
         message = "Invalid data entry"
     } else {
         statusCode = error.statusCode || 500
-        message = statusCode === 500 ? "Internal server error" : error.message
+        message = statusCode === 500 
+            ? "Internal server error"
+            : error.message
     }
 
     res.status(statusCode).json({
         success: false,
-        message
+        message,
+        errors: error.errors || null
     })
 }

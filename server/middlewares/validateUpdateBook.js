@@ -22,78 +22,105 @@ export default function validateUpdateBook(req, res, next) {
         throw new AppError("No fields to update", 400)
     }
 
-    const hasValidFields = requestFields.every(field => allowedFields.includes(field))
+    const hasValidFields = requestFields.every(field =>
+        allowedFields.includes(field)
+    )
+
     if (!hasValidFields) {
         throw new AppError("Invalid field/s included in update", 400)
     }
 
-    const { 
-        title, 
-        author, 
-        genre, 
-        cover, 
-        currentPage, 
+    const errors = {}
+
+    const {
+        title,
+        author,
+        genre,
+        cover,
+        currentPage,
         totalPages,
         rating,
         format
     } = req.body
 
-
     if (title !== undefined) {
-        if (title === null || title.trim() === "") {
-            throw new AppError("Title cannot be empty", 400)
+        if (title === null) {
+            errors.title = "Title is required"
+        } else if (typeof title !== "string") {
+            errors.title = "Title must be a text value"
+        } else if (title.trim() === "") {
+            errors.title = "Title is required"
         }
     }
 
     if (author !== undefined) {
-        if (author === null || author.trim() === "") {
-            throw new AppError("Author cannot be empty", 400)
+        if (author === null) {
+            errors.author = "Author is required"
+        } else if (typeof author !== "string") {
+            errors.author = "Author must be a text value"
+        } else if (author.trim() === "") {
+            errors.author = "Author is required"
         }
     }
 
     if (genre !== undefined) {
-        if (!GENRE_OPTIONS.includes(genre)) {
-            throw new AppError("Invalid genre", 400)
+        if (genre === null || genre === "") {
+            errors.genre = "Genre is required"
+        } else if (typeof genre !== "string") {
+            errors.genre = "Genre must be a text value"
+        } else if (!GENRE_OPTIONS.includes(genre)) {
+            errors.genre = "Invalid genre"
         }
     }
 
     if (cover !== undefined) {
-        if (cover === null || cover.trim() === "") {
-            throw new AppError("Cover cannot be empty", 400)
+        if (cover === null) {
+            errors.cover = "Cover is required"
+        } else if (typeof cover !== "string") {
+            errors.cover = "Cover must be a text value"
+        } else if (cover.trim() === "") {
+            errors.cover = "Cover is required"
         }
     }
 
     if (currentPage !== undefined) {
         if (!Number.isFinite(currentPage)) {
-            throw new AppError("Current page must be a valid number", 400)
+            errors.currentPage = "Current page must be a valid number"
+        } else if (currentPage < 0) {
+            errors.currentPage = "Current page cannot be negative"
         }
-
-        if (currentPage < 0) {
-            throw new AppError("Current page cannot be negative", 400)
-        }
-        
     }
 
     if (totalPages !== undefined) {
         if (!Number.isFinite(totalPages)) {
-            throw new AppError("Total pages must be a valid number", 400)
-        }
-
-        if (totalPages < 1) {
-            throw new AppError("Total pages must be at least 1", 400)
+            errors.totalPages = "Total pages must be a valid number"
+        } else if (totalPages < 1) {
+            errors.totalPages = "Total pages must be at least 1"
         }
     }
 
     if (rating !== undefined) {
         if (!RATING_OPTIONS.includes(rating)) {
-            throw new AppError("Choose a valid rating option", 400)
+            errors.rating = "Invalid rating"
         }
     }
 
     if (format !== undefined) {
-        if (!FORMAT_OPTIONS.includes(format)) {
-            throw new AppError("Invalid format", 400)
+        if (format === null || format === "") {
+            errors.format = "Format is required"
+        } else if (typeof format !== "string") {
+            errors.format = "Format must be a text value"
+        } else if (!FORMAT_OPTIONS.includes(format)) {
+            errors.format = "Invalid format"
         }
+    }
+    
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors
+        })
     }
 
     next()
