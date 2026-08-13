@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 
 import StatsHeader from "../components/stats/StatsHeader"
 import DateFilterPill from "../components/stats/DateFilterPill"
-import CardShell from "../components/stats/CardShell"
+import CardShell from "../components/shared/CardShell"
 import SummaryCard from "../components/stats/SummaryCard"
 import StatusDistributionCard from "../components/stats/StatusDistributionCard"
 import GenreDistributionCard from "../components/stats/GenreDistributionCard"
@@ -11,13 +11,13 @@ import LongestBookCard from "../components/stats/LongestBookCard"
 import LongestStreak from "../components/stats/LongestStreak"
 import RatingCard from "../components/stats/RatingCard"
 import FormatDistributionCard from "../components/stats/FormatDistributionCard"
-import BottomNavigation from "../components/BottomNavigation"
+import BottomNavigation from "../components/shared/BottomNavigation"
 
 import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
-export default function StatisticsScreen({ books, setBooks, addBook }) {
+export default function StatisticsScreen({ books, setBooks }) {
     const [activeDateFilter, setActiveDateFilter] = useState("All time")
     const [customDateRange, setCustomDateRange] = useState({ startDate: "", endDate: "" })
 
@@ -292,7 +292,6 @@ export default function StatisticsScreen({ books, setBooks, addBook }) {
             <BottomNavigation
                 books={books}
                 setBooks={setBooks}
-                addBook={addBook}
             />
         </div>
     )

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react"
-import Header from "../components/Header"
-import StatusFilter from "../components/StatusFilter"
-import BookCarousel from "../components/BookCarousel"
-import SortControl from "../components/SortControl"
-import TextInput from "../components/form/TextInput"
-import RecentlyTrackingCard from "../components/RecentlyTrackingCard"
-import BottomNavigation from "../components/BottomNavigation"
-import AddBook from "../components/AddBook"
+import Header from "../components/homeScreen/Header"
+import StatusFilter from "../components/homeScreen/StatusFilter"
+import BookCarousel from "../components/homeScreen/BookCarousel"
+import SortControl from "../components/homeScreen/SortControl"
+import TextInput from "../components/shared/form/TextInput"
+import RecentlyTrackingCard from "../components/homeScreen/RecentlyTrackingCard"
+import BottomNavigation from "../components/shared/BottomNavigation"
+import AddBook from "../components/shared/AddBook"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { GalleryHorizontalEndIcon, Search02Icon } from "@hugeicons/core-free-icons";
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
-export default function HomeScreen({ books, setBooks, loading, addBook, updateBook }) {
+export default function HomeScreen({ books, setBooks, loading }) {
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false)
     const [activeSortControl, setActiveSortControl] = useState("Recently added")
@@ -136,7 +136,6 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
                             currentPage={recentlyTrackingBook.currentPage}
                             totalPages={recentlyTrackingBook.totalPages}
                             setBooks={setBooks}
-                            updateBook={updateBook}
                         /> :
                         <span></span>
                     }
@@ -146,7 +145,6 @@ export default function HomeScreen({ books, setBooks, loading, addBook, updateBo
             <BottomNavigation
                 books={books}
                 setBooks={setBooks}
-                addBook={addBook}
             />
         </div>
     )

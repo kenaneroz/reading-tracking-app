@@ -1,9 +1,9 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { MoreVerticalIcon, Cancel01Icon, Edit01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
-import Textarea from "./form/Textarea";
-import NumberInput from "./form/NumberInput";
-import PrimaryButton from "./PrimaryButton";
+import Textarea from "../shared/form/Textarea";
+import NumberInput from "../shared/form/NumberInput";
+import PrimaryButton from "../shared/PrimaryButton";
 import AddNote from "./AddNote";
 
 export default function PersonalNotesCard({ id, content, page, date, setIsEditNotePopupOpen, setSelectedNoteId }) {

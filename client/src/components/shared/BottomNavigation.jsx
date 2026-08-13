@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import AddBook from "./AddBook"
 import { useState } from "react"
 
-export default function BottomNavigation({ books, setBooks, addBook }) {
+export default function BottomNavigation({ books, setBooks }) {
     const [isAddBookPopupActive, setIsAddBookPopupActive] = useState(false)
 
     const navigate = useNavigate()
@@ -69,7 +69,6 @@ export default function BottomNavigation({ books, setBooks, addBook }) {
                     setIsAddBookPopupActive={setIsAddBookPopupActive}
                     books={books}
                     setBooks={setBooks}
-                    addBook={addBook}
                 />
             }
         </nav>

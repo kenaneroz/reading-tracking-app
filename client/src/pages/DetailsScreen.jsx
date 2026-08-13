@@ -1,17 +1,17 @@
-import DetailsHeader from "../components/DetailsHeader"
-import DetailsHero from "../components/DetailsHero"
-import ProgressCard from "../components/ProgressCard"
-import BookInfoCard from "../components/BookInfoCard"
-import ReadingActivityCard from "../components/ReadingActivityCard"
-import PersonalNotesCard from "../components/PersonalNotesCard"
+import DetailsHeader from "../components/detailsScreen/DetailsHeader"
+import DetailsHero from "../components/detailsScreen/DetailsHero"
+import ProgressCard from "../components/detailsScreen/ProgressCard"
+import BookInfoCard from "../components/detailsScreen/BookInfoCard"
+import ReadingActivityCard from "../components/detailsScreen/ReadingActivityCard"
+import PersonalNotesCard from "../components/detailsScreen/PersonalNotesCard"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import ReadingActivityPopup from "../components/ReadingActivityPopup"
-import AllNotes from "../components/AllNotes"
-import AddNote from "../components/AddNote"
-import EditNote from "../components/EditNote"
-import ConfirmDeletePopup from "../components/ConfirmDeletePopup"
-import EditDetails from "../components/EditDetails"
+import ReadingActivityPopup from "../components/detailsScreen/ReadingActivityPopup"
+import AllNotes from "../components/detailsScreen/AllNotes"
+import AddNote from "../components/detailsScreen/AddNote"
+import EditNote from "../components/detailsScreen/EditNote"
+import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
+import EditDetails from "../components/detailsScreen/EditDetails"
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
@@ -19,11 +19,6 @@ export default function DetailsScreen({
     books,
     setBooks,
     loading,
-    updateBook,
-    deleteBook,
-    addNoteService,
-    updateNoteService,
-    deleteNoteService,
 }) {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -62,8 +57,6 @@ export default function DetailsScreen({
             <DetailsHeader 
                 book={book} 
                 setBooks={setBooks} 
-                updateBook={updateBook} 
-                deleteBook={deleteBook} 
                 setIsEditPopupOpen={setIsEditPopupOpen}
             />
             <DetailsHero 
@@ -143,7 +136,6 @@ export default function DetailsScreen({
                         totalPages={book.totalPages} 
                         setBooks={setBooks} 
                         setIsAddNotePopupOpen={setIsAddNotePopupOpen} 
-                        addNoteService={addNoteService}
                     />
                 }
             </div>
@@ -153,7 +145,6 @@ export default function DetailsScreen({
                     book={book} 
                     setBooks={setBooks} 
                     setIsEditPopupOpen={setIsEditPopupOpen} 
-                    updateBook={updateBook} 
                 />
             }
 
@@ -167,9 +158,7 @@ export default function DetailsScreen({
                     setBooks={setBooks} 
                     setIsEditNotePopupOpen={setIsEditNotePopupOpen} 
                     setIsDeleteConfirmPopupOpen={setIsDeleteConfirmPopupOpen} 
-                    updateNoteService={updateNoteService}
                     selectedNoteId={selectedNoteId}
-                    deleteNoteService={deleteNoteService}
                 />
             }
         </div>

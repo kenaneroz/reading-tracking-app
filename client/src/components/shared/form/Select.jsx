@@ -1,4 +1,4 @@
-import ErrorMessage from "../shared/ErrorMessage"
+import ErrorMessage from "../ErrorMessage"
 
 export default function Select({
     label,

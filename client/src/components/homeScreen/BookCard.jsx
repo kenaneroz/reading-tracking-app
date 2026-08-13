@@ -1,4 +1,4 @@
-import ProgressBar from "./ProgressBar"
+import ProgressBar from "../shared/ProgressBar"
 import { useNavigate } from "react-router-dom"
 
 export default function BookCard({ id, title, cover, currentPage, totalPages, isFirst }) {

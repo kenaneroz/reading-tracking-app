@@ -3,16 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeScreen from "./pages/HomeScreen";
 import DetailsScreen from "./pages/DetailsScreen";
 import { useEffect, useState } from "react";
-import {
-  getBook,
-  getBooks,
-  addBook,
-  updateBook,
-  deleteBook,
-  addNoteService,
-  updateNoteService,
-  deleteNoteService,
-} from "./services/bookService.js"
+import { getBooks } from "./services/bookService.js"
 import StatisticsScreen from './pages/StatisticsScreen'
 
 function App() {
@@ -46,8 +37,6 @@ function App() {
               books={books} 
               setBooks={setBooks} 
               loading={loading} 
-              addBook={addBook}
-              updateBook={updateBook}
             />
           } 
         />
@@ -59,11 +48,6 @@ function App() {
               books={books} 
               setBooks={setBooks}
               loading={loading}
-              updateBook={updateBook}
-              deleteBook={deleteBook} 
-              addNoteService={addNoteService}
-              updateNoteService={updateNoteService}
-              deleteNoteService={deleteNoteService}
             />
           } 
         />
@@ -73,7 +57,6 @@ function App() {
           element={
             <StatisticsScreen 
               books={books}
-              addBook={addBook}
               setBooks={setBooks}
             />
           }

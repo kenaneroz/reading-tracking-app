@@ -1,5 +1,5 @@
 import { useState } from "react"
-import HorizontalDivider from "./HorizontalDivider"
+import HorizontalDivider from "../shared/HorizontalDivider"
 import { BarChart, Bar, XAxis, YAxis, Cell, LabelList, ResponsiveContainer } from "recharts"
 import EmptyState from "./EmptyState"
 

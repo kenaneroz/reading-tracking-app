@@ -1,11 +1,11 @@
-import { HugeiconsIcon } from "@hugeicons/react"
-import { StarIcon, ArrowRight01Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
-
-import HorizontalDivider from "./HorizontalDivider"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import Modal from "./Modal"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { StarIcon, ArrowRight01Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
+
+import Modal from "../shared/Modal"
+import HorizontalDivider from "../shared/HorizontalDivider"
 
 export default function RatingCard({ totalFilteredBooks, ratingDistribution, totalRatedBooks, rating }) {
     const navigate = useNavigate()

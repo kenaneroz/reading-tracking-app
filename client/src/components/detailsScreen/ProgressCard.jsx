@@ -1,5 +1,5 @@
-import ProgressBar from "./ProgressBar"
-import PrimaryButton from "./PrimaryButton"
+import ProgressBar from "../shared/ProgressBar"
+import PrimaryButton from "../shared/PrimaryButton"
 
 export default function ProgressCard({ currentPage, totalPages, setIsEditPopupOpen }) {
     return (

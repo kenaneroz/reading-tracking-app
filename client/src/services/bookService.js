@@ -1,35 +1,27 @@
 const API_URL = import.meta.env.VITE_API_URL
 
 export async function getBook(id) {
-    try {
-        const response = await fetch(`${API_URL}/books/${id}`)
+    const response = await fetch(`${API_URL}/books/${id}`)
 
-        const result = await response.json()
+    const result = await response.json()
 
-        if (!response.ok) {
-            throw new Error(result.message || "Something went wrong")
-        }
+    if (!response.ok) {
+        throw result
+    }
 
-        return result.data
-    } catch (error) {
-        throw error
-    }  
+    return result.data
 }
 
 export async function getBooks() {
-    try {
-        const response = await fetch(`${API_URL}/books/`)
+    const response = await fetch(`${API_URL}/books/`)
 
-        const result = await response.json()
+    const result = await response.json()
 
-        if (!response.ok) {
-            throw new Error(result.message || "Something went wrong")
-        }
-
-        return result.data
-    } catch (error) {
-        throw error
+    if (!response.ok) {
+        throw result
     }
+
+    return result.data
 }
 
 export async function addBook(data) {
@@ -75,22 +67,20 @@ export async function updateBook(id, data) {
 }
 
 export async function deleteBook(id) {
-    try {
-        const response = await fetch(
-            `${API_URL}/books/${id}`,
-            { method: "DELETE" }
-        )
-
-        const result = await response.json()
-
-        if (!response.ok) {
-            throw new Error(result.message || "Something went wrong")
+    const response = await fetch(
+        `${API_URL}/books/${id}`,
+        {
+            method: "DELETE"
         }
+    )
 
-        return result.data
-    } catch (error) {
-        throw error
-    }  
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw result
+    }
+
+    return result.data
 }
 
 export async function addNoteService(id, data) {
@@ -112,7 +102,6 @@ export async function addNoteService(id, data) {
     }
 
     return result.data
-   
 }
 
 export async function updateNoteService(id, noteId, data) {
@@ -137,22 +126,20 @@ export async function updateNoteService(id, noteId, data) {
 }
 
 export async function deleteNoteService(id, noteId) {
-    try {
-        const response = await fetch(
-            `${API_URL}/books/${id}/notes/${noteId}`,
-            {
-                method: "DELETE"
-            }
-        )
+    const response = await fetch(
+        `${API_URL}/books/${id}/notes/${noteId}`,
+        {
+            method: "DELETE"
+        }
+    )
 
-        const result = await response.json()
+    const result = await response.json()
 
-        if (!response.ok) throw new Error(result.message || "Something went wrong")
-
-        return result.data
-    } catch (error) {
-        throw error
+    if (!response.ok) {
+        throw result
     }
+
+    return result.data
 }
 
 export async function updateLatestReadingActivityService(id, data) {
@@ -177,20 +164,18 @@ export async function updateLatestReadingActivityService(id, data) {
 }
 
 export async function deleteLatestReadingActivityService(id) {
-    try {
-        const response = await fetch(
-            `${API_URL}/books/${id}/reading-activity/latest`,
-            {
-                method: "DELETE"
-            }
-        )
+    const response = await fetch(
+        `${API_URL}/books/${id}/reading-activity/latest`,
+        {
+            method: "DELETE"
+        }
+    )
 
-        const result = await response.json()
+    const result = await response.json()
 
-        if (!response.ok) throw new Error(result.message || "Something went wrong")
-
-        return result.data
-    } catch (error) {
-        throw error
+    if (!response.ok) {
+        throw result
     }
+
+    return result.data
 }

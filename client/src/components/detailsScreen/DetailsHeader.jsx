@@ -2,9 +2,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon, MoreVerticalIcon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import ConfirmDeletePopup from "./ConfirmDeletePopup";
+import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
 
-export default function DetailsHeader({ book, setBooks, updateBook, deleteBook, setIsEditPopupOpen }) {
+import { deleteBook } from "../../services/bookService.js"
+
+export default function DetailsHeader({ book, setBooks, setIsEditPopupOpen }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
 

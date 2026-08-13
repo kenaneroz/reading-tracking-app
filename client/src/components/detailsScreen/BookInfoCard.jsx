@@ -1,4 +1,4 @@
-import HorizontalDivider from "../components/shared/HorizontalDivider.jsx"
+import HorizontalDivider from "../shared/HorizontalDivider.jsx"
 
 export default function BookInfoCard({ genre, totalPages, rating, format, createdAt }) {
     const date = new Date(createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })

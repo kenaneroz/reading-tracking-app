@@ -1,6 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 
-import HorizontalDivider from "./HorizontalDivider"
+import HorizontalDivider from "../shared/HorizontalDivider"
 import EmptyState from "./EmptyState"
 
 export default function StatusDistributionCard({ totalFilteredBooks, data }) {

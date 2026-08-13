@@ -2,7 +2,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { ImageAdd02Icon } from "@hugeicons/core-free-icons"
 import { useState } from "react"
 
-import ErrorMessage from "../shared/ErrorMessage"
+import ErrorMessage from "../ErrorMessage"
 
 export default function FileInput({
     label,

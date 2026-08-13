@@ -1,7 +1,7 @@
-import ProgressBar from "./ProgressBar"
-import PrimaryButton from "./PrimaryButton"
+import ProgressBar from "../shared/ProgressBar"
+import PrimaryButton from "../shared/PrimaryButton"
 import { useNavigate } from "react-router-dom"
-import PositionUpdatePopup from "./PositionUpdatePopup"
+import PositionUpdatePopup from "../shared/PositionUpdatePopup"
 import { useEffect, useState } from "react"
 
 export default function RecentlyTrackingCard({ 
@@ -11,8 +11,7 @@ export default function RecentlyTrackingCard({
     cover, 
     currentPage, 
     totalPages, 
-    setBooks,
-    updateBook
+    setBooks
 }) {
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
 
@@ -106,7 +105,6 @@ export default function RecentlyTrackingCard({
                     totalPages={totalPages}
                     setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
                     setBooks={setBooks}
-                    updateBook={updateBook}
                 />
             }
         </div>

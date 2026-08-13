@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
-import HorizontalDivider from "./HorizontalDivider"
+import HorizontalDivider from "../shared/HorizontalDivider"
 
 import { HugeiconsIcon } from '@hugeicons/react'
 import EmptyState from "./EmptyState"

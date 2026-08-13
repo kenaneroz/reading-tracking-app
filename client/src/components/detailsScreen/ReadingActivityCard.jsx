@@ -1,22 +1,26 @@
-import ProgressBar from "./ProgressBar"
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons";
-import { useEffect, useState } from "react";
-import NumberInput from "./form/NumberInput";
-import PrimaryButton from "./PrimaryButton";
-import ConfirmDeletePopup from "./ConfirmDeletePopup";
+import { useEffect, useState } from "react"
+
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons"
+
+import Modal from "../shared/Modal.jsx"
+import ProgressBar from "../shared/ProgressBar.jsx"
+import NumberInput from "../shared/form/NumberInput.jsx"
+import PrimaryButton from "../shared/PrimaryButton.jsx"
+import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
+import PositionUpdatePopup from "../shared/PositionUpdatePopup.jsx"
 
 import {
   deleteLatestReadingActivityService,
   updateLatestReadingActivityService
-} from "../services/bookService.js"
+} from "../../services/bookService.js"
 
 export default function ReadingActivityCard({ 
     readingActivity, 
     currentPage, 
     totalPages, 
     id, 
-    setBooks, 
+    setBooks
 }) {
     const [isOpen, setIsOpen] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
@@ -31,28 +35,6 @@ export default function ReadingActivityCard({
     const countReadingDays = uniqueDays.size
 
     let [newCurrentPage, setNewCurrentPage] = useState(currentPage)
-
-    async function handleEdit() {
-        if (currentPage === newCurrentPage) return
-
-        try {
-            const updatedBook = await updateLatestReadingActivityService(id, {
-                currentPage: newCurrentPage,
-            })
-
-            setBooks(prev =>
-                prev.map(book =>
-                    book._id === id ? updatedBook : book
-                )
-            )
-
-            setIsOpen(false)
-            setIsPositionUpdatePopupActive(false)
-        } catch (error) {
-            setErrors(error.errors || {})
-            console.error(error)
-        }
-    }
 
     async function handleDelete() {
         try {
@@ -142,46 +124,15 @@ export default function ReadingActivityCard({
                                         />
                                     }
                                     {isPositionUpdatePopupActive &&
-                                        <div className="fixed bg-espresso/40 inset-0 z-50">
-                                            <div className="p-6 bg-beige border border-tan rounded-[20px] fixed left-6 right-6 top-1/2 -translate-y-1/2 md:max-w-[392px]">
-                                                <button 
-                                                    className="cursor-pointer"
-                                                >
-                                                    <HugeiconsIcon
-                                                        icon={Cancel01Icon}
-                                                        size={20}
-                                                        strokeWidth={1.15}
-                                                        onClick={() => setIsPositionUpdatePopupActive(false)}
-                                                    />
-                                                </button>
-
-                                                <div className="mt-10">
-                                                    <div>
-                                                        <p className="h5 text-espresso">New current position</p>
-                                                        <p className="mt-2 text-body-sm text-coffee">Currently on page {currentPage} of {totalPages}</p>
-                                                    </div>
-
-                                                    <div className="mt-6">
-                                                        <NumberInput
-                                                            min={0} 
-                                                            max={totalPages}
-                                                            placeholder="Enter your current position"
-                                                            value={newCurrentPage}
-                                                            onChange={(e) => setNewCurrentPage(Number(e.target.value))}
-                                                            errorMessage={errors.currentPage}
-                                                        />
-                                                    </div>
-
-                                                    <div className="mt-8">
-                                                        <PrimaryButton 
-                                                            className="mt-8"
-                                                            label="Update"
-                                                            onClick={handleEdit}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <Modal>
+                                            <PositionUpdatePopup 
+                                                id={id}
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
+                                                setBooks={setBooks}
+                                            />
+                                        </Modal>
                                     }
                                 </div>
                                 : <div className={`flex items-center gap-4 ${(index + 1) === readingActivity.slice(0, 3).length ? "" : "border-b border-tan pb-4"}`} >
