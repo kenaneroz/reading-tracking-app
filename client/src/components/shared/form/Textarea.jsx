@@ -23,7 +23,7 @@ export default function Textarea({
                 </label>
             }
 
-            <div className={`${inputBorder} w-full flex items-center gap-4 mt-2 bg-beige/60 border px-4 py-2 rounded-[17px]`}>
+            <div className={`${inputBorder} w-full flex items-center gap-4 mt-2 bg-beige/60 border px-4 py-2 rounded-[12px]`}>
                 <textarea
                     id={id}
                     name={id}

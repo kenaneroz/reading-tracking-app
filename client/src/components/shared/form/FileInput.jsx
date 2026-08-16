@@ -36,7 +36,7 @@ export default function FileInput({
 
             <label
                 htmlFor={id}
-                className={`${inputBorder} border border-dashed rounded-[17px] px-4 h-[140px] flex flex-col justify-center items-center mt-2 cursor-pointe`}
+                className={`${inputBorder} border border-dashed rounded-[12px] px-4 h-30 flex flex-col justify-center items-center mt-2 cursor-pointer`}
             >
                 <input
                     type="file"

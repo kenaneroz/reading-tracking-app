@@ -9,7 +9,7 @@ import TextInput from "../shared/form/TextInput"
 import NumberInput from "../shared/form/NumberInput"
 import FileInput from "../shared/form/FileInput"
 import Select from "../shared/form/Select"
-import PrimaryButton from "../shared/PrimaryButton.jsx"
+import Button from "../shared/Button.jsx"
 
 import { GENRE_OPTIONS } from "../../../../shared/constants/genreOptions.js"
 import { RATING_OPTIONS } from "../../../../shared/constants/ratingOptions.js"
@@ -155,10 +155,11 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen }) {
                 </div>
 
                 <div className="mt-8">
-                    <PrimaryButton
-                        label="Update"
+                    <Button
                         onClick={handleUpdate}
-                    />
+                    >
+                        <span>Update</span>
+                    </Button>
                 </div>
             </div>
         </Modal>

@@ -1,5 +1,5 @@
 import ProgressBar from "../shared/ProgressBar"
-import PrimaryButton from "../shared/PrimaryButton"
+import Button from "../shared/Button"
 import { useNavigate } from "react-router-dom"
 import PositionUpdatePopup from "../shared/PositionUpdatePopup"
 import { useEffect, useState } from "react"
@@ -91,10 +91,11 @@ export default function RecentlyTrackingCard({
                 </div>
 
                 <div className="mt-4">
-                    <PrimaryButton
+                    <Button
                         onClick={showPositionUpdatePopup}
-                        label="Update progress"
-                    />
+                    >
+                        <span>Update progress</span>
+                    </Button>
                 </div>
             </div>
 

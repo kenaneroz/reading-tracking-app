@@ -8,7 +8,7 @@ import TextInput from "./form/TextInput"
 import NumberInput from "./form/NumberInput"
 import FileInput from "./form/FileInput"
 import Select from "./form/Select"
-import PrimaryButton from "./PrimaryButton.jsx"
+import Button from "./Button.jsx"
 
 import { GENRE_OPTIONS } from "../../../../shared/constants/genreOptions.js"
 import { RATING_OPTIONS } from "../../../../shared/constants/ratingOptions.js"
@@ -154,10 +154,11 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                 </div>
 
                 <div className="mt-8">
-                    <PrimaryButton
-                        label="Add Book"
+                    <Button
                         onClick={handleAddBook}
-                    />
+                    >
+                        <span>Add Book</span>
+                    </Button>
                 </div>
             </div>
         </Modal>

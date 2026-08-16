@@ -7,7 +7,7 @@ import Modal from "../shared/Modal"
 import PersonalNotesCard from "./PersonalNotesCard"
 import Textarea from "../shared/form/Textarea"
 import NumberInput from "../shared/form/NumberInput"
-import PrimaryButton from "../shared/PrimaryButton"
+import Button from "../shared/Button"
 
 import { addNoteService } from "../../services/bookService"
 
@@ -69,10 +69,11 @@ console.log(errors)
             </div>
 
             <div className="mt-8">
-                <PrimaryButton 
-                    label="Add note" 
+                <Button 
                     onClick={handleAddNote} 
-                />
+                >
+                    <span>Add note</span>
+                </Button>
             </div>
         </Modal>
     )   

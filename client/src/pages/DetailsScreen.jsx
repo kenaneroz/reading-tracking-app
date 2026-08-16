@@ -12,6 +12,7 @@ import AddNote from "../components/detailsScreen/AddNote"
 import EditNote from "../components/detailsScreen/EditNote"
 import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
 import EditDetails from "../components/detailsScreen/EditDetails"
+import Button from "../components/shared/Button"
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
@@ -120,9 +121,13 @@ export default function DetailsScreen({
                         }
                     </div>
 
-                    <button className="cursor-pointer w-full h-13 px-6 rounded-[26px] text-taupe text-body mt-4 border border-tan border-dashed hover:bg-tan transition-all duration-300"
+                    <Button
+                        variant="dashed"
                         onClick={() => setIsAddNotePopupOpen(true)}
-                    >Add notes</button>
+                        className="text-taupe mt-4"
+                    >
+                        <span>Add notes</span>
+                    </Button>
                 </div>
 
                 { isAllNotesPopupOpen &&

@@ -26,7 +26,7 @@ export default function TextInput({
                 </label>
             }
 
-            <div className={`${inputBorder} w-full h-15 flex items-center gap-4 mt-2 bg-beige/60 border px-4 rounded-[17px]`}>
+            <div className={`${inputBorder} w-full h-13 flex items-center gap-4 mt-2 bg-beige/60 border px-4 rounded-[12px]`}>
                 <input
                     type="text"
                     id={id}

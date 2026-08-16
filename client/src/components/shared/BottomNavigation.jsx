@@ -1,12 +1,26 @@
+import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
     Home05Icon,
     PieChart02Icon,
     Add01Icon
 } from "@hugeicons/core-free-icons"
-import { useLocation, useNavigate } from "react-router-dom"
+
 import AddBook from "./AddBook"
-import { useState } from "react"
+
+function NavItem({ icon, label, isActive, onClick }) {
+    return (
+        <button
+            className={`${isActive ? "text-espresso" : "text-taupe"} flex-1 flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-beige/60 hover:text-espresso transition-all duration-300 p-2 rounded-3xl`}
+            onClick={onClick}
+        >
+            <HugeiconsIcon icon={icon} size={24} strokeWidth={1.5} />
+            <span className="text-body-xs">{label}</span>
+        </button>
+    )
+}
 
 export default function BottomNavigation({ books, setBooks }) {
     const [isAddBookPopupActive, setIsAddBookPopupActive] = useState(false)
@@ -17,52 +31,28 @@ export default function BottomNavigation({ books, setBooks }) {
     const isHomeActive = location.pathname === "/"
     const isStatisticsActive = location.pathname === "/statistics"
 
-    function openAddBookPopup() {
-        setIsAddBookPopupActive(true)
-    }
-
     return (
         <nav className="w-full px-6 py-4 flex gap-4 justify-between items-end bg-cream border-t border-tan">
-            <button
-                className={`${isHomeActive ? "text-espresso" : "text-taupe"} flex-1 flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-beige/60 hover:text-espresso transition-all duration-300 p-2 rounded-3xl`}
+            <NavItem
+                icon={Home05Icon}
+                label="Home"
+                isActive={isHomeActive}
                 onClick={() => navigate("/")}
-            >
-                <HugeiconsIcon
-                    icon={Home05Icon}
-                    size={24}
-                    strokeWidth={1.5}
-                />
-
-                <span className="text-body-xs">
-                    Home
-                </span>
-            </button>
+            />
 
             <button
-                className="bg-espresso text-cream rounded-3xl w-14 h-14 flex justify-center items-center cursor-pointer hover:bg-taupe transition-all duration-300"
-                onClick={openAddBookPopup}
+                className="bg-espresso text-cream rounded-3xl w-14 h-14 flex justify-center items-center cursor-pointer hover:bg-espresso/90 transition-all duration-300"
+                onClick={() => setIsAddBookPopupActive(true)}
             >
-                <HugeiconsIcon
-                    icon={Add01Icon}
-                    size={24}
-                    strokeWidth={1.5}
-                />
+                <HugeiconsIcon icon={Add01Icon} size={24} strokeWidth={1.5} />
             </button>
 
-            <button
-                className={`${isStatisticsActive ? "text-espresso" : "text-taupe"} flex-1 flex flex-col justify-center items-center gap-1 cursor-pointer hover:bg-beige/60 hover:text-espresso transition-all duration-300 p-2 rounded-3xl`}
+            <NavItem
+                icon={PieChart02Icon}
+                label="Statistics"
+                isActive={isStatisticsActive}
                 onClick={() => navigate("/statistics")}
-            >
-                <HugeiconsIcon
-                    icon={PieChart02Icon}
-                    size={24}
-                    strokeWidth={1.5}
-                />
-
-                <span className="text-body-xs">
-                    Statistics
-                </span>
-            </button>
+            />
 
             { isAddBookPopupActive &&
                 <AddBook

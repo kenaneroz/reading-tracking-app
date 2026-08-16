@@ -3,7 +3,7 @@ import { MoreVerticalIcon, Cancel01Icon, Edit01Icon } from "@hugeicons/core-free
 import { useState } from "react";
 import Textarea from "../shared/form/Textarea";
 import NumberInput from "../shared/form/NumberInput";
-import PrimaryButton from "../shared/PrimaryButton";
+import Button from "../shared/Button";
 import AddNote from "./AddNote";
 
 export default function PersonalNotesCard({ id, content, page, date, setIsEditNotePopupOpen, setSelectedNoteId }) {

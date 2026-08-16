@@ -5,7 +5,7 @@ import { Cancel01Icon } from "@hugeicons/core-free-icons"
 
 import Modal from "./Modal"
 import NumberInput from "./form/NumberInput"
-import PrimaryButton from "./PrimaryButton"
+import Button from "./Button"
 
 import { updateBook } from "../../services/bookService.js"
 
@@ -73,11 +73,11 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
                 </div>
 
                 <div className="mt-8">
-                    <PrimaryButton 
-                        className="mt-8"
+                    <Button 
                         onClick={updatePosition}
-                        label="Update progress"
-                    />
+                    >
+                        <span>Update progress</span>
+                    </Button>
                 </div>
             </div>
         </Modal>

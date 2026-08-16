@@ -1,5 +1,5 @@
 import ProgressBar from "../shared/ProgressBar"
-import PrimaryButton from "../shared/PrimaryButton"
+import Button from "../shared/Button"
 
 export default function ProgressCard({ currentPage, totalPages, setIsEditPopupOpen }) {
     return (
@@ -22,7 +22,9 @@ export default function ProgressCard({ currentPage, totalPages, setIsEditPopupOp
             </div>
 
             <div className="mt-4">
-                <PrimaryButton label="Update progress" onClick={() => setIsEditPopupOpen(true)}/>
+                <Button onClick={() => setIsEditPopupOpen(true)}>
+                    <span>Update progress</span>
+                </Button>
             </div>
         </div>
     )

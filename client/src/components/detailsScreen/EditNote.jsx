@@ -7,7 +7,7 @@ import { MoreVerticalIcon, Cancel01Icon, Edit01Icon } from "@hugeicons/core-free
 import Modal from "../shared/Modal.jsx"
 import Textarea from "../shared/form/Textarea"
 import NumberInput from "../shared/form/NumberInput"
-import PrimaryButton from "../shared/PrimaryButton.jsx";
+import Button from "../shared/Button.jsx";
 import AddNote from "./AddNote"
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
 
@@ -110,10 +110,11 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, selec
                     </div>
         
                     <div className="mt-8">
-                        <PrimaryButton 
-                            label="Update note" 
+                        <Button 
                             onClick={handleUpdateNote} 
-                        />
+                        >
+                            <span>Update note</span>
+                        </Button>
                     </div>
                 </Modal>
             }

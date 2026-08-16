@@ -32,7 +32,7 @@ export default function Select({
                 name={id}
                 value={value}
                 onChange={onChange}
-                className={`${inputBorder} ${textColor} h-15 mt-2 bg-beige/60 border px-4 rounded-[17px] outline-none appearance-none w-full`}
+                className={`${inputBorder} ${textColor} h-13 mt-2 bg-beige/60 border px-4 rounded-[12px] outline-none appearance-none w-full`}
             >
                 <option value="">
                     Select
