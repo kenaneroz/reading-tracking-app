@@ -4,8 +4,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon } from "@hugeicons/core-free-icons"
 
 import Modal from "./Modal.jsx"
-import TextInput from "./form/TextInput"
-import NumberInput from "./form/NumberInput"
+import Input from "./form/Input"
 import FileInput from "./form/FileInput"
 import Select from "./form/Select"
 import Button from "./Button.jsx"
@@ -80,7 +79,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                 />
 
                 <div className="flex flex-col gap-5 mt-6">
-                    <TextInput
+                    <Input
                         id="title"
                         label="Title"
                         placeholder="e.g. The Quiet Mind"
@@ -89,7 +88,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                         onChange={(e) => setFormData(prev => ({...prev, title: e.target.value}))}
                     />
 
-                    <TextInput 
+                    <Input
                         id="author"
                         label="Author"
                         placeholder="Enter author's name"
@@ -100,7 +99,8 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
 
                     <div className="flex gap-2">
                         <div className="flex-1">
-                            <NumberInput
+                            <Input
+                                type="number"
                                 id="currentPage"
                                 label="Current page"
                                 placeholder="0"
@@ -112,7 +112,8 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
                             />
                         </div>
                         <div className="flex-1">
-                            <NumberInput
+                            <Input
+                                type="number"
                                 id="totalPages"
                                 label="Total pages"
                                 placeholder="1"

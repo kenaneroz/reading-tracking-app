@@ -6,7 +6,7 @@ import { MoreVerticalIcon, Cancel01Icon, Edit01Icon } from "@hugeicons/core-free
 
 import Modal from "../shared/Modal.jsx"
 import Textarea from "../shared/form/Textarea"
-import NumberInput from "../shared/form/NumberInput"
+import Input from "../shared/form/Input"
 import Button from "../shared/Button.jsx";
 import AddNote from "./AddNote"
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
@@ -98,7 +98,8 @@ export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, selec
                     </div>
         
                     <div className="mt-4">
-                        <NumberInput 
+                        <Input
+                            type="number"
                             label="Page" 
                             placeholder="Page number" 
                             min={0} 

@@ -4,7 +4,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon } from "@hugeicons/core-free-icons"
 
 import Modal from "./Modal"
-import NumberInput from "./form/NumberInput"
+import Input from "./form/Input"
 import Button from "./Button"
 
 import { updateBook } from "../../services/bookService.js"
@@ -62,7 +62,8 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
                 </div>
 
                 <div className="mt-6">
-                    <NumberInput
+                    <Input
+                        type="number"
                         min={0} 
                         max={totalPages}
                         placeholder="Enter your current position"

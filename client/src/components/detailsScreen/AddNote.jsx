@@ -6,7 +6,7 @@ import { Cancel01Icon } from "@hugeicons/core-free-icons"
 import Modal from "../shared/Modal"
 import PersonalNotesCard from "./PersonalNotesCard"
 import Textarea from "../shared/form/Textarea"
-import NumberInput from "../shared/form/NumberInput"
+import Input from "../shared/form/Input"
 import Button from "../shared/Button"
 
 import { addNoteService } from "../../services/bookService"
@@ -58,10 +58,12 @@ console.log(errors)
             </div>
 
             <div className="mt-4">
-                <NumberInput 
+                <Input
+                    type="number"
                     label="Page number" 
                     placeholder="Page number" 
-                    min={0} max={totalPages} 
+                    min={0}
+                    max={totalPages} 
                     errorMessage={errors.page}
                     value={formData.page} 
                     onChange={(e) => setFormData(prev => ({...prev, page: Number(e.target.value)}))} 

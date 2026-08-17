@@ -1,15 +1,17 @@
 import { HugeiconsIcon } from "@hugeicons/react"
-
 import ErrorMessage from "../ErrorMessage"
 
-export default function TextInput({
+export default function Input({
+    type = "text",
     label,
     id,
     placeholder,
     icon,
     errorMessage,
     value,
-    onChange
+    onChange,
+    min,
+    max
 }) {
     const inputBorder = errorMessage
         ? "border-red"
@@ -18,22 +20,21 @@ export default function TextInput({
     return (
         <div>
             {label &&
-                <label
-                    htmlFor={id}
-                    className="text-espresso text-body-sm font-medium"
-                >
+                <label htmlFor={id} className="text-espresso text-body-sm font-medium">
                     {label}
                 </label>
             }
 
-            <div className={`${inputBorder} w-full h-13 flex items-center gap-4 mt-2 bg-beige/60 border px-4 rounded-[12px]`}>
+            <div className={`${inputBorder} w-full h-13 flex items-center gap-4 mt-2 bg-beige border px-4 rounded-xl`}>
                 <input
-                    type="text"
+                    type={type}
                     id={id}
                     name={id}
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
+                    min={min}
+                    max={max}
                     className="w-full h-full text-espresso text-body outline-none"
                 />
 

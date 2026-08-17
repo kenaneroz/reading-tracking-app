@@ -2,7 +2,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { MoreVerticalIcon, Cancel01Icon, Edit01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
 import Textarea from "../shared/form/Textarea";
-import NumberInput from "../shared/form/NumberInput";
 import Button from "../shared/Button";
 import AddNote from "./AddNote";
 

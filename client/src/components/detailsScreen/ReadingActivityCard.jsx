@@ -5,7 +5,6 @@ import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons"
 
 import Modal from "../shared/Modal.jsx"
 import ProgressBar from "../shared/ProgressBar.jsx"
-import NumberInput from "../shared/form/NumberInput.jsx"
 import Button from "../shared/Button.jsx"
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
 import PositionUpdatePopup from "../shared/PositionUpdatePopup.jsx"

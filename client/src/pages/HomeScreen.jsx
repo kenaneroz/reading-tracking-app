@@ -3,7 +3,7 @@ import Header from "../components/homeScreen/Header"
 import StatusFilter from "../components/homeScreen/StatusFilter"
 import BookCarousel from "../components/homeScreen/BookCarousel"
 import SortControl from "../components/homeScreen/SortControl"
-import TextInput from "../components/shared/form/TextInput"
+import Input from "../components/shared/form/Input"
 import RecentlyTrackingCard from "../components/homeScreen/RecentlyTrackingCard"
 import BottomNavigation from "../components/shared/BottomNavigation"
 import AddBook from "../components/shared/AddBook"
@@ -71,7 +71,7 @@ export default function HomeScreen({ books, setBooks, loading }) {
                     <h2 className="h4 text-espresso">Your library</h2>
 
                     {isSearchBoxVisible ? (
-                        <TextInput
+                        <Input
                             placeholder="Search by a book or author name"
                             icon={Search02Icon}
                             value={searchValue}
