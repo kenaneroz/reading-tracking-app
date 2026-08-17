@@ -1,20 +1,19 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft02Icon } from "@hugeicons/core-free-icons"
 
+import FileInput from "../components/shared/form/FileInput"
 import Input from "../components/shared/form/Input"
-import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
-import { useNavigate } from "react-router-dom"
 
-export default function SignUpScreen() {
+export default function EditProfileScreen() {
     const [formData, setFormData] = useState({
+        profilePhoto: "",
         name: "",
-        surname: "",
-        email: "",
-        password: ""
+        surname: ""
     })
     const [errors, setErrors] = useState({})
 
@@ -32,14 +31,21 @@ export default function SignUpScreen() {
                 />
             </div>
 
-            <div className="mt-8 px-5">
+            <div className="mt-6 px-5">
                 <div className="text-center">
-                    <h1 className="h1 text-espresso">Start tracking</h1>
-                    <p className="text-body-sm text-taupe mt-2">Track your books, see your stats, build the habit.</p>
+                    <h1 className="h1 text-espresso">Edit profile</h1>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-7">
                     <div className="flex flex-col gap-5">
+                        <FileInput 
+                            id="profile-image"
+                            label="Profile image"
+                            placeholder="Tap to change the profile photo"
+                            onChange=""
+                            errorMessage=""
+                        />
+
                         <div className="flex items-center gap-3">
                             <Input 
                                 id="name"
@@ -59,70 +65,40 @@ export default function SignUpScreen() {
                                 errorMessage=""
                             />
                         </div>
-
-                        <Input 
-                            id="email"
-                            label="Email"
-                            placeholder="name@example.com"
-                            value={formData.email}
-                            onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                            errorMessage=""
-                        />
-
-                        <PasswordInput 
-                            id="password"
-                            label="Password"
-                            placeholder="Your password"
-                            value={formData.password}
-                            onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
-                            errorMessage=""
-                        />
-
                     </div>
 
                     <Button
                         onClick=""
                         className="mt-7"
                     >
-                        <span>Sign up</span>
+                        <span>Save</span>
                     </Button>
                 </div>
 
-
-                <div className="flex items-center gap-3 mt-6">
-                    <HorizontalDivider className="flex-1" />
-                    <span className="shrink-0 whitespace-nowrap text-body-xs text-taupe">
-                        Or continue with
-                    </span>
-                    <HorizontalDivider className="flex-1" />
-                </div>
+                <HorizontalDivider className="mt-7" />
 
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
-                        variant="outline"
+                        variant="secondary"
                         onClick=""
                     >
-                        <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
-                        <span>Continue with Google</span>
+                        <span>Change email address</span>
                     </Button>
 
                     <Button
-                        variant="outline"
+                        variant="secondary"
                         onClick=""
                     >
-                        <img src="/apple-icon-logo.svg" alt="" className="h-5 w-5" />
-                        <span>Continue with Apple</span>
+                        <span>Change password</span>
                     </Button>
 
                 </div>
 
-                <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
-                    Already have an account?  <span 
-                        className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/sign-in")}
-                    > 
-                        Sign in
-                    </span>
+                <p 
+                    className="text-body-sm text-red mt-7 mb-10 text-center cursor-pointer"
+                    onClick=""
+                >
+                    Request delete account
                 </p>
             </div>
         </div>

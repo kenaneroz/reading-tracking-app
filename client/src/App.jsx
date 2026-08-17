@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 import { getBooks } from "./services/bookService.js"
 import StatisticsScreen from './pages/StatisticsScreen'
 import StartScreen from './pages/StartScreen'
-import SignUpScreen from './pages/SignUpScreen.jsx';
+import SignUpScreen from './pages/SignUpScreen'
+import SignInScreen from './pages/SignInScreen'
+import ForgotPasswordScreen from './pages/ForgotPasswordScreen'
+import CreateNewPasswordScreen from './pages/CreateNewPasswordScreen'
+import EditProfileScreen from './pages/EditProfileScreen.jsx';
 
 function App() {
   const [books, setBooks] = useState([])
@@ -77,6 +81,34 @@ function App() {
             <SignUpScreen />
           }
         />
+
+        <Route
+          path="/sign-in"
+          element={
+            <SignInScreen />
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <ForgotPasswordScreen />
+          }
+        />
+
+        <Route
+          path="/create-new-password"
+          element={
+            <CreateNewPasswordScreen />
+          }
+        />
+
+        <Route
+          path="/edit-profile"
+          element={
+            <EditProfileScreen />
+          }
+        />    
       </Routes>
     </BrowserRouter>
     

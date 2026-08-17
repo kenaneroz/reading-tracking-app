@@ -9,10 +9,8 @@ import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
 import { useNavigate } from "react-router-dom"
 
-export default function SignUpScreen() {
+export default function SignInScreen() {
     const [formData, setFormData] = useState({
-        name: "",
-        surname: "",
         email: "",
         password: ""
     })
@@ -34,32 +32,12 @@ export default function SignUpScreen() {
 
             <div className="mt-8 px-5">
                 <div className="text-center">
-                    <h1 className="h1 text-espresso">Start tracking</h1>
-                    <p className="text-body-sm text-taupe mt-2">Track your books, see your stats, build the habit.</p>
+                    <h1 className="h1 text-espresso">Welcome back!</h1>
+                    <p className="text-body-sm text-taupe mt-2">Sign in to continue your tracking journey.</p>
                 </div>
 
                 <div className="mt-8">
                     <div className="flex flex-col gap-5">
-                        <div className="flex items-center gap-3">
-                            <Input 
-                                id="name"
-                                label="Name"
-                                placeholder="Ellison"
-                                value={formData.name}
-                                onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
-                                errorMessage=""
-                            />
-
-                            <Input 
-                                id="surname"
-                                label="Surname"
-                                placeholder="Elliot"
-                                value={formData.surname}
-                                onChange={(e) => setFormData(prev => ({...prev, surname: e.target.value}))}
-                                errorMessage=""
-                            />
-                        </div>
-
                         <Input 
                             id="email"
                             label="Email"
@@ -69,22 +47,30 @@ export default function SignUpScreen() {
                             errorMessage=""
                         />
 
-                        <PasswordInput 
-                            id="password"
-                            label="Password"
-                            placeholder="Your password"
-                            value={formData.password}
-                            onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
-                            errorMessage=""
-                        />
+                        <div>
+                            <PasswordInput 
+                                id="password"
+                                label="Password"
+                                placeholder="Your password"
+                                value={formData.password}
+                                onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                                errorMessage=""
+                            />
 
+                            <p 
+                                className="cursor-pointer text-body-sm text-taupe text-right mt-2 hover:text-espresso transition-all duration-300"
+                                onClick={() => navigate("/forgot-password")}
+                            >
+                                Forgot password
+                            </p>
+                        </div>
                     </div>
 
                     <Button
                         onClick=""
-                        className="mt-7"
+                        className="mt-6"
                     >
-                        <span>Sign up</span>
+                        <span>Sign in</span>
                     </Button>
                 </div>
 
@@ -117,11 +103,11 @@ export default function SignUpScreen() {
                 </div>
 
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
-                    Already have an account?  <span 
+                    New to Bookly? <span 
                         className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/sign-in")}
+                        onClick={() => navigate("/sign-up")}
                     > 
-                        Sign in
+                        Sign up
                     </span>
                 </p>
             </div>

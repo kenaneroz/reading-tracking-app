@@ -1,8 +1,27 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Search02Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function Header({ isSearchBoxVisible, setSearchBoxVisibility, setActiveStatusFilter, setSearchValue }) {   
+import { HugeiconsIcon } from "@hugeicons/react";
+import { 
+    AccountSetting01Icon, 
+    ArrowRight01Icon, 
+    ArrowRightFromLineIcon, 
+    Search02Icon,
+    Cancel01Icon
+} from "@hugeicons/core-free-icons";
+
+import HorizontalDivider from "../shared/HorizontalDivider"
+
+export default function Header({ 
+    isSearchBoxVisible, 
+    setSearchBoxVisibility, 
+    setActiveStatusFilter, 
+    setSearchValue 
+}) {   
+    const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false)
+
+    const navigate = useNavigate()
+
     function showSearchBox() {
         setSearchBoxVisibility(true)
         setActiveStatusFilter("All")
@@ -16,7 +35,10 @@ export default function Header({ isSearchBoxVisible, setSearchBoxVisibility, set
 
     return (
         <header className="p-6 pt-16 flex justify-between items-center bg-espresso rounded-b-3xl">
-            <div className="flex items-center gap-3">
+            <div 
+                className="flex items-center gap-3"
+                onClick={() => setIsProfilePopupOpen(prev => !prev)}
+            >
                 <img 
                     src="/profile-photo.jpg" 
                     alt="Profile photo" 
@@ -29,33 +51,80 @@ export default function Header({ isSearchBoxVisible, setSearchBoxVisibility, set
                 </div>                
             </div>
 
-            {
-                isSearchBoxVisible 
-                ?
-                <button
+            {isProfilePopupOpen &&
+                <div className="w-60 bg-beige border border-tan p-4 rounded-[20px] absolute left-5 top-40 z-50">
+                    <div className="flex items-center gap-3">
+                        <img 
+                            src="/profile-photo.jpg" 
+                            alt="Profile photo" 
+                            className="w-12 h-12 rounded-full object-cover border-2 border-cream"
+                        />
+
+                        <p className="text-espresso"><span className="text-[20px] font-regular">Ellison</span> <span className="h4">Elliot</span> </p>
+                    </div>
+
+                    <HorizontalDivider className="mt-4" />
+
+                    <div className="mt-4 flex flex-col gap-4">
+                        <div 
+                            className="flex items-center justify-between px-1 py-2 cursor-pointer"
+                            onClick={() => navigate("/edit-profile")}
+                        >
+                            <div className="flex items-center gap-3">
+                                <HugeiconsIcon 
+                                    icon={AccountSetting01Icon} 
+                                    size={20} 
+                                    strokeWidth={1.5} 
+                                    className="text-coffee"
+                                />  
+                                <p className="h4 font-medium text-espresso">Edit profile</p>
+                            </div>
+
+                            <HugeiconsIcon 
+                                icon={ArrowRight01Icon} 
+                                size={16} 
+                                strokeWidth={1} 
+                                className="text-taupe"
+                            />                              
+                        </div>
+
+                        <div className="flex items-center gap-3 px-1 py-2 cursor-pointer">
+                            <HugeiconsIcon 
+                                icon={ArrowRightFromLineIcon} 
+                                size={20} 
+                                strokeWidth={1.5} 
+                                className="text-coffee"
+                            />  
+                            <p className="h4 font-medium text-espresso">Log out</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {isSearchBoxVisible 
+                ? <button
                     type="button"
                     aria-label="Search"
                     className="bg-cream/20 text-cream w-11 h-11 rounded-[18px] flex justify-center items-center cursor-pointer hover:bg-cream/40 transition-all duration-300"
                     onClick={hideSearchBox}
                 >
-                        <HugeiconsIcon
-                            icon={Cancel01Icon}
-                            size={20}
-                            strokeWidth={1.15}
-                        />
+                    <HugeiconsIcon
+                        icon={Cancel01Icon}
+                        size={20}
+                        strokeWidth={1.15}
+                    />
                 </button>
-                :
-                <button
+                : <button
                     type="button"
                     aria-label="Search"
                     className="bg-cream/20 text-cream w-11 h-11 rounded-[18px] flex justify-center items-center cursor-pointer hover:bg-cream/40 transition-all duration-300"
                     onClick={showSearchBox}
                 >
-                        <HugeiconsIcon
-                            icon={Search02Icon}
-                            size={20}
-                            strokeWidth={1.15}
-                        />
+                    <HugeiconsIcon
+                        icon={Search02Icon}
+                        size={20}
+                        strokeWidth={1.15}
+                    />
                 </button>
             }
 
