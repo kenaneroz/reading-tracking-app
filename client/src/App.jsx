@@ -5,6 +5,8 @@ import DetailsScreen from "./pages/DetailsScreen";
 import { useEffect, useState } from "react";
 import { getBooks } from "./services/bookService.js"
 import StatisticsScreen from './pages/StatisticsScreen'
+import StartScreen from './pages/StartScreen'
+import SignUpScreen from './pages/SignUpScreen.jsx';
 
 function App() {
   const [books, setBooks] = useState([])
@@ -59,6 +61,20 @@ function App() {
               books={books}
               setBooks={setBooks}
             />
+          }
+        />
+
+        <Route
+          path="/start"
+          element={
+            <StartScreen />
+          }
+        />
+
+        <Route
+          path="/sign-up"
+          element={
+            <SignUpScreen />
           }
         />
       </Routes>

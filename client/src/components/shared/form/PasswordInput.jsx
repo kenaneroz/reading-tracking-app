@@ -1,18 +1,20 @@
 import { HugeiconsIcon } from "@hugeicons/react"
-import ErrorMessage from "../ErrorMessage"
+import { ViewIcon } from "@hugeicons/core-free-icons"
 
-export default function TextInput({
-    type = "text",
+import ErrorMessage from "../ErrorMessage"
+import { useState } from "react"
+
+export default function PasswordInput({
     label,
     id,
     placeholder,
-    icon,
     errorMessage,
     value,
     onChange,
-    min,
-    max
+    onClick
 }) {
+    const [showPassword, setShowPassword] = useState(false)
+
     const inputBorder = errorMessage
         ? "border-red"
         : "border-tan focus-within:outline focus-within:outline-1 focus-within:outline-espresso"
@@ -27,25 +29,22 @@ export default function TextInput({
 
             <div className={`${inputBorder} w-full h-13 flex items-center gap-4 mt-2 bg-beige border px-4 rounded-xl`}>
                 <input
-                    type={type}
+                    type={showPassword ? "text" : "password"}
                     id={id}
                     name={id}
                     value={value}
                     placeholder={placeholder}
                     onChange={onChange}
-                    min={min}
-                    max={max}
                     className="w-full h-full text-espresso text-body outline-none"
                 />
 
-                {icon &&
-                    <HugeiconsIcon
-                        icon={icon}
-                        size={20}
-                        strokeWidth={1.15}
-                        className="text-taupe"
-                    />
-                }
+                <HugeiconsIcon
+                    icon={ViewIcon}
+                    size={20}
+                    strokeWidth={1.15}
+                    className="cursor-pointer text-taupe"
+                    onClick={() => setShowPassword(prev => !prev)}
+                />
             </div>
 
             <ErrorMessage message={errorMessage} />
