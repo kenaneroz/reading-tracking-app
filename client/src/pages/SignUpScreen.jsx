@@ -21,7 +21,7 @@ export default function SignUpScreen() {
     const navigate = useNavigate()
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
+        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
             <div className="px-5 pt-5">
                 <HugeiconsIcon 
                     icon={ArrowLeft02Icon} 
@@ -114,7 +114,7 @@ export default function SignUpScreen() {
 
                 </div>
 
-                <p className="text-body-sm text-taupe mt-8 text-center">
+                <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
                     Already have an account?  <span 
                         className="cursor-pointer text-espresso font-semibold"
                         onClick={() => navigate("/sign-in")}
