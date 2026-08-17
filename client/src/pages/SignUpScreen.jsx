@@ -21,7 +21,7 @@ export default function SignUpScreen() {
     const navigate = useNavigate()
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-hidden">
+        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
             <div className="px-5 pt-5">
                 <HugeiconsIcon 
                     icon={ArrowLeft02Icon} 
