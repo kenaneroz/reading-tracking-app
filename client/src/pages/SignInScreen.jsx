@@ -39,6 +39,7 @@ export default function SignInScreen() {
                 <div className="mt-8">
                     <div className="flex flex-col gap-5">
                         <Input 
+                            type="email"
                             id="email"
                             label="Email"
                             placeholder="name@example.com"

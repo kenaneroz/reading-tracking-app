@@ -1,14 +1,15 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
 
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
-import { useNavigate } from "react-router-dom"
 
-export default function CreateNewPasswordScreen() {
+export default function ChangePasswordScreen() {
     const [formData, setFormData] = useState({
+        currentPassword: "",
         newPassword: "",
         confirmNewPassword: ""
     })
@@ -41,11 +42,21 @@ export default function CreateNewPasswordScreen() {
                 </div>
 
                 <div className="mt-6 text-center">
-                    <h1 className="h1 text-espresso">Create new password</h1>
+                    <h1 className="h1 text-espresso">Change password</h1>
+                    <p className="text-body-sm text-taupe mt-2">Enter your current password and choose a new one.</p>
                 </div>
 
                 <div className="mt-8">
                     <div className="flex flex-col gap-5">
+                        <PasswordInput 
+                            id="current-password"
+                            label="Current password"
+                            placeholder="Current password"
+                            value={formData.currentPassword}
+                            onChange={(e) => setFormData(prev => ({...prev, currentPassword: e.target.value}))}
+                            errorMessage=""
+                        />
+
                         <PasswordInput 
                             id="new-password"
                             label="New password"
@@ -69,20 +80,8 @@ export default function CreateNewPasswordScreen() {
                         onClick=""
                         className="mt-7"
                     >
-                        <span>Reset password</span>
+                        <span>Update password</span>
                     </Button>
-                </div>
-
-                <div
-                    className="cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300"
-                    onClick={() => navigate("/sign-in")}
-                >
-                    <HugeiconsIcon 
-                        icon={ArrowLeft02Icon} 
-                        size={16} 
-                        strokeWidth={1} 
-                    />
-                    <p className="font-medium">Back to login</p>
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@ export default function DetailsHeader({ book, setBooks, setIsEditPopupOpen }) {
     const navigate = useNavigate()
 
     function returnHome() {
-        navigate("/")
+        navigate("/home")
     }
 
     async function handleDelete() {
@@ -24,7 +24,7 @@ export default function DetailsHeader({ book, setBooks, setIsEditPopupOpen }) {
 
             setConfirmDelete(false)
 
-            navigate("/")
+            navigate("/home")
         } catch (error) {
             console.log(error.message)
         }

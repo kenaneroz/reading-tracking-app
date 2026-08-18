@@ -1,13 +1,13 @@
 import { useState } from "react"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
+import { ArrowLeft02Icon, MailEdit01Icon } from "@hugeicons/core-free-icons"
 
 import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
 import { useNavigate } from "react-router-dom"
 
-export default function ForgotPasswordScreen() {
+export default function ChangeEmailAddressScreen() {
     const [formData, setFormData] = useState({
         email: ""
     })
@@ -32,7 +32,7 @@ export default function ForgotPasswordScreen() {
                     <img src="/neutral.svg" alt="" className="h-25 w-25" />
 
                     <HugeiconsIcon 
-                        icon={ResetPasswordIcon} 
+                        icon={MailEdit01Icon} 
                         size={40} 
                         strokeWidth={1.5} 
                         className="text-espresso absolute"
@@ -40,8 +40,8 @@ export default function ForgotPasswordScreen() {
                 </div>
 
                 <div className="mt-6 text-center">
-                    <h1 className="h1 text-espresso">Reset your password</h1>
-                    <p className="text-body-sm text-taupe mt-2">Enter the email address associated with your account and we'll send you instructions to reset your password.</p>
+                    <h1 className="h1 text-espresso">Change email address</h1>
+                    <p className="text-body-sm text-taupe mt-2">Enter a new email address. We'll send a confirmation link to verify the change.</p>
                 </div>
 
                 <div className="mt-8">
@@ -59,20 +59,8 @@ export default function ForgotPasswordScreen() {
                         onClick=""
                         className="mt-5"
                     >
-                        <span>Send reset link</span>
+                        <span>Send confirmation link</span>
                     </Button>
-                </div>
-
-                <div
-                    className="cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300"
-                    onClick={() => navigate("/sign-in")}
-                >
-                    <HugeiconsIcon 
-                        icon={ArrowLeft02Icon} 
-                        size={16} 
-                        strokeWidth={1} 
-                    />
-                    <p className="font-medium">Back to login</p>
                 </div>
             </div>
         </div>

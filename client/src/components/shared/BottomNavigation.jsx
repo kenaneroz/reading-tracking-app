@@ -28,7 +28,7 @@ export default function BottomNavigation({ books, setBooks }) {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const isHomeActive = location.pathname === "/"
+    const isHomeActive = location.pathname === "/home"
     const isStatisticsActive = location.pathname === "/statistics"
 
     return (
@@ -37,7 +37,7 @@ export default function BottomNavigation({ books, setBooks }) {
                 icon={Home05Icon}
                 label="Home"
                 isActive={isHomeActive}
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/home")}
             />
 
             <button

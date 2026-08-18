@@ -45,7 +45,7 @@ export default function DetailsScreen({
 
                 <button
                     className="cursor-pointer"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/home")}
                 >
                     Return home screen
                 </button>

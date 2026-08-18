@@ -35,14 +35,12 @@ export default function Header({
 
     return (
         <header className="p-6 pt-16 flex justify-between items-center bg-espresso rounded-b-3xl">
-            <div 
-                className="flex items-center gap-3"
-                onClick={() => setIsProfilePopupOpen(prev => !prev)}
-            >
+            <div className="flex items-center gap-3">
                 <img 
                     src="/profile-photo.jpg" 
                     alt="Profile photo" 
                     className="w-11 h-11 rounded-full object-cover hover:scale-105 transition-all duration-300 cursor-pointer"
+                    onClick={() => setIsProfilePopupOpen(prev => !prev)}
                 />
 
                 <div>

@@ -8,6 +8,7 @@ import FileInput from "../components/shared/form/FileInput"
 import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
+import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
 
 export default function EditProfileScreen() {
     const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function EditProfileScreen() {
         surname: ""
     })
     const [errors, setErrors] = useState({})
+    const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
 
     const navigate = useNavigate()
 
@@ -80,14 +82,14 @@ export default function EditProfileScreen() {
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
                         variant="secondary"
-                        onClick=""
+                        onClick={() => navigate("/edit-profile/change-email")}
                     >
                         <span>Change email address</span>
                     </Button>
 
                     <Button
                         variant="secondary"
-                        onClick=""
+                        onClick={() => navigate("/edit-profile/change-password")}
                     >
                         <span>Change password</span>
                     </Button>
@@ -96,10 +98,18 @@ export default function EditProfileScreen() {
 
                 <p 
                     className="text-body-sm text-red mt-7 mb-10 text-center cursor-pointer"
-                    onClick=""
+                    onClick={() => setIsConfirmPopupOpen(true)}
                 >
                     Request delete account
                 </p>
+
+                {isConfirmPopupOpen &&
+                    <ConfirmDeletePopup 
+                        cancel={() => setIsConfirmPopupOpen(false)}
+                        delete_=""
+                        message="We'll send a confirmation email to delete your account. This action cannot be undone once confirmed."
+                    />
+                }
             </div>
         </div>
     )

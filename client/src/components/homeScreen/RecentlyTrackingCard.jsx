@@ -31,7 +31,7 @@ export default function RecentlyTrackingCard({
 
     const navigate = useNavigate()
     function handleSelectedBook() {
-        navigate(`book/${id}`)
+        navigate(`/book/${id}`)
     }
 
     function showPositionUpdatePopup() {

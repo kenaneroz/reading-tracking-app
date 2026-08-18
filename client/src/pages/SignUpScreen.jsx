@@ -61,6 +61,7 @@ export default function SignUpScreen() {
                         </div>
 
                         <Input 
+                            type="email"
                             id="email"
                             label="Email"
                             placeholder="name@example.com"
