@@ -9,7 +9,10 @@ import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
 import { useNavigate } from "react-router-dom"
 
+import { useAuth } from "../context/authContext"
+
 export default function SignUpScreen() {
+    const { register } = useAuth() 
     const [formData, setFormData] = useState({
         name: "",
         surname: "",
@@ -17,8 +20,24 @@ export default function SignUpScreen() {
         password: ""
     })
     const [errors, setErrors] = useState({})
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const navigate = useNavigate()
+
+    async function handleRegister(e) {
+        e.preventDefault()
+        try {
+            setIsSubmitting(true)
+            setErrors({})
+
+            await register(formData)
+        } catch (error) {
+           setErrors(error.errors || {})
+           console.log(error)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
@@ -47,7 +66,7 @@ export default function SignUpScreen() {
                                 placeholder="Ellison"
                                 value={formData.name}
                                 onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
-                                errorMessage=""
+                                errorMessage={errors.name}
                             />
 
                             <Input 
@@ -56,7 +75,7 @@ export default function SignUpScreen() {
                                 placeholder="Elliot"
                                 value={formData.surname}
                                 onChange={(e) => setFormData(prev => ({...prev, surname: e.target.value}))}
-                                errorMessage=""
+                                errorMessage={errors.surname}
                             />
                         </div>
 
@@ -67,7 +86,7 @@ export default function SignUpScreen() {
                             placeholder="name@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.email}
                         />
 
                         <PasswordInput 
@@ -76,16 +95,17 @@ export default function SignUpScreen() {
                             placeholder="Your password"
                             value={formData.password}
                             onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.password}
                         />
 
                     </div>
 
                     <Button
-                        onClick=""
+                        onClick={handleRegister}
                         className="mt-7"
+                        disabled={isSubmitting}
                     >
-                        <span>Sign up</span>
+                        <span>{isSubmitting ? "Signing up" : "Sign up"}</span>
                     </Button>
                 </div>
 

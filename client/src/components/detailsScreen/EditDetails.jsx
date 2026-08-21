@@ -14,9 +14,11 @@ import { GENRE_OPTIONS } from "../../../../shared/constants/genreOptions.js"
 import { RATING_OPTIONS } from "../../../../shared/constants/ratingOptions.js"
 import { FORMAT_OPTIONS } from "../../../../shared/constants/formatOptions.js"
 
-import { updateBook } from "../../services/bookService.js"
+import { useBooks } from "../../context/BookContext"
 
-export default function EditDetails({ book, setBooks, setIsEditPopupOpen }) {
+export default function EditDetails({ book, setIsEditPopupOpen }) {
+    const { setBooks, updateBook } = useBooks()
+
     const [formData, setFormData] = useState({
         title: book.title,
         author: book.author,
@@ -41,16 +43,7 @@ export default function EditDetails({ book, setBooks, setIsEditPopupOpen }) {
         if (Object.keys(changedFields).length === 0) return
 
         try {
-            const updatedBook = await updateBook(book._id, changedFields)
-    
-            setBooks(prevBooks =>
-                prevBooks.map(book =>
-                    book._id === updatedBook._id
-                        ? updatedBook
-                        : book
-                )
-            )
-    
+            await updateBook(book._id, changedFields)
             setIsEditPopupOpen(false)
         } catch (error) {
             setErrors(error.errors || {})

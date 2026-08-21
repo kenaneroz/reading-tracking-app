@@ -16,7 +16,11 @@ import {
     deleteNoteService
 } from "../../services/bookService.js"
 
-export default function EditNote({ book, setBooks, setIsEditNotePopupOpen, selectedNoteId }) {
+import { useBooks } from "../../context/BookContext"
+
+export default function EditNote({ book, setIsEditNotePopupOpen, selectedNoteId }) {
+    const { setBooks } = useBooks()
+
     const note = book.notes.find(note => note._id === selectedNoteId)
     const [errors, setErrors] = useState({})
     const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false)

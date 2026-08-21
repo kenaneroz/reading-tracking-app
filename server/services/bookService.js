@@ -1,8 +1,8 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 
-export async function getBookService(id) {
-    const book = await Book.findById(id)
+export async function getBookService(id, userId) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError("Book not found", 404)
@@ -10,14 +10,15 @@ export async function getBookService(id) {
 
     return book
 }
-export async function getBooksService() {
-    const books = await Book.find()
+export async function getBooksService(userId) {
+    const books = await Book.find({ userId: userId })
 
     return books
 }
 
 export async function createBookService(data) {
     const {
+        userId,
         title, 
         author,
         genre,
@@ -39,6 +40,7 @@ export async function createBookService(data) {
         : []
 
     const newBook = await Book.create({ 
+        userId,
         title, 
         author,
         genre,
@@ -53,8 +55,8 @@ export async function createBookService(data) {
     return newBook
 }
 
-export async function updateBookService(id, data) {
-    const book = await Book.findById(id)
+export async function updateBookService(id, userId, data) {
+    const book = await Book.findOne({ _id: id, userId: userId })
 
     if (!book) {
         throw new AppError("Book not found", 404)
@@ -141,8 +143,8 @@ export async function updateBookService(id, data) {
     return updatedBook
 }
 
-export async function deleteBookService(id) {
-    const deletedBook = await Book.findByIdAndDelete(id)
+export async function deleteBookService(id, userId) {
+    const deletedBook = await Book.findOneAndDelete({ _id: id, userId: userId })
 
     if (!deletedBook) {
         throw new AppError("Book not found", 404)

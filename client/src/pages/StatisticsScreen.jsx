@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 
 import StatsHeader from "../components/stats/StatsHeader"
 import DateFilterPill from "../components/stats/DateFilterPill"
@@ -17,7 +17,11 @@ import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHea
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
-export default function StatisticsScreen({ books, setBooks }) {
+import { useBooks } from "../context/BookContext"
+
+export default function StatisticsScreen() {
+    const { books, setBooks } = useBooks()
+
     const [activeDateFilter, setActiveDateFilter] = useState("All time")
     const [customDateRange, setCustomDateRange] = useState({ startDate: "", endDate: "" })
 
@@ -289,10 +293,7 @@ export default function StatisticsScreen({ books, setBooks }) {
                 </div>
             </div>
 
-            <BottomNavigation
-                books={books}
-                setBooks={setBooks}
-            />
+            <BottomNavigation />
         </div>
     )
 }

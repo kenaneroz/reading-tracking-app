@@ -7,9 +7,10 @@ import Modal from "./Modal"
 import Input from "./form/Input"
 import Button from "./Button"
 
-import { updateBook } from "../../services/bookService.js"
+import { useBooks } from "../../context/BookContext"
 
-export default function PositionUpdatePopup({ id, currentPage, totalPages, setIsPositionUpdatePopupActive, setBooks }) {
+export default function PositionUpdatePopup({ id, currentPage, totalPages, setIsPositionUpdatePopupActive }) {
+    const { setBooks, updateBook } = useBooks()
     const [newCurrentPage, setNewCurrentPage] = useState(currentPage)
     const [errors, setErrors] = useState({})
 
@@ -21,20 +22,10 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
         if (currentPage === newCurrentPage) return
 
         try {
-            setErrors({})
-
-            const updatedBook = await updateBook(id, {
+            setErrors({})   
+            await updateBook(id, {
                 currentPage: newCurrentPage
             })
-
-            setBooks(prev =>
-                prev.map(book =>
-                    book._id === id
-                        ? updatedBook
-                        : book
-                )
-            )
-
             hidePopup()
         } catch (error) {
             setErrors(error.errors || {})

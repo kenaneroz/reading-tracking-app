@@ -3,6 +3,7 @@ import Button from "../shared/Button"
 import { useNavigate } from "react-router-dom"
 import PositionUpdatePopup from "../shared/PositionUpdatePopup"
 import { useEffect, useState } from "react"
+import { useBooks } from "../../context/BookContext"
 
 export default function RecentlyTrackingCard({ 
     id, 
@@ -11,8 +12,8 @@ export default function RecentlyTrackingCard({
     cover, 
     currentPage, 
     totalPages, 
-    setBooks
 }) {
+    const { setBooks } = useBooks()
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
 
     useEffect(() => {

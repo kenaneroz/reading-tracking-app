@@ -40,6 +40,12 @@ const noteSchema = new mongoose.Schema({
 
 const bookSchema = new mongoose.Schema(
     {
+        userId: {
+            type: mongoose.ObjectId,
+            ref: "User",
+            required: true,
+            index: true
+        },
         title: {
             type: String,
             required: true,

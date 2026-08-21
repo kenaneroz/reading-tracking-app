@@ -1,8 +1,8 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 
-export async function createNoteService(id, data) {
-    const book = await Book.findById(id)
+export async function createNoteService(id, userId, data) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError("Book not found", 404)
@@ -37,8 +37,8 @@ export async function createNoteService(id, data) {
     return updatedBook.notes[updatedBook.notes.length - 1]
 }
 
-export async function updateNoteService(id, noteId, data) {
-    const book = await Book.findById(id)
+export async function updateNoteService(id, userId, noteId, data) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError("Book not found", 404)
@@ -79,8 +79,8 @@ export async function updateNoteService(id, noteId, data) {
     return note
 }
 
-export async function deleteNoteService(id, noteId) {
-    const book = await Book.findById(id)
+export async function deleteNoteService(id, userId, noteId) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError("Book not found", 404)

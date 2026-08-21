@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import connectDB from "./config/db.js"
+import authRoutes from "./routes/authRoutes.js"
 import bookRoutes from "./routes/bookRoutes.js"
 import errorMiddleware from "./middlewares/errorMiddleware.js"
 
@@ -16,6 +17,7 @@ app.use(cors({
     origin: process.env.CLIENT_URL
 }))
 app.use(express.json())
+app.use("/auth", authRoutes)
 app.use("/books", bookRoutes)
 app.use(errorMiddleware)
 

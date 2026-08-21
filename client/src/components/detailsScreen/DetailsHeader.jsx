@@ -4,9 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
 
-import { deleteBook } from "../../services/bookService.js"
+import { useBooks } from "../../context/BookContext"
 
-export default function DetailsHeader({ book, setBooks, setIsEditPopupOpen }) {
+export default function DetailsHeader({ book, setIsEditPopupOpen }) {
+    const { books, setBooks, deleteBook } = useBooks()
+
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
 
@@ -19,11 +21,7 @@ export default function DetailsHeader({ book, setBooks, setIsEditPopupOpen }) {
     async function handleDelete() {
         try {
             await deleteBook(book._id)
-
-            setBooks(prev => prev.filter(b => b._id !== book._id))
-
             setConfirmDelete(false)
-
             navigate("/home")
         } catch (error) {
             console.log(error.message)

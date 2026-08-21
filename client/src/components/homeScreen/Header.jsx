@@ -12,12 +12,15 @@ import {
 
 import HorizontalDivider from "../shared/HorizontalDivider"
 
+import { useAuth } from "../../context/authContext"
+
 export default function Header({ 
     isSearchBoxVisible, 
     setSearchBoxVisibility, 
     setActiveStatusFilter, 
     setSearchValue 
 }) {   
+    const { user, logout, loading } = useAuth()
     const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false)
 
     const navigate = useNavigate()
@@ -32,19 +35,22 @@ export default function Header({
         setSearchValue("")
     }
 
+    if (loading) {
+        return <div className="skeleton-loader"></div>
+    }
 
     return (
         <header className="p-6 pt-16 flex justify-between items-center bg-espresso rounded-b-3xl">
             <div className="flex items-center gap-3">
                 <img 
-                    src="/profile-photo.jpg" 
+                    src={user.profilePhoto || "/default-avatar.png"}
                     alt="Profile photo" 
                     className="w-11 h-11 rounded-full object-cover hover:scale-105 transition-all duration-300 cursor-pointer"
                     onClick={() => setIsProfilePopupOpen(prev => !prev)}
                 />
 
                 <div>
-                    <p className="text-body text-cream/60">Hello, Selda 👋 </p>
+                    <p className="text-body text-cream/60">Hello, {user.name} 👋 </p>
                     <h1 className="h3 text-cream pt-1">Welcome back!</h1>    
                 </div>                
             </div>
@@ -53,12 +59,12 @@ export default function Header({
                 <div className="w-60 bg-beige border border-tan p-4 rounded-[20px] absolute left-5 top-40 z-50">
                     <div className="flex items-center gap-3">
                         <img 
-                            src="/profile-photo.jpg" 
+                            src={user.profilePhoto || "/default-avatar.png"}
                             alt="Profile photo" 
                             className="w-12 h-12 rounded-full object-cover border-2 border-cream"
                         />
 
-                        <p className="text-espresso"><span className="text-[20px] font-regular">Ellison</span> <span className="h4">Elliot</span> </p>
+                        <p className="text-espresso"><span className="text-[20px] font-regular">{user.name}</span> <span className="h4">{user.surname}</span> </p>
                     </div>
 
                     <HorizontalDivider className="mt-4" />
@@ -86,7 +92,10 @@ export default function Header({
                             />                              
                         </div>
 
-                        <div className="flex items-center gap-3 px-1 py-2 cursor-pointer">
+                        <div 
+                            className="flex items-center gap-3 px-1 py-2 cursor-pointer"
+                            onClick={logout}
+                        >
                             <HugeiconsIcon 
                                 icon={ArrowRightFromLineIcon} 
                                 size={20} 

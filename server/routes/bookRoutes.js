@@ -1,5 +1,4 @@
 import express from "express"
-
 import { 
     getBooks,
     getBook, 
@@ -19,7 +18,11 @@ import validateCreateNote from "../middlewares/validateCreateNote.js"
 import validateUpdateNote from "../middlewares/validateUpdateNote.js"
 import validateUpdateActivity from "../middlewares/validateUpdateActivity.js"
 
+import verifyToken from "../middlewares/verifyToken.js"
+
 const router = express.Router()
+
+router.use(verifyToken)
 
 router
     .get("/", getBooks)
@@ -50,4 +53,3 @@ router
     .delete("/:id/reading-activity/latest", deleteLatestReadingActivity)
 
 export default router
-

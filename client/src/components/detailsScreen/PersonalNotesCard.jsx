@@ -5,7 +5,10 @@ import Textarea from "../shared/form/Textarea";
 import Button from "../shared/Button";
 import AddNote from "./AddNote";
 
+import { useBooks } from "../../context/BookContext"
+
 export default function PersonalNotesCard({ id, content, page, date, setIsEditNotePopupOpen, setSelectedNoteId }) {
+    const { setBooks } = useBooks()
     const date_ = new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     
     function selectNote() {

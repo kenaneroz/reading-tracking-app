@@ -13,9 +13,10 @@ import { GENRE_OPTIONS } from "../../../../shared/constants/genreOptions.js"
 import { RATING_OPTIONS } from "../../../../shared/constants/ratingOptions.js"
 import { FORMAT_OPTIONS } from "../../../../shared/constants/formatOptions.js"
 
-import { addBook } from "../../services/bookService.js"
+import { useBooks } from "../../context/BookContext"
 
-export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
+export default function AddBook({ setIsAddBookPopupActive }) {
+    const { books, setBooks, addBook } = useBooks()
     const [errors, setErrors] = useState({})
 
     const [formData, setFormData] = useState({
@@ -35,18 +36,7 @@ export default function AddBook({ setIsAddBookPopupActive, books, setBooks }) {
 
     async function handleAddBook() {
         try {
-            const newBook = await addBook(
-                {
-                    title: formData.title,
-                    author: formData.author,
-                    cover: formData.cover,
-                    genre: formData.genre,
-                    currentPage: formData.currentPage,
-                    totalPages: formData.totalPages,
-                    format: formData.format
-                }
-            )
-            setBooks(prev => [...prev, newBook])
+            await addBook(formData)
             hideAddBookPopup()
         } catch (error) {
            setErrors(error.errors || {})

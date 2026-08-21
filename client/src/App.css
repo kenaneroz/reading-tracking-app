@@ -3,7 +3,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Renkler */
   --color-cream: #F6F2EB;
   --color-beige: #ECE5D8;
   --color-espresso: #4B382A;
@@ -69,5 +68,5 @@ select.placeholder-shown {
 }
 
 select option {
-    color: #8D7F73;  /* diğer option'lar normal renkte */
+    color: #8D7F73;
 }

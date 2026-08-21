@@ -9,14 +9,39 @@ import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
 import { useNavigate } from "react-router-dom"
 
+import { login } from "../services/authService.js"
+
+import { useBooks } from "../context/BookContext"
+import { useAuth } from "../context/authContext"
+
 export default function SignInScreen() {
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     })
     const [errors, setErrors] = useState({})
+    const { getBooks } = useBooks()
+    const { login } = useAuth()
 
     const navigate = useNavigate()
+
+    async function handleLogin() {
+        try {
+            setErrors({})
+
+            await login({
+                email: formData.email,
+                password: formData.password
+            })
+
+            await getBooks()
+
+            navigate("/home")
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.error(error)
+        }
+    }
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
@@ -45,7 +70,7 @@ export default function SignInScreen() {
                             placeholder="name@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.email}
                         />
 
                         <div>
@@ -55,7 +80,7 @@ export default function SignInScreen() {
                                 placeholder="Your password"
                                 value={formData.password}
                                 onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
-                                errorMessage=""
+                                errorMessage={errors.password}
                             />
 
                             <p 
@@ -68,7 +93,7 @@ export default function SignInScreen() {
                     </div>
 
                     <Button
-                        onClick=""
+                        onClick={handleLogin}
                         className="mt-6"
                     >
                         <span>Sign in</span>

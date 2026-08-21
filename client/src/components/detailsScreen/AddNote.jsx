@@ -11,7 +11,11 @@ import Button from "../shared/Button"
 
 import { addNoteService } from "../../services/bookService"
 
-export default function AddNote({ id, notes, totalPages, setBooks, setIsAddNotePopupOpen }) {
+import { useBooks } from "../../context/BookContext"
+
+export default function AddNote({ id, notes, totalPages, setIsAddNotePopupOpen }) {
+    const { setBooks } = useBooks()
+
     const [formData, setFormData] = useState({
         content: "",
         page: null

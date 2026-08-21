@@ -1,8 +1,8 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 
-export async function updateLatestReadingActivityService(id, data) {
-    const book = await Book.findById(id)
+export async function updateLatestReadingActivityService(id, userId, data) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError(
@@ -62,8 +62,8 @@ export async function updateLatestReadingActivityService(id, data) {
     return updatedBook
 }
 
-export async function deleteLatestReadingActivityService(id) {
-    const book = await Book.findById(id)
+export async function deleteLatestReadingActivityService(id, userId) {
+    const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError("Book not found", 404)

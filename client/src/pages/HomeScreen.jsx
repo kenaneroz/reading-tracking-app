@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Header from "../components/homeScreen/Header"
 import StatusFilter from "../components/homeScreen/StatusFilter"
 import BookCarousel from "../components/homeScreen/BookCarousel"
@@ -12,26 +12,20 @@ import { GalleryHorizontalEndIcon, Search02Icon } from "@hugeicons/core-free-ico
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
-export default function HomeScreen({ books, setBooks, loading }) {
+import { useBooks } from "../context/BookContext"
+
+export default function HomeScreen() {
+    const { books, loading } = useBooks()
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false)
     const [activeSortControl, setActiveSortControl] = useState("Recently added")
     const [searchValue, setSearchValue] = useState("")
     const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false)
 
-    const [recentlyTrackingBook, setRecentlyTrackingBook] = useState(() =>
+    const recentlyTrackingBook =
         books && books.length > 0
             ? books.reduce((latest, book) => (book.updatedAt > latest.updatedAt ? book : latest))
             : null
-    )
-
-    useEffect(() => {
-        if (!books || books.length === 0) return
-        setRecentlyTrackingBook(() =>
-            books.reduce((latest, book) => (book.updatedAt > latest.updatedAt ? book : latest))
-        )
-    }, [books])
-
 
     if (loading) return <span></span>
 
@@ -127,25 +121,21 @@ export default function HomeScreen({ books, setBooks, loading }) {
                 <section className="px-4 pb-6">
                     <h2 className="h4 text-espresso">Latest activity</h2>
 
-                    { recentlyTrackingBook ?
-                        <RecentlyTrackingCard
+                    { recentlyTrackingBook
+                        ? <RecentlyTrackingCard
                             id={recentlyTrackingBook._id}
                             title={recentlyTrackingBook.title}
                             author={recentlyTrackingBook.author}
                             cover={recentlyTrackingBook.cover}
                             currentPage={recentlyTrackingBook.currentPage}
                             totalPages={recentlyTrackingBook.totalPages}
-                            setBooks={setBooks}
-                        /> :
-                        <span></span>
+                        /> 
+                        : <span></span>
                     }
                 </section>
             </div>
 
-            <BottomNavigation
-                books={books}
-                setBooks={setBooks}
-            />
+            <BottomNavigation />
         </div>
     )
 }

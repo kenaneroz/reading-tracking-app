@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { use, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -9,6 +9,8 @@ import {
 } from "@hugeicons/core-free-icons"
 
 import AddBook from "./AddBook"
+
+import { useBooks } from "../../context/BookContext"
 
 function NavItem({ icon, label, isActive, onClick }) {
     return (
@@ -22,7 +24,8 @@ function NavItem({ icon, label, isActive, onClick }) {
     )
 }
 
-export default function BottomNavigation({ books, setBooks }) {
+export default function BottomNavigation() {
+    const { boook, setBooks } = useBooks()
     const [isAddBookPopupActive, setIsAddBookPopupActive] = useState(false)
 
     const navigate = useNavigate()
@@ -55,11 +58,7 @@ export default function BottomNavigation({ books, setBooks }) {
             />
 
             { isAddBookPopupActive &&
-                <AddBook
-                    setIsAddBookPopupActive={setIsAddBookPopupActive}
-                    books={books}
-                    setBooks={setBooks}
-                />
+                <AddBook setIsAddBookPopupActive={setIsAddBookPopupActive} />
             }
         </nav>
     )

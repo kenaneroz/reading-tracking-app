@@ -1,181 +1,118 @@
 const API_URL = import.meta.env.VITE_API_URL
 
-export async function getBook(id) {
-    const response = await fetch(`${API_URL}/books/${id}`)
+async function apiFetch(endpoint, { method = "GET", body = {} } = {}) {
+    const token = localStorage.getItem("token")
 
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
-}
-
-export async function getBooks() {
-    const response = await fetch(`${API_URL}/books/`)
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
-}
-
-export async function addBook(data) {
     const response = await fetch(
-        `${API_URL}/books`,
+        `${API_URL}${endpoint}`, 
+        {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                ...(token && { Authorization: `Bearer ${token}` })
+            },
+            body: body ? JSON.stringify(body) : undefined
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw result
+    }
+
+    return result.data
+}
+
+/* *************** Books *************** */
+
+export function getBooks() {
+    return apiFetch("/books")
+}
+
+export function getBook(id) {
+    return apiFetch(`/books/${id}`)
+}
+
+export function addBook(data) {
+    return apiFetch(
+        "/books", 
         {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: data
         }
+
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function updateBook(id, data) {
-    const response = await fetch(
-        `${API_URL}/books/${id}`,
+export function updateBook(id, data) {
+    return apiFetch(
+        `/books/${id}`, 
         {
+
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: data
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function deleteBook(id) {
-    const response = await fetch(
-        `${API_URL}/books/${id}`,
+export function deleteBook(id) {
+    return apiFetch(
+        `/books/${id}`, 
         {
             method: "DELETE"
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function addNoteService(id, data) {
-    const response = await fetch(
-        `${API_URL}/books/${id}/notes`,
+/* *************** Notes *************** */
+
+export function addNoteService(id, data) {
+    return apiFetch(
+        `/books/${id}/notes`, 
         {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: data
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function updateNoteService(id, noteId, data) {
-    const response = await fetch(
-        `${API_URL}/books/${id}/notes/${noteId}`,
+export function updateNoteService(id, noteId, data) {
+    return apiFetch(
+        `/books/${id}/notes/${noteId}`, 
         {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: data
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function deleteNoteService(id, noteId) {
-    const response = await fetch(
-        `${API_URL}/books/${id}/notes/${noteId}`,
+export function deleteNoteService(id, noteId) {
+    return apiFetch(
+        `/books/${id}/notes/${noteId}`, 
         {
             method: "DELETE"
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function updateLatestReadingActivityService(id, data) {
-    const response = await fetch(
-        `${API_URL}/books/${id}/reading-activity/latest`,
+/* *************** Reading activity *************** */
+
+export function updateLatestReadingActivityService(id, data) {
+    return apiFetch(
+        `/books/${id}/reading-activity/latest`, 
         {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: data
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function deleteLatestReadingActivityService(id) {
-    const response = await fetch(
-        `${API_URL}/books/${id}/reading-activity/latest`,
+export function deleteLatestReadingActivityService(id) {
+    return apiFetch(
+        `/books/${id}/reading-activity/latest`, 
         {
             method: "DELETE"
         }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }

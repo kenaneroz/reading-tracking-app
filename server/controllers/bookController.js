@@ -18,7 +18,7 @@ import {
 } from "../services/readingActivityService.js"
 
 export async function getBook(req, res) {
-    const book = await getBookService(req.params.id)
+    const book = await getBookService(req.params.id, req.userId)
 
     res.json({
         success: true,
@@ -28,7 +28,7 @@ export async function getBook(req, res) {
 }
 
 export async function getBooks(req, res) {
-    const books = await getBooksService()
+    const books = await getBooksService(req.userId)
 
     res.json({
         success: true,
@@ -38,7 +38,10 @@ export async function getBooks(req, res) {
 }
 
 export async function createBook(req, res) {
-    const newBook = await createBookService(req.body)
+    const newBook = await createBookService({
+        ...req.body,
+        userId: req.userId
+    })
 
     res.status(201).json({
         success: true,
@@ -48,7 +51,7 @@ export async function createBook(req, res) {
 }
 
 export async function updateBook(req, res) {
-    const updatedBook = await updateBookService(req.params.id, req.body)
+    const updatedBook = await updateBookService(req.params.id, req.userId, req.body)
 
     return res.json({
         success: true,
@@ -58,7 +61,7 @@ export async function updateBook(req, res) {
 }
 
 export async function deleteBook (req, res) {
-    const deletedBook = await deleteBookService(req.params.id)
+    const deletedBook = await deleteBookService(req.params.id, req.userId)
 
     res.json({
         success: true,
@@ -68,7 +71,7 @@ export async function deleteBook (req, res) {
 }
 
 export async function createNote(req, res) {
-    const newNote = await createNoteService(req.params.id, req.body)
+    const newNote = await createNoteService(req.params.id, req.userId, req.body)
 
     res.status(201).json({
         success: true,
@@ -78,7 +81,7 @@ export async function createNote(req, res) {
 }
 
 export async function updateNote(req, res) {
-    const updatedNote = await updateNoteService(req.params.id, req.params.noteId, req.body)
+    const updatedNote = await updateNoteService(req.params.id, req.userId, req.params.noteId, req.body)
 
     res.json({
         success: true,
@@ -88,7 +91,7 @@ export async function updateNote(req, res) {
 }
 
 export async function deleteNote(req, res) {
-    const deletedNote = await deleteNoteService(req.params.id, req.params.noteId)
+    const deletedNote = await deleteNoteService(req.params.id, req.userId, req.params.noteId)
 
     res.json({
         success: true,
@@ -98,7 +101,7 @@ export async function deleteNote(req, res) {
 }
 
 export async function updateLatestReadingActivity(req, res) {
-    const latestReadingActivity = await updateLatestReadingActivityService(req.params.id, req.body)
+    const latestReadingActivity = await updateLatestReadingActivityService(req.params.id, req.userId, req.body)
 
     res.json({
         success: true,
@@ -108,7 +111,7 @@ export async function updateLatestReadingActivity(req, res) {
 }
 
 export async function deleteLatestReadingActivity(req, res) {
-    const latestReadingActivity = await deleteLatestReadingActivityService(req.params.id)
+    const latestReadingActivity = await deleteLatestReadingActivityService(req.params.id, req.userId)
 
     res.json({
         success: true,

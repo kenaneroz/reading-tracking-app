@@ -14,13 +14,15 @@ import {
   updateLatestReadingActivityService
 } from "../../services/bookService.js"
 
+import { useBooks } from "../../context/BookContext"
+
 export default function ReadingActivityCard({ 
     readingActivity, 
     currentPage, 
     totalPages, 
     id, 
-    setBooks
 }) {
+    const { setBooks } = useBooks()
     const [isOpen, setIsOpen] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
     const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] = useState(false)

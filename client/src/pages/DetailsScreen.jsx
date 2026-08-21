@@ -16,11 +16,11 @@ import Button from "../components/shared/Button"
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
-export default function DetailsScreen({
-    books,
-    setBooks,
-    loading,
-}) {
+import { useBooks } from "../context/BookContext"
+
+export default function DetailsScreen() {
+    const { books, setBooks, loading } = useBooks()
+
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -57,8 +57,7 @@ export default function DetailsScreen({
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
             <DetailsHeader 
                 book={book} 
-                setBooks={setBooks} 
-                setIsEditPopupOpen={setIsEditPopupOpen}
+                setIsEditPopupOpen={setIsEditPopupOpen} 
             />
             <DetailsHero 
                 title={book.title} 
@@ -89,7 +88,7 @@ export default function DetailsScreen({
                     readingActivity={book.readingActivity} 
                     currentPage={book.currentPage} 
                     totalPages={book.totalPages} 
-                    id={id} setBooks={setBooks} 
+                    id={id}
                 />
             </div>
             <div className="mt-8 mx-6 pb-6">
@@ -108,7 +107,6 @@ export default function DetailsScreen({
                             :
                             book.notes.slice(-3).reverse().map(note => (
                                 <PersonalNotesCard 
-                                    setBooks={setBooks} 
                                     id={note._id} 
                                     content={note.content} 
                                     page={note.page} 
@@ -139,7 +137,6 @@ export default function DetailsScreen({
                         id={id} 
                         notes={book.notes} 
                         totalPages={book.totalPages} 
-                        setBooks={setBooks} 
                         setIsAddNotePopupOpen={setIsAddNotePopupOpen} 
                     />
                 }
@@ -148,7 +145,6 @@ export default function DetailsScreen({
             { isEditPopupOpen &&
                 <EditDetails 
                     book={book} 
-                    setBooks={setBooks} 
                     setIsEditPopupOpen={setIsEditPopupOpen} 
                 />
             }
@@ -160,7 +156,6 @@ export default function DetailsScreen({
             { isEditNotePopupOpen &&
                 <EditNote 
                     book={book} 
-                    setBooks={setBooks} 
                     setIsEditNotePopupOpen={setIsEditNotePopupOpen} 
                     setIsDeleteConfirmPopupOpen={setIsDeleteConfirmPopupOpen} 
                     selectedNoteId={selectedNoteId}
