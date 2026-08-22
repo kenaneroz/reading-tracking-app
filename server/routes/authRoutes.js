@@ -3,7 +3,8 @@ import express from "express"
 import { 
     getUser,
     register, 
-    login
+    login,
+    deleteUser
 } from "../controllers/authController.js"
 
 import validateRegister from "../middlewares/validateRegister.js"
@@ -25,6 +26,10 @@ router
     .get("/me",
         verifyToken,
         getUser
+    )
+    .delete("/me",
+        verifyToken,
+        deleteUser
     )
 
 

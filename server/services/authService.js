@@ -1,5 +1,8 @@
 import bcrypt from "bcryptjs"
 import User from "../models/User.js"
+import Book from "../models/Book.js"
+
+import AppError from "../errors/AppError.js"
 
 import { jwtDecode } from "jwt-decode"
 
@@ -23,7 +26,13 @@ export async function registerService(data) {
 
     const existingUser = await User.findOne({ email })
     if (existingUser) {
-        throw new AppError("This email address is already in use", 400)
+        throw new AppError(
+            "Validation failed", 
+            400, 
+            {
+                email: "This email address is already in use"
+            }
+        )
     }
 
     const salt = await bcrypt.genSalt(10)
@@ -47,13 +56,39 @@ export async function loginService(data) {
 
     const user = await User.findOne({ email })
     if (!user) {
-        throw new AppError("Invalid email or password", 400)
+        throw new AppError(
+            "Validation failed", 
+            400, 
+            {
+                email: "Invalid email or password",
+                password: "Invalid email or password"
+            }
+        )
     }
     
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-        throw new AppError("Invalid email or password", 400)
+        throw new AppError(
+            "Validation failed", 
+            400, 
+            {
+                email: "Invalid email or password",
+                password: "Invalid email or password"
+            }
+        )
     }
+
+    return user
+}
+
+export async function deleteUserService(userId) {
+    const user = await User.findByIdAndDelete(userId)
+
+    if (!user) {
+        throw new AppError("User not found", 400)
+    }
+
+    await Book.deleteMany({ userId: userId })
 
     return user
 }

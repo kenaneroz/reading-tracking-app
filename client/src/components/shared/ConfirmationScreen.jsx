@@ -13,6 +13,7 @@ export default function ConfirmationScreen({
     message,
     buttonText,
     buttonDestination,
+    onClose,
     secondaryText,
     onSecondaryClick,
 }) {
@@ -41,7 +42,10 @@ export default function ConfirmationScreen({
             </div>
 
             <Button 
-                onClick={() => navigate(buttonDestination)}
+                onClick={() => {
+                    navigate(buttonDestination)
+                    onClose()
+                }}
                 className="mt-8"
             >
                 {buttonText}

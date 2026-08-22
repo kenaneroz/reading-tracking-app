@@ -25,8 +25,6 @@ export default function validateLogin(req, res, next) {
             errors
         })
     }
-
-    req.body.email = email.trim().toLowerCase()
-
+    
     next()
 }

@@ -62,3 +62,24 @@ export async function login(data) {
 
     return result.data
 }
+
+export async function deleteUser(token) {
+    const response = await fetch(
+        `${API_URL}/auth/me`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw result
+    }
+
+    return result.data
+}

@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken"
 import {
     getUserService,
     registerService,
-    loginService
+    loginService,
+    deleteUserService
 } from "../services/authService.js"
-import User from "../models/User.js"
 
 
 function generateToken(userId) {
@@ -61,5 +61,15 @@ export async function login(req, res) {
             },
             token
         }        
+    })
+}
+
+export async function deleteUser(req, res) {
+    const user = await deleteUserService(req.userId)
+
+    res.status(200).json({
+        success: true,
+        message: "Account deleted successfully",
+        data: user
     })
 }

@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { 
     getUser as getUserApi,
     login as loginApi, 
-    register as registerApi 
+    register as registerApi,
+    deleteUser as deleteUserApi
 } from "../services/authService"
 
 import { jwtDecode } from "jwt-decode"
@@ -82,6 +83,12 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
+    async function deleteAccount() {
+        const deletedAccount = await deleteUserApi(token)
+
+        return deletedAccount
+    }
+ 
     return (
         <AuthContext.Provider 
             value={
@@ -93,7 +100,8 @@ export function AuthProvider({ children }) {
                     loading,
                     login, 
                     register, 
-                    logout 
+                    logout,
+                    deleteAccount
                 }
             }
         >
