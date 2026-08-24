@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft02Icon, MailEdit01Icon } from "@hugeicons/core-free-icons"
@@ -7,13 +7,36 @@ import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
 import { useNavigate } from "react-router-dom"
 
+import { useAuth } from "../context/authContext"
+
 export default function ChangeEmailAddressScreen() {
-    const [formData, setFormData] = useState({
-        email: ""
+    const { user, updateAccountDetails, logout } = useAuth()
+    
+    const initialData = useRef({
+        email: user.email
     })
+    const [formData, setFormData] = useState({
+        email: user.email
+    })
+    const hasChanges = Object.keys(initialData.current).some(key => formData[key] !== initialData.current[key])
+
     const [errors, setErrors] = useState({})
 
     const navigate = useNavigate()
+
+    async function handleUpdate() {
+        if (!hasChanges) return
+
+        const token = localStorage.getItem("token")
+
+        try {
+            await updateAccountDetails(token, formData)
+            logout()
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
+    }
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
@@ -41,7 +64,7 @@ export default function ChangeEmailAddressScreen() {
 
                 <div className="mt-6 text-center">
                     <h1 className="h1 text-espresso">Change email address</h1>
-                    <p className="text-body-sm text-taupe mt-2">Enter a new email address. We'll send a confirmation link to verify the change.</p>
+                    <p className="text-body-sm text-taupe mt-2">Enter a new email address.</p>
                 </div>
 
                 <div className="mt-8">
@@ -56,10 +79,11 @@ export default function ChangeEmailAddressScreen() {
                     />
 
                     <Button
-                        onClick=""
+                        onClick={handleUpdate}
                         className="mt-5"
+                        disabled={!hasChanges}
                     >
-                        <span>Send confirmation link</span>
+                        <span>Update email</span>
                     </Button>
                 </div>
             </div>

@@ -16,7 +16,7 @@ import { FORMAT_OPTIONS } from "../../../../shared/constants/formatOptions.js"
 import { useBooks } from "../../context/BookContext"
 
 export default function AddBook({ setIsAddBookPopupActive }) {
-    const { books, setBooks, addBook } = useBooks()
+    const { addBook } = useBooks()
     const [errors, setErrors] = useState({})
 
     const [formData, setFormData] = useState({
@@ -66,6 +66,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                     placeholder="Tap to upload"
                     errorMessage={errors.cover}
                     onChange={(file) => setFormData(prev => ({...prev, cover: URL.createObjectURL(file)}))}
+                    className="aspect-5/8 rounded-[10px]"
                 />
 
                 <div className="flex flex-col gap-5 mt-6">

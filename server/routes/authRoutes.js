@@ -4,11 +4,13 @@ import {
     getUser,
     register, 
     login,
+    updateUser,
     deleteUser
 } from "../controllers/authController.js"
 
 import validateRegister from "../middlewares/validateRegister.js"
 import validateLogin from "../middlewares/validateLogin.js"
+import validateUpdateUser from "../middlewares/validateUpdateUser.js"
 
 import verifyToken from "../middlewares/verifyToken.js"
 
@@ -30,6 +32,11 @@ router
     .delete("/me",
         verifyToken,
         deleteUser
+    )
+    .patch("/me",
+        verifyToken,
+        validateUpdateUser,
+        updateUser
     )
 
 

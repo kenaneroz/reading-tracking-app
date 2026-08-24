@@ -4,8 +4,10 @@ import {
     getUserService,
     registerService,
     loginService,
+    updateUserService,
     deleteUserService
 } from "../services/authService.js"
+import AppError from "../errors/AppError.js"
 
 
 function generateToken(userId) {
@@ -61,6 +63,27 @@ export async function login(req, res) {
             },
             token
         }        
+    })
+}
+
+export async function updateUser(req, res) {
+    const user = await updateUserService(
+        req.userId,
+        req.body
+    )
+
+    res.status(200).json({
+        success: true,
+        message: "Account information updated successfully",
+        data: {
+            user: {
+                _id: user._id,
+                profilePhoto: user.profilePhoto,
+                name: user.name,
+                surname: user.surname,
+                email: user.email
+            }
+        }
     })
 }
 

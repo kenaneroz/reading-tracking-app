@@ -1,6 +1,3 @@
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Cancel01Icon } from "@hugeicons/core-free-icons"
-
 import Modal from "./Modal"
 import Button from "./Button"
 

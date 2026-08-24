@@ -5,7 +5,7 @@ import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 
 import { jwtDecode } from "jwt-decode"
-
+ 
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
 
@@ -79,6 +79,52 @@ export async function loginService(data) {
     }
 
     return user
+}
+
+export async function updateUserService(userId, data) {
+    const user = await User.findById(userId)
+
+    if (!user) {
+        throw new AppError("User not found", 404)
+    }
+
+    const updateData = { ...data }
+
+    if (data.newPassword !== undefined) {
+
+        const isCurrentPasswordCorrect = await bcrypt.compare(
+            data.currentPassword,
+            user.password
+        )
+
+        if (!isCurrentPasswordCorrect) {
+            throw new AppError(
+                "Current password is incorrect",
+                400,
+                {
+                    currentPassword: "Current password is incorrect"
+                }
+            )
+        }
+
+        updateData.password = await bcrypt.hash(
+            data.newPassword,
+            10
+        )
+
+        delete updateData.currentPassword
+        delete updateData.newPassword
+        delete updateData.confirmNewPassword
+    }
+
+    return User.findByIdAndUpdate(
+        userId,
+        updateData,
+        {
+            new: true,
+            runValidators: true
+        }
+    )
 }
 
 export async function deleteUserService(userId) {

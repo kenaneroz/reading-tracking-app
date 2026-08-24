@@ -7,15 +7,38 @@ import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 
+import { useAuth } from "../context/authContext"
+
 export default function ChangePasswordScreen() {
+    const { logout, updateAccountDetails } = useAuth()
+    
     const [formData, setFormData] = useState({
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: ""
     })
-    const [errors, setErrors] = useState({})
+    const hasChanges = 
+        formData.currentPassword.trim() !== "" &&
+        formData.newPassword.trim() !== "" &&
+        formData.confirmNewPassword.trim() !== ""
 
+    const [errors, setErrors] = useState({})
+    
     const navigate = useNavigate()
+
+    async function handleUpdate() {
+        if (!hasChanges) return
+
+        const token = localStorage.getItem("token")
+
+        try {
+            await updateAccountDetails(token, formData)
+            logout()
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)
+        }
+    }
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
@@ -54,7 +77,7 @@ export default function ChangePasswordScreen() {
                             placeholder="Current password"
                             value={formData.currentPassword}
                             onChange={(e) => setFormData(prev => ({...prev, currentPassword: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.currentPassword}
                         />
 
                         <PasswordInput 
@@ -63,7 +86,7 @@ export default function ChangePasswordScreen() {
                             placeholder="New password"
                             value={formData.newPassword}
                             onChange={(e) => setFormData(prev => ({...prev, newPassword: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.newPassword}
                         />
 
                         <PasswordInput 
@@ -72,13 +95,14 @@ export default function ChangePasswordScreen() {
                             placeholder="Confirm new password"
                             value={formData.confirmNewPassword}
                             onChange={(e) => setFormData(prev => ({...prev, confirmNewPassword: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.confirmNewPassword}
                         />
                     </div>
 
                     <Button
-                        onClick=""
+                        onClick={handleUpdate}
                         className="mt-7"
+                        disabled={!hasChanges}
                     >
                         <span>Update password</span>
                     </Button>

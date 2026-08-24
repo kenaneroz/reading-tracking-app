@@ -3,6 +3,7 @@ import {
     getUser as getUserApi,
     login as loginApi, 
     register as registerApi,
+    updateUser as updateUserApi,
     deleteUser as deleteUserApi
 } from "../services/authService"
 
@@ -83,9 +84,19 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
-    async function deleteAccount() {
-        const deletedAccount = await deleteUserApi(token)
+    async function updateAccountDetails(token, data) {
+        const updatedUser = await updateUserApi(token, data)
 
+        const { password, ...userWithoutPassword } = updatedUser.user
+
+        setUser(userWithoutPassword)
+
+        return userWithoutPassword
+    }
+
+    async function deleteAccount(token) {
+        const deletedAccount = await deleteUserApi(token)
+        logout()
         return deletedAccount
     }
  
@@ -101,6 +112,7 @@ export function AuthProvider({ children }) {
                     login, 
                     register, 
                     logout,
+                    updateAccountDetails,
                     deleteAccount
                 }
             }

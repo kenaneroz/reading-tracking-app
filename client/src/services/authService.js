@@ -63,6 +63,28 @@ export async function login(data) {
     return result.data
 }
 
+export async function updateUser(token, data) {
+    const response = await fetch(
+        `${API_URL}/auth/me`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw result
+    }
+
+    return result.data
+}
+
 export async function deleteUser(token) {
     const response = await fetch(
         `${API_URL}/auth/me`,

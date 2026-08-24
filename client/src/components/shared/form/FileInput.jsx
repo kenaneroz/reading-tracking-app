@@ -9,7 +9,8 @@ export default function FileInput({
     id,
     placeholder,
     errorMessage,
-    onChange
+    onChange,
+    className
 }) {
     const [preview, setPreview] = useState(null)
 
@@ -52,7 +53,7 @@ export default function FileInput({
                         <img
                             src={preview}
                             alt="Preview"
-                            className="h-full aspect-5/8 object-cover rounded-[10px]"
+                            className={`h-full object-cover ${className}`}
                         />
                     </div>
                     : <>
