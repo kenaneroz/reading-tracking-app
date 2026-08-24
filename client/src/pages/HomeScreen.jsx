@@ -15,7 +15,7 @@ import { getBookStatus } from "../utils/bookUtils.js"
 import { useBooks } from "../context/BookContext"
 
 export default function HomeScreen() {
-    const { books, loading } = useBooks()
+    const { books, getBooks, loading } = useBooks()
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false)
     const [activeSortControl, setActiveSortControl] = useState("Recently added")

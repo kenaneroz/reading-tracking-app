@@ -131,7 +131,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                         value={formData.rating}
                         options={RATING_OPTIONS}
                         errorMessage={errors.rating}
-                        onChange={(e) => setFormData(prev => ({...prev, rating: Number(e.target.value)}))}
+                        onChange={(e) => setFormData(prev => ({...prev, rating: e.target.value}))}
                     />
 
                     <Select 

@@ -34,6 +34,10 @@ export default function DetailsScreen() {
 
     const book = books.find(book => book._id === id)
 
+    function hideAddNotePopup() {
+        setIsAddNotePopupOpen(false)
+    }
+
     if (loading) {
         return <span></span>
     }
@@ -137,7 +141,7 @@ export default function DetailsScreen() {
                         id={id} 
                         notes={book.notes} 
                         totalPages={book.totalPages} 
-                        setIsAddNotePopupOpen={setIsAddNotePopupOpen} 
+                        hideAddNotePopup={hideAddNotePopup} 
                     />
                 }
             </div>
@@ -156,8 +160,7 @@ export default function DetailsScreen() {
             { isEditNotePopupOpen &&
                 <EditNote 
                     book={book} 
-                    setIsEditNotePopupOpen={setIsEditNotePopupOpen} 
-                    setIsDeleteConfirmPopupOpen={setIsDeleteConfirmPopupOpen} 
+                    hideAddNotePopup={hideAddNotePopup} 
                     selectedNoteId={selectedNoteId}
                 />
             }

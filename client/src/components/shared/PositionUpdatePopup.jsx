@@ -34,7 +34,7 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
     }
 
     return (
-        <Modal>
+        <>
             <button 
                 className="cursor-pointer"
                 onClick={hidePopup}
@@ -72,6 +72,6 @@ export default function PositionUpdatePopup({ id, currentPage, totalPages, setIs
                     </Button>
                 </div>
             </div>
-        </Modal>
+        </>
     )
 }

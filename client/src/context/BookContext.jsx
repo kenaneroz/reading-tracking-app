@@ -3,8 +3,12 @@ import {
     getBooks as getBooksApi,
     addBook as addBookApi,
     updateBook as updateBookApi,
-    deleteBook as deleteBookApi
-    
+    deleteBook as deleteBookApi,
+    addNoteService as addNoteApi,
+    updateNoteService as updateNoteApi,
+    deleteNoteService as deleteNoteApi,
+    updateLatestReadingActivityService as updateReadingActivityApi,
+    deleteLatestReadingActivityService as deleteReadingActivityApi
 } from "../services/bookService.js"
 
 const BookContext = createContext(null)
@@ -34,6 +38,8 @@ export function BookProvider({ children }) {
         }
     }
 
+    /* *************** Book *************** */
+
     async function addBook(bookData) {
         const newBook = await addBookApi(bookData)
 
@@ -55,6 +61,73 @@ export function BookProvider({ children }) {
         return deletedBook
     }
 
+    /* *************** Note *************** */
+    
+    async function addNote(id, data) {
+        const newNote = await addNoteApi(id, data)
+
+        setBooks(prev => prev.map(book =>
+            book._id === id 
+            ? { 
+                ...book, 
+                notes: [...book.notes, newNote]
+            }
+            : book
+        ))
+
+        return newNote
+    }
+
+    async function updateNote(id, noteId, data) {
+        const updatedNote = await updateNoteApi(id, noteId, data)
+
+        setBooks(prev => prev.map(book => 
+            book._id === id
+            ? { 
+                ...book,  
+                notes: book.notes.map(note => 
+                    note._id === noteId
+                    ? { ...updatedNote }
+                    : note
+                )
+            }
+            : book
+        ))
+
+        return updatedNote
+    }
+
+    async function deleteNote(id, noteId) {
+        const deletedNote = await deleteNoteApi(id, noteId)
+
+        setBooks(prev => prev.map(book =>
+            book._id === id
+            ? {
+                ...book,
+                notes: book.notes.filter(note => 
+                    note._id !== noteId
+                )
+            }
+            : book
+        ))
+
+        return deletedNote
+    }
+
+    /* *************** Reading activity *************** */
+
+    async function deleteReadingActivity(id, data) {
+        const updatedBook = await updateReadingActivityApi(id, data)
+
+        setBooks(prev =>
+            prev.map(book =>
+                book._id === id ? updatedBook : book
+            )
+        )
+
+        return updatedBook
+    }
+
     useEffect(() => {
         getBooks()
     }, [])    
@@ -70,7 +143,11 @@ export function BookProvider({ children }) {
                     getBooks,
                     addBook,
                     updateBook,
-                    deleteBook
+                    deleteBook,
+                    addNote,
+                    updateNote,
+                    deleteNote,
+                    deleteReadingActivity
                 }
             }
         >

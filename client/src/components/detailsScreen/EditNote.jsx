@@ -18,36 +18,20 @@ import {
 
 import { useBooks } from "../../context/BookContext"
 
-export default function EditNote({ book, setIsEditNotePopupOpen, selectedNoteId }) {
-    const { setBooks } = useBooks()
-
+export default function EditNote({ book, hideAddNotePopup, selectedNoteId }) {
+    const { updateNote, deleteNote } = useBooks()
     const note = book.notes.find(note => note._id === selectedNoteId)
-    const [errors, setErrors] = useState({})
-    const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false)
-
     const [formData, setFormData] = useState({
         content: note.content,
         page: note.page
     })
+    const [errors, setErrors] = useState({})
+    const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false)
 
     async function handleUpdateNote() {
         try {
-            const n = await updateNoteService(book._id, selectedNoteId, formData)
-    
-            setBooks(prev => prev.map(b => 
-                b._id === book._id
-                ? { 
-                    ...b,  
-                    notes: b.notes.map(note => 
-                        note._id === selectedNoteId
-                        ? { ...n }
-                        : note
-                    )
-                }
-                : b
-            ))
-    
-            setIsEditNotePopupOpen(false)
+            updateNote(book._id, selectedNoteId, formData)
+            hideAddNotePopup()
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
@@ -55,20 +39,13 @@ export default function EditNote({ book, setIsEditNotePopupOpen, selectedNoteId 
     }
 
     async function handleDeleteNote() {
-        const n = await deleteNoteService(book._id, selectedNoteId)
-
-        setBooks(prev => prev.map(b =>
-            b._id === book._id
-            ? {
-                ...b,
-                notes: b.notes.filter(note => 
-                    note._id !== selectedNoteId
-                )
-            }
-            : b
-        ))
-
-        setIsEditNotePopupOpen(false)
+        try {
+            deleteNote(book._id, selectedNoteId)
+            hideAddNotePopup()
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.log(error)            
+        }
     }
 
     return (

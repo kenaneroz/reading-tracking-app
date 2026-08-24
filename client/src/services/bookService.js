@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
-async function apiFetch(endpoint, { method = "GET", body = {} } = {}) {
+async function apiFetch(endpoint, { method, body } = {}) {
     const token = localStorage.getItem("token")
 
     const response = await fetch(
@@ -8,10 +8,10 @@ async function apiFetch(endpoint, { method = "GET", body = {} } = {}) {
         {
             method,
             headers: {
-                "Content-Type": "application/json",
+                ...(body !== undefined && { "Content-Type": "application/json" }),
                 ...(token && { Authorization: `Bearer ${token}` })
             },
-            body: body ? JSON.stringify(body) : undefined
+            ...(body !== undefined && { body: JSON.stringify(body) })
         }
     )
 
@@ -49,7 +49,6 @@ export function updateBook(id, data) {
     return apiFetch(
         `/books/${id}`, 
         {
-
             method: "PATCH",
             body: data
         }

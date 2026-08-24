@@ -4,42 +4,30 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon } from "@hugeicons/core-free-icons"
 
 import Modal from "../shared/Modal"
-import PersonalNotesCard from "./PersonalNotesCard"
 import Textarea from "../shared/form/Textarea"
 import Input from "../shared/form/Input"
 import Button from "../shared/Button"
 
-import { addNoteService } from "../../services/bookService"
-
 import { useBooks } from "../../context/BookContext"
 
-export default function AddNote({ id, notes, totalPages, setIsAddNotePopupOpen }) {
-    const { setBooks } = useBooks()
+export default function AddNote({ 
+    id, 
+    notes, 
+    totalPages, 
+    hideAddNotePopup 
+}) {
+    const { addNote } = useBooks()
 
     const [formData, setFormData] = useState({
         content: "",
         page: null
     })
     const [errors, setErrors] = useState({})
-console.log(errors)
-    function hidePopup() {
-        setIsAddNotePopupOpen(false)
-    }
 
     async function handleAddNote() {
         try {
-            const newNote = await addNoteService(id, formData)
-    
-            setBooks(prev => prev.map(book =>
-                book._id === id 
-                ? { 
-                    ...book, 
-                    notes: [...book.notes, newNote]
-                }
-                : book
-            ))
-    
-            hidePopup()
+            addNote(id, formData)
+            hideAddNotePopup()
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
@@ -48,7 +36,7 @@ console.log(errors)
 
     return (
         <Modal>
-            <HugeiconsIcon icon={Cancel01Icon} size={24} strokeWidth={1.5} className="cursor-pointer" onClick={hidePopup} />
+            <HugeiconsIcon icon={Cancel01Icon} size={24} strokeWidth={1.5} className="cursor-pointer" onClick={hideAddNotePopup} />
             
             <div className="mt-8">
                 <Textarea 

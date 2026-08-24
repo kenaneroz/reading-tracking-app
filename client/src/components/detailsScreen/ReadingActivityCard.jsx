@@ -1,18 +1,12 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Cancel01Icon, MoreVerticalIcon } from "@hugeicons/core-free-icons"
+import { MoreVerticalIcon } from "@hugeicons/core-free-icons"
 
 import Modal from "../shared/Modal.jsx"
 import ProgressBar from "../shared/ProgressBar.jsx"
-import Button from "../shared/Button.jsx"
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
 import PositionUpdatePopup from "../shared/PositionUpdatePopup.jsx"
-
-import {
-  deleteLatestReadingActivityService,
-  updateLatestReadingActivityService
-} from "../../services/bookService.js"
 
 import { useBooks } from "../../context/BookContext"
 
@@ -22,7 +16,7 @@ export default function ReadingActivityCard({
     totalPages, 
     id, 
 }) {
-    const { setBooks } = useBooks()
+    const { deleteReadingActivity } = useBooks()
     const [isOpen, setIsOpen] = useState(false)
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
     const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] = useState(false)
@@ -39,14 +33,7 @@ export default function ReadingActivityCard({
 
     async function handleDelete() {
         try {
-            const updatedBook = await deleteLatestReadingActivityService(id)
-
-            setBooks(prev =>
-                prev.map(book =>
-                    book._id === id ? updatedBook : book
-                )
-            )
-
+            deleteReadingActivity(id)
             setIsOpen(false)
         } catch (error) {
             console.error(error.message)
@@ -131,7 +118,6 @@ export default function ReadingActivityCard({
                                                 currentPage={currentPage}
                                                 totalPages={totalPages}
                                                 setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
-                                                setBooks={setBooks}
                                             />
                                         </Modal>
                                     }
