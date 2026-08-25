@@ -1,26 +1,24 @@
+import { useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+
 import DetailsHeader from "../components/detailsScreen/DetailsHeader"
 import DetailsHero from "../components/detailsScreen/DetailsHero"
 import ProgressCard from "../components/detailsScreen/ProgressCard"
 import BookInfoCard from "../components/detailsScreen/BookInfoCard"
 import ReadingActivityCard from "../components/detailsScreen/ReadingActivityCard"
 import PersonalNotesCard from "../components/detailsScreen/PersonalNotesCard"
-import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
 import ReadingActivityPopup from "../components/detailsScreen/ReadingActivityPopup"
 import AllNotes from "../components/detailsScreen/AllNotes"
 import AddNote from "../components/detailsScreen/AddNote"
 import EditNote from "../components/detailsScreen/EditNote"
-import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
 import EditDetails from "../components/detailsScreen/EditDetails"
 import Button from "../components/shared/Button"
 
 import { getBookStatus } from "../utils/bookUtils.js"
-
 import { useBooks } from "../context/BookContext"
 
 export default function DetailsScreen() {
-    const { books, setBooks, loading } = useBooks()
-
+    const { books, loading } = useBooks()
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -28,27 +26,21 @@ export default function DetailsScreen() {
     const [isAllNotesPopupOpen, setIsAllNotesPopupOpen] = useState(false)
     const [isAddNotePopupOpen, setIsAddNotePopupOpen] = useState(false)
     const [isEditNotePopupOpen, setIsEditNotePopupOpen] = useState(false)
-    const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false)
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
     const [selectedNoteId, setSelectedNoteId] = useState(null)
 
-    const book = books.find(book => book._id === id)
-
-    function hideAddNotePopup() {
-        setIsAddNotePopupOpen(false)
-    }
+    const book = books?.find(b => b._id === id)
 
     if (loading) {
-        return <span></span>
+        return <div className="md:w-110 h-dvh md:h-239 bg-cream" />
     }
 
     if (!book) {
         return (
-            <div>
-                <p>Book not found</p>
-
+            <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col items-center justify-center p-6 text-center">
+                <p className="text-espresso h5">Book not found</p>
                 <button
-                    className="cursor-pointer"
+                    className="mt-4 text-taupe text-body-sm hover:text-espresso cursor-pointer underline transition-all duration-300"
                     onClick={() => navigate("/home")}
                 >
                     Return home screen
@@ -57,23 +49,29 @@ export default function DetailsScreen() {
         )
     }
 
+    const notes = book.notes || []
+    const recentNotes = notes.slice(-3).reverse()
+
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
             <DetailsHeader 
                 book={book} 
                 setIsEditPopupOpen={setIsEditPopupOpen} 
             />
+
             <DetailsHero 
                 title={book.title} 
                 author={book.author} 
                 cover={book.cover} 
                 status={getBookStatus(book.currentPage, book.totalPages)} 
             />
+
             <ProgressCard 
                 currentPage={book.currentPage} 
                 totalPages={book.totalPages} 
                 setIsEditPopupOpen={setIsEditPopupOpen}
             />
+
             <BookInfoCard 
                 genre={book.genre} 
                 totalPages={book.totalPages} 
@@ -81,36 +79,41 @@ export default function DetailsScreen() {
                 format={book.format}
                 rating={book.rating}
             />
+
             <div className="mt-8 mx-6">
-                <div className="flex justify-between">
-                    <h2 className="text-espreso h4">Reading Activity</h2>
-                    <button className="text-taupe text-body-sm cursor-pointer hover:text-espresso transition-all duration-300"
+                <div className="flex justify-between items-center">
+                    <h2 className="text-espresso h4">Reading Activity</h2>
+                    <button 
+                        className="text-taupe text-body-sm cursor-pointer hover:text-espresso transition-all duration-300"
                         onClick={() => setIsReadingActivityPopupOpen(true)}
-                    >View all</button>
+                    >
+                        View all
+                    </button>
                 </div>
-                <ReadingActivityCard 
-                    readingActivity={book.readingActivity} 
-                    currentPage={book.currentPage} 
-                    totalPages={book.totalPages} 
-                    id={id}
-                />
+                <ReadingActivityCard book={book} />
             </div>
+
             <div className="mt-8 mx-6 pb-6">
-                <div className="flex justify-between">
-                    <h2 className="text-espreso h4">Personal notes</h2>
-                    <button className="text-taupe text-body-sm hover:text-espresso transition-all duration-300 cursor-pointer"
+                <div className="flex justify-between items-center">
+                    <h2 className="text-espresso h4">Personal notes</h2>
+                    <button 
+                        className="text-taupe text-body-sm hover:text-espresso transition-all duration-300 cursor-pointer"
                         onClick={() => setIsAllNotesPopupOpen(true)}
-                    >View all</button>
+                    >
+                        View all
+                    </button>
                 </div>
 
                 <div className="mt-4">   
                     <div className="flex flex-col gap-4">
-                        {
-                            book.notes.length === 0 ?
-                            <p className="text-body-sm text-taupe text-center">You haven't added any notes yet</p>
-                            :
-                            book.notes.slice(-3).reverse().map(note => (
+                        {notes.length === 0 ? (
+                            <p className="text-body-sm text-taupe text-center">
+                                You haven't added any notes yet
+                            </p>
+                        ) : (
+                            recentNotes.map(note => (
                                 <PersonalNotesCard 
+                                    key={note._id}
                                     id={note._id} 
                                     content={note.content} 
                                     page={note.page} 
@@ -120,50 +123,57 @@ export default function DetailsScreen() {
                                     setSelectedNoteId={setSelectedNoteId}
                                 />
                             ))
-                        }
+                        )}
                     </div>
 
                     <Button
                         variant="dashed"
                         onClick={() => setIsAddNotePopupOpen(true)}
-                        className="text-taupe mt-4"
+                        className="text-taupe mt-4 w-full"
                     >
                         <span>Add notes</span>
                     </Button>
                 </div>
 
-                { isAllNotesPopupOpen &&
-                    <AllNotes notes={book.notes} setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} setSelectedNoteId={setSelectedNoteId} setIsEditNotePopupOpen={setIsEditNotePopupOpen} />
-                }
-
-                { isAddNotePopupOpen &&
-                    <AddNote 
-                        id={id} 
-                        notes={book.notes} 
-                        totalPages={book.totalPages} 
-                        hideAddNotePopup={hideAddNotePopup} 
+                {isAllNotesPopupOpen && (
+                    <AllNotes 
+                        notes={notes} 
+                        setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} 
+                        setSelectedNoteId={setSelectedNoteId} 
+                        setIsEditNotePopupOpen={setIsEditNotePopupOpen} 
                     />
-                }
+                )}
+
+                {isAddNotePopupOpen && (
+                    <AddNote 
+                        book={book}
+                        hideAddNotePopup={() => setIsAddNotePopupOpen(false)} 
+                    />
+                )}
             </div>
 
-            { isEditPopupOpen &&
+            {isEditPopupOpen && (
                 <EditDetails 
                     book={book} 
                     setIsEditPopupOpen={setIsEditPopupOpen} 
                 />
-            }
+            )}
 
-            { isReadingActivityPopupOpen &&
-                <ReadingActivityPopup setIsReadingActivityPopupOpen={setIsReadingActivityPopupOpen} readingActivity={book.readingActivity} totalPages={book.totalPages} />                
-            }
+            {isReadingActivityPopupOpen && (
+                <ReadingActivityPopup 
+                    setIsReadingActivityPopupOpen={setIsReadingActivityPopupOpen} 
+                    readingActivity={book.readingActivity || []} 
+                    totalPages={book.totalPages} 
+                />                
+            )}
 
-            { isEditNotePopupOpen &&
+            {isEditNotePopupOpen && (
                 <EditNote 
                     book={book} 
-                    hideAddNotePopup={hideAddNotePopup} 
+                    closeEditNotePopup={() => setIsEditNotePopupOpen(false)} 
                     selectedNoteId={selectedNoteId}
                 />
-            }
+            )}
         </div>
     )
 }

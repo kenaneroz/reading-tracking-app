@@ -14,10 +14,12 @@ import { RATING_OPTIONS } from "../../../../shared/constants/ratingOptions.js"
 import { FORMAT_OPTIONS } from "../../../../shared/constants/formatOptions.js"
 
 import { useBooks } from "../../context/BookContext"
+import validateAddBook from "../../utils/validators/validateAddBook.js"
 
 export default function AddBook({ setIsAddBookPopupActive }) {
     const { addBook } = useBooks()
     const [errors, setErrors] = useState({})
+    const [isLoading, setIsLoading] = useState(false)
 
     const [formData, setFormData] = useState({
         cover: "",
@@ -26,7 +28,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
         totalPages: null,
         currentPage: null,
         genre: "",
-        rating: "",
+        rating: null,
         format: ""
     })
 
@@ -35,12 +37,25 @@ export default function AddBook({ setIsAddBookPopupActive }) {
     }
 
     async function handleAddBook() {
+        const validationErrors = validateAddBook(formData)
+        const hasErrors = Object.keys(validationErrors).length > 0
+
+        if (hasErrors) {
+            setErrors(validationErrors)
+            return
+        }
+
+        setIsLoading(true)
+        setErrors({})
+
         try {
             await addBook(formData)
             hideAddBookPopup()
         } catch (error) {
-           setErrors(error.errors || {})
-           console.log(error)
+            setErrors(error.errors || {})
+            console.log(error)
+        } finally {
+            setIsLoading(false)
         }
     }
     
@@ -56,7 +71,9 @@ export default function AddBook({ setIsAddBookPopupActive }) {
         
             <div className="mt-8">
                 <p className="h2 text-espresso">Add a new book</p>
-                <p className="text-body text-coffee mt-2">Begin your next journey by cataloging a new title to your personal collection.</p>
+                <p className="text-body text-coffee mt-2">
+                    Begin your next journey by cataloging a new title to your personal collection.
+                </p>
             </div>
 
             <div className="mt-8">
@@ -96,10 +113,13 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                                 label="Current page"
                                 placeholder="0"
                                 min={0}
-                                max={Number(formData.totalPages)}
+                                max={formData.totalPages ? Number(formData.totalPages) : undefined}
                                 errorMessage={errors.currentPage}
-                                value={formData.currentPage}
-                                onChange={(e) => setFormData(prev => ({...prev, currentPage: Number(e.target.value)}))}
+                                value={formData.currentPage ?? ""}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev, 
+                                    currentPage: e.target.value === "" ? null : Number(e.target.value)
+                                }))}
                             />
                         </div>
                         <div className="flex-1">
@@ -109,10 +129,12 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                                 label="Total pages"
                                 placeholder="1"
                                 min={1}
-                                max={Number(formData.totalPages)}
                                 errorMessage={errors.totalPages}
-                                value={formData.totalPages}
-                                onChange={(e) => setFormData(prev => ({...prev, totalPages: Number(e.target.value)}))}
+                                value={formData.totalPages ?? ""}
+                                onChange={(e) => setFormData(prev => ({
+                                    ...prev, 
+                                    totalPages: e.target.value === "" ? null : Number(e.target.value)
+                                }))}
                             />
                         </div>
                     </div>
@@ -129,7 +151,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                     <Select 
                         id="rating"
                         label="Rating"
-                        value={formData.rating}
+                        value={formData.rating ?? ""}
                         options={RATING_OPTIONS}
                         errorMessage={errors.rating}
                         onChange={(e) => setFormData(prev => ({...prev, rating: e.target.value}))}
@@ -148,8 +170,9 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                 <div className="mt-8">
                     <Button
                         onClick={handleAddBook}
+                        disabled={isLoading}
                     >
-                        <span>Add Book</span>
+                        <span>{isLoading ? "Adding..." : "Add Book"}</span>
                     </Button>
                 </div>
             </div>

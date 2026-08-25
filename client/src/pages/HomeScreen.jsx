@@ -122,14 +122,7 @@ export default function HomeScreen() {
                     <h2 className="h4 text-espresso">Latest activity</h2>
 
                     { recentlyTrackingBook
-                        ? <RecentlyTrackingCard
-                            id={recentlyTrackingBook._id}
-                            title={recentlyTrackingBook.title}
-                            author={recentlyTrackingBook.author}
-                            cover={recentlyTrackingBook.cover}
-                            currentPage={recentlyTrackingBook.currentPage}
-                            totalPages={recentlyTrackingBook.totalPages}
-                        /> 
+                        ? <RecentlyTrackingCard book={recentlyTrackingBook} /> 
                         : <span></span>
                     }
                 </section>

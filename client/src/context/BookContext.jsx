@@ -116,8 +116,8 @@ export function BookProvider({ children }) {
 
     /* *************** Reading activity *************** */
 
-    async function deleteReadingActivity(id, data) {
-        const updatedBook = await updateReadingActivityApi(id, data)
+    async function deleteReadingActivity(id) {
+        const updatedBook = await deleteReadingActivityApi(id)
 
         setBooks(prev =>
             prev.map(book =>

@@ -1,20 +1,14 @@
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
 import ProgressBar from "../shared/ProgressBar"
 import Button from "../shared/Button"
-import { useNavigate } from "react-router-dom"
+import Modal from "../shared/Modal"
 import PositionUpdatePopup from "../shared/PositionUpdatePopup"
-import { useEffect, useState } from "react"
-import { useBooks } from "../../context/BookContext"
 
-export default function RecentlyTrackingCard({ 
-    id, 
-    title, 
-    author, 
-    cover, 
-    currentPage, 
-    totalPages, 
-}) {
-    const { setBooks } = useBooks()
+export default function RecentlyTrackingCard({ book }) {
     const [isPositionUpdatePopupActive, setIsPositionUpdatePopupActive] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (isPositionUpdatePopupActive) {
@@ -30,85 +24,77 @@ export default function RecentlyTrackingCard({
         }
     }, [isPositionUpdatePopupActive])
 
-    const navigate = useNavigate()
     function handleSelectedBook() {
-        navigate(`/book/${id}`)
+        navigate(`/book/${book._id}`)
     }
 
     function showPositionUpdatePopup() {
         setIsPositionUpdatePopupActive(true)
     }
 
+    const currentPage = book.currentPage || 0
+    const totalPages = book.totalPages || 0
+    const remainingPages = Math.max(0, totalPages - currentPage)
+    const completedPercentage = totalPages > 0 
+        ? Math.min(100, Math.floor((currentPage / totalPages) * 100)) 
+        : 0
 
     return (
-        <div
-            className="flex gap-4 items-center bg-beige rounded-[20px] p-5 border border-tan mt-4"
-        >
+        <div className="flex gap-4 items-center bg-beige rounded-[20px] p-5 border border-tan mt-4">
             <img 
-                src={cover}
-                alt=""
+                src={book.cover}
+                alt={book.title}
                 className="w-20 aspect-5/8 rounded-[10px] object-cover cursor-pointer"
                 onClick={handleSelectedBook}
             />
 
             <div className="flex-1">
                 <div>
-                    <h3 className="h5 text-espresso">{title}</h3>
-                    <p className="text-body-sm text-taupe mt-1">{author}</p>
+                    <h3 className="h5 text-espresso">{book.title}</h3>
+                    <p className="text-body-sm text-taupe mt-1">{book.author}</p>
                 </div>
 
-                <div
-                    className="flex justify-between items-center mt-4"
-                >
+                <div className="flex justify-between items-center mt-4">
                     <div>
-                        <p
-                            className="text-body-sm text-taupe"
-                        >Current position</p>
-                        <p
-                            className="text-body text-espresso font-semibold mt-1"
-                        >Page {currentPage || 0}</p>
+                        <p className="text-body-sm text-taupe">Current position</p>
+                        <p className="text-body text-espresso font-semibold mt-1">
+                            Page {currentPage}
+                        </p>
                     </div>
 
                     <div>
-                        <p
-                            className="text-body-sm text-taupe"
-                        >Remaining</p>
-                        <p
-                            className="text-body text-espresso font-semibold mt-1"
-                        >{totalPages - currentPage} pages</p>
+                        <p className="text-body-sm text-taupe">Remaining</p>
+                        <p className="text-body text-espresso font-semibold mt-1">
+                            {remainingPages} pages
+                        </p>
                     </div>
                 </div>
 
-                <div
-                    className="mt-3"
-                >
+                <div className="mt-3">
                     <ProgressBar 
                         currentPage={currentPage}
                         totalPages={totalPages}
                     />
-                    <p
-                        className="text-body-sm text-taupe mt-2"
-                    >{Math.floor((currentPage / totalPages) * 100)}% completed</p>
+                    <p className="text-body-sm text-taupe mt-2">
+                        {completedPercentage}% completed
+                    </p>
                 </div>
 
                 <div className="mt-4">
-                    <Button
-                        onClick={showPositionUpdatePopup}
-                    >
+                    <Button onClick={showPositionUpdatePopup}>
                         <span>Update progress</span>
                     </Button>
                 </div>
             </div>
 
-            { isPositionUpdatePopupActive &&
-                <PositionUpdatePopup
-                    id={id}
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
-                    setBooks={setBooks}
-                />
-            }
+            {isPositionUpdatePopupActive && (
+                <Modal>
+                    <PositionUpdatePopup
+                        book={book}
+                        setIsPositionUpdatePopupActive={setIsPositionUpdatePopupActive}
+                    />
+                </Modal>
+            )}
         </div>
     )
 }

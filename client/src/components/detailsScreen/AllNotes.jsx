@@ -2,7 +2,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import PersonalNotesCard from "./PersonalNotesCard";
 
-export default function AllNotes({ notes, setIsAllNotesPopupOpen, setSelectedNoteId, setIsEditNotePopupOpen }) {
+export default function AllNotes({ 
+    notes, 
+    setIsAllNotesPopupOpen, 
+    setSelectedNoteId, 
+    setIsEditNotePopupOpen,
+}) {
     return (
         <div className="fixed bg-espresso/40 inset-0 z-30">
             <div className="p-6 bg-beige border border-tan rounded-[20px] fixed left-6 right-6 top-6 bottom-6 md:max-w-[392px] md:max-h-[908px] overflow-y-auto">
