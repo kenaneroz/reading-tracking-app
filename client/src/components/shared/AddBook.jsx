@@ -17,7 +17,7 @@ import { useBooks } from "../../context/BookContext"
 import validateAddBook from "../../utils/validators/validateAddBook.js"
 
 export default function AddBook({ setIsAddBookPopupActive }) {
-    const { addBook } = useBooks()
+    const { books, addBook } = useBooks()
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
 
@@ -37,7 +37,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
     }
 
     async function handleAddBook() {
-        const validationErrors = validateAddBook(formData)
+        const validationErrors = validateAddBook(formData, books)
         const hasErrors = Object.keys(validationErrors).length > 0
 
         if (hasErrors) {

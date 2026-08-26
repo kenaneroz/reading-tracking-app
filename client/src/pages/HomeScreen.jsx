@@ -5,8 +5,6 @@ import BookCarousel from "../components/homeScreen/BookCarousel"
 import SortControl from "../components/homeScreen/SortControl"
 import Input from "../components/shared/form/Input"
 import RecentlyTrackingCard from "../components/homeScreen/RecentlyTrackingCard"
-import BottomNavigation from "../components/shared/BottomNavigation"
-import AddBook from "../components/shared/AddBook"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { GalleryHorizontalEndIcon, Search02Icon } from "@hugeicons/core-free-icons";
 
@@ -15,7 +13,7 @@ import { getBookStatus } from "../utils/bookUtils.js"
 import { useBooks } from "../context/BookContext"
 
 export default function HomeScreen() {
-    const { books, getBooks, loading } = useBooks()
+    const { books, loading } = useBooks()
     const [activeStatusFilter, setActiveStatusFilter] = useState("All")
     const [isSortControlVisible, setIsSortControlVisible] = useState(false)
     const [activeSortControl, setActiveSortControl] = useState("Recently added")
@@ -51,8 +49,7 @@ export default function HomeScreen() {
 
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
-            {/* -–––*–––- */}
+        <>
             <Header
                 isSearchBoxVisible={isSearchBoxVisible}
                 setSearchBoxVisibility={setIsSearchBoxVisible}
@@ -127,8 +124,6 @@ export default function HomeScreen() {
                     }
                 </section>
             </div>
-
-            <BottomNavigation />
-        </div>
+        </>
     )
 }

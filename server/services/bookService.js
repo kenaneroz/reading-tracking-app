@@ -29,6 +29,19 @@ export async function createBookService(data) {
         format
     } = data
 
+    const cleanTitle = title?.trim()
+    const existingBook = await Book.findOne({
+        userId,
+        title: { $regex: `^${cleanTitle}$`, $options: "i" }
+    })
+    if (existingBook) {
+        throw new AppError(
+            "This book is already in your library", 
+            409,
+            { title: "This book is already in your library" }
+        )
+    }
+
     const startingPage = currentPage ?? 0
 
     const readingActivity = 
@@ -41,7 +54,7 @@ export async function createBookService(data) {
 
     const newBook = await Book.create({ 
         userId,
-        title, 
+        title: cleanTitle, 
         author,
         genre,
         cover,

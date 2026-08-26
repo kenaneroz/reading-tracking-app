@@ -11,9 +11,9 @@ export async function getUser(token) {
             }
         }
     )
-
+    
     const result = await response.json()
-
+    
     if (!response.ok) {
         throw result
     }

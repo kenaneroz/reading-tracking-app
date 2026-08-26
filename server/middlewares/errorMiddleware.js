@@ -16,6 +16,7 @@ export default function errorMiddleware(error, req, res, next) {
 
     res.status(statusCode).json({
         success: false,
+        statusCode,
         message,
         errors: error.errors || null
     })

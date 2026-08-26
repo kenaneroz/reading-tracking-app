@@ -9,7 +9,7 @@ export default function StartScreen() {
     const navigate = useNavigate()
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="relative w-full flex-1 min-h-0">
                 <img src="/background-2.jpg" alt="" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cream"></div>

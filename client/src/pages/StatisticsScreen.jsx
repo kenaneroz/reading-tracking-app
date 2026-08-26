@@ -11,9 +11,8 @@ import LongestBookCard from "../components/stats/LongestBookCard"
 import LongestStreak from "../components/stats/LongestStreak"
 import RatingCard from "../components/stats/RatingCard"
 import FormatDistributionCard from "../components/stats/FormatDistributionCard"
-import BottomNavigation from "../components/shared/BottomNavigation"
 
-import { Car, LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
+import { LibrariesIcon, NoteIcon, BookOpen02Icon, SmartPhone01Icon, FileHeadphoneIcon, Pdf01Icon } from "@hugeicons/core-free-icons"
 
 import { getBookStatus } from "../utils/bookUtils.js"
 
@@ -194,7 +193,7 @@ export default function StatisticsScreen() {
     })
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
+        <>
             <div className="flex-1 bg-cream overflow-y-auto py-6">
                 <div className="px-5">
                     <StatsHeader />
@@ -292,8 +291,6 @@ export default function StatisticsScreen() {
                     </CardShell>                
                 </div>
             </div>
-
-            <BottomNavigation />
-        </div>
+        </>
     )
 }

@@ -49,7 +49,7 @@ export default function EditProfileScreen() {
     const token = localStorage.getItem("token")
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto">
+        <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
                 <HugeiconsIcon 
                     icon={ArrowLeft02Icon} 

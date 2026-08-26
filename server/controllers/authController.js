@@ -7,8 +7,6 @@ import {
     updateUserService,
     deleteUserService
 } from "../services/authService.js"
-import AppError from "../errors/AppError.js"
-
 
 function generateToken(userId) {
     return jwt.sign({ userId: userId }, process.env.JWT_SECRET, { 
@@ -19,7 +17,7 @@ function generateToken(userId) {
 export async function getUser(req, res) {
     const user = await getUserService(req.userId)
 
-    res.json({
+    res.status(200).json({
         success: true,
         message: "User fetching successful",
         data: user

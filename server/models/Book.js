@@ -100,6 +100,14 @@ const bookSchema = new mongoose.Schema(
     }
 ) 
 
+bookSchema.index(
+    { userId: 1, title: 1 }, 
+    { 
+        unique: true,
+        collation: { locale: "en", strength: 2 }
+    }
+)
+
 const Book = mongoose.model("Book", bookSchema)
 
 export default Book

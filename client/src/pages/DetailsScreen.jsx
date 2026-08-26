@@ -53,7 +53,7 @@ export default function DetailsScreen() {
     const recentNotes = notes.slice(-3).reverse()
 
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col overflow-y-auto relative">
+        <div className="flex-1 overflow-y-auto flex flex-col">
             <DetailsHeader 
                 book={book} 
                 setIsEditPopupOpen={setIsEditPopupOpen} 

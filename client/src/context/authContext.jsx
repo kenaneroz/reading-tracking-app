@@ -14,7 +14,7 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
     const [token, setToken] = useState(() => {
         const t = localStorage.getItem("token")
-
+        
         if (t) {
             try {
                 const exp = jwtDecode(t)?.exp
@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
                     return null
                 } 
             } catch (error) {
-                console.error("Invalid token format", error)
+                console.error(error)
                 localStorage.removeItem("token")
                 return null
             }
@@ -46,8 +46,8 @@ export function AuthProvider({ children }) {
                 const userData = await getUserApi(token)
                 setUser(userData)
             } catch (error) {
-                console.error("User information could not be retrieved: ", error)
-                logout()
+                console.error(error)
+                if (error.statusCode === 401) logout()
             } finally {
                 setLoading(false)
             }
