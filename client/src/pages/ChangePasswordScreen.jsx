@@ -10,7 +10,7 @@ import Button from "../components/shared/Button"
 import { useAuth } from "../context/authContext"
 
 export default function ChangePasswordScreen() {
-    const { logout, updateAccountDetails } = useAuth()
+    const { logout, updatePassword } = useAuth()
     
     const [formData, setFormData] = useState({
         currentPassword: "",
@@ -32,7 +32,7 @@ export default function ChangePasswordScreen() {
         const token = localStorage.getItem("token")
 
         try {
-            await updateAccountDetails(token, formData)
+            await updatePassword(token, formData)
             logout()
         } catch (error) {
             setErrors(error.errors || {})

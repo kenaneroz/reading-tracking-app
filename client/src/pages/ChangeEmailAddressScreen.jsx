@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/authContext"
 
 export default function ChangeEmailAddressScreen() {
-    const { user, updateAccountDetails, logout } = useAuth()
+    const { user, updateEmail, logout } = useAuth()
     
     const initialData = useRef({
         email: user.email
@@ -30,7 +30,7 @@ export default function ChangeEmailAddressScreen() {
         const token = localStorage.getItem("token")
 
         try {
-            await updateAccountDetails(token, formData)
+            await updateEmail(token, formData)
             logout()
         } catch (error) {
             setErrors(error.errors || {})

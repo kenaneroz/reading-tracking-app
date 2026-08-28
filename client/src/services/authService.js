@@ -1,107 +1,97 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
+const API_URL = import.meta.env.API_URL || "http://localhost:3000"
 
-export async function getUser(token) {
+async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
     const response = await fetch(
-        `${API_URL}/auth/me`,
+        `${API_URL}${endpoint}`, 
         {
-            method: "GET",
+            method,
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
+                ...(body !== undefined && { "Content-Type": "application/json" }),
+                ...(token && { Authorization: `Bearer ${token}` })
+            },
+            ...(body !== undefined && { body: JSON.stringify(body) })
         }
     )
-    
+
     const result = await response.json()
-    
+
     if (!response.ok) {
         throw result
     }
 
     return result.data
+}
+
+export async function getUser(token) {
+    return apiFetch(
+        "/auth/me", 
+        {}, 
+        token
+    )
 }
 
 export async function register(data) {
-    const response = await fetch(
-        `${API_URL}/auth/register`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        }
+    return apiFetch(
+        "/auth/register", 
+        { method: 'POST', body: data }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
 export async function login(data) {
-    const response = await fetch(
-        `${API_URL}/auth/login`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        }
+    return apiFetch(
+        "/auth/login", 
+        { method: 'POST', body: data }
     )
-
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
 }
 
-export async function updateUser(token, data) {
-    const response = await fetch(
-        `${API_URL}/auth/me`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(data)
-        }
+export async function updateProfile(token, data) {
+    return apiFetch(
+        "/auth/me", 
+        { method: 'PATCH', body: data }, 
+        token
     )
+}
 
-    const result = await response.json()
+export async function updateEmail(token, data) {
+    return apiFetch(
+        "/auth/me/email", 
+        { method: 'PATCH', body: data }, 
+        token
+    )
+}
 
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
+export async function updatePassword(token, data) {
+    return apiFetch(
+        "/auth/me/password", 
+        { method: 'PATCH', body: data }, 
+        token
+    )
 }
 
 export async function deleteUser(token) {
-    const response = await fetch(
-        `${API_URL}/auth/me`,
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        }
+    return apiFetch(
+        "/auth/me", 
+        { method: 'DELETE' }, 
+        token
     )
+}
 
-    const result = await response.json()
+export async function forgotPassword(data) {
+    return apiFetch(
+        "/auth/forgot-password", 
+        { method: 'POST', body: data }
+    )
+}
 
-    if (!response.ok) {
-        throw result
-    }
+export async function resetPassword(resetPasswordToken, data) {
+    return apiFetch(
+        `/auth/reset-password?token=${resetPasswordToken}`, 
+        { method: 'PATCH', body: data }
+    )
+}
 
-    return result.data
+export async function verifyResetToken(resetPasswordToken) {
+    return apiFetch(
+        `/auth/reset-password/verify-token?token=${resetPasswordToken}`
+    )
 }

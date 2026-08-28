@@ -1,10 +1,16 @@
 import bcrypt from "bcryptjs"
 import User from "../models/User.js"
 import Book from "../models/Book.js"
+import { Token } from "../models/Token.js"
 
 import AppError from "../errors/AppError.js"
 
 import { jwtDecode } from "jwt-decode"
+import crypto from "crypto"
+import { transporter } from "../config/mailer.js"
+
+import dotenv from "dotenv"
+dotenv.config()
  
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
@@ -137,4 +143,78 @@ export async function deleteUserService(userId) {
     await Book.deleteMany({ userId: userId })
 
     return user
+}
+
+export async function forgotPasswordService(email) {
+    const user = await User.findOne( { email: email })
+
+    if (!user) {
+        return true
+    }
+
+    await Token.deleteMany({ userId: user._id, type: "reset-password" })
+
+    const rawToken = crypto.randomBytes(32).toString("hex")
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(rawToken)
+        .digest("hex")
+
+    await Token.create({
+        userId: user._id,
+        type: "reset-password",
+        token: hashedToken,
+        expiresAt: Date.now() + 300000
+    })
+
+    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${rawToken}`
+
+    await transporter.sendMail({
+      from: "noreply@reading-tracking-app.kenaneroz.com",
+      to: user.email,
+      subject: "Reset password – Reading Tracking App",
+      html: `<p>To reset your password <a href="${resetLink}">click here</a>. The link expires in 5 minutes.</p>`,
+    })
+
+    return true
+}
+
+export async function resetPasswordService(token, data) {
+    if (!token) {
+        throw new AppError(
+            "Invalid or expired link", 
+            400,
+            {
+                link: "Invalid or expired link"
+            }
+        )
+    }
+
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex")
+
+    const t = await Token.findOne( { type: "reset-password", token: hashedToken })
+
+    if (!t || 
+        t.expiresAt < Date.now()
+    ) {
+        throw new AppError(
+            "Invalid or expired link", 
+            400,
+            {
+                link: "Invalid or expired link"
+            }
+        )    
+    }
+
+    await Token.deleteOne({ _id: token._id })
+
+    const hashedPassword = await bcrypt.hash(data.newPassword, 10)
+
+    return User.findByIdAndUpdate(
+        t.userId,
+        { password: hashedPassword }
+    )
 }

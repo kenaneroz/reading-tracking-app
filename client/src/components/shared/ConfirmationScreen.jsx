@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ResetPasswordIcon } from "@hugeicons/core-free-icons"
+import { Tick02Icon, Alert02Icon } from "@hugeicons/core-free-icons"
 
 
 import Button from "./Button"
@@ -29,7 +29,7 @@ export default function ConfirmationScreen({
                 /> 
 
                 <HugeiconsIcon 
-                    icon={icon} 
+                    icon={iconVariant === "success" ? Tick02Icon : Alert02Icon} 
                     size={40} 
                     strokeWidth={1.5} 
                     className="text-espresso absolute"
@@ -44,7 +44,7 @@ export default function ConfirmationScreen({
             <Button 
                 onClick={() => {
                     navigate(buttonDestination)
-                    onClose()
+                    onClose?.()
                 }}
                 className="mt-8"
             >

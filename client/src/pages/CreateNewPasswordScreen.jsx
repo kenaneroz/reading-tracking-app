@@ -5,7 +5,12 @@ import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
 
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
+
+import { useAuth } from "../context/authContext"
+import validateResetPassword from "../utils/validators/validateResetPassword"
+import ConfirmationScreen from "../components/shared/ConfirmationScreen"
+import { useEffect } from "react"
 
 export default function CreateNewPasswordScreen() {
     const [formData, setFormData] = useState({
@@ -13,8 +18,90 @@ export default function CreateNewPasswordScreen() {
         confirmNewPassword: ""
     })
     const [errors, setErrors] = useState({})
+    const { verifyResetToken, resetPassword } = useAuth()
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get("token")
+    const [loading, setLoading] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [verifying, setVerifying] = useState(true)
 
-    const navigate = useNavigate()
+    const navigate = useNavigate()  
+
+    useEffect(() => {
+        if (!token) {
+            setErrors({ link: "Invalid or expired link" })
+            setVerifying(false)
+            return
+        }
+
+        async function verifyToken() {
+            try {
+                await verifyResetToken(token)
+            } catch (error) {
+                setSuccess(false)
+                setErrors(error.errors || {})
+                console.error(error)
+            } finally {
+                setVerifying(false)
+            }
+        }
+
+        verifyToken()
+    }, [])
+
+    async function handleReset() {
+        setLoading(true)
+        setErrors({})
+
+        try {
+            const validationErrors = validateResetPassword(formData)
+            const hasErrors = Object.keys(validationErrors).length > 0
+
+            if (hasErrors) {
+                setErrors(validationErrors)
+                return
+            }
+
+            await resetPassword(token, formData)
+            setSuccess(true)
+        } catch (error) {
+            setErrors(error.errors || {})
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    if (verifying) {
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center">
+                <p className="text-espresso text-body">Verifying...</p>
+            </div>
+        )
+    }
+
+    if (success) {
+        return (
+            <ConfirmationScreen 
+                iconVariant="success"
+                title="Password reset successful"
+                message="Your password has been successfully updated. You can now log in with your new password."
+                buttonText="Back to login"
+                buttonDestination="/sign-in"
+            />            
+        )
+    }
+
+    if (errors.link) {
+        return (
+            <ConfirmationScreen 
+                title="Invalid or expired link"
+                message="This password reset link is invalid or has expired. Please request a new one."
+                buttonText="Request new link"
+                buttonDestination="/forgot-password"
+            />           
+        )        
+    }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
@@ -52,7 +139,7 @@ export default function CreateNewPasswordScreen() {
                             placeholder="New password"
                             value={formData.newPassword}
                             onChange={(e) => setFormData(prev => ({...prev, newPassword: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.newPassword}
                         />
 
                         <PasswordInput 
@@ -61,26 +148,27 @@ export default function CreateNewPasswordScreen() {
                             placeholder="Confirm new password"
                             value={formData.confirmNewPassword}
                             onChange={(e) => setFormData(prev => ({...prev, confirmNewPassword: e.target.value}))}
-                            errorMessage=""
+                            errorMessage={errors.confirmNewPassword}
                         />
                     </div>
 
                     <Button
-                        onClick=""
+                        onClick={handleReset}
                         className="mt-7"
+                        disabled={loading}
                     >
-                        <span>Reset password</span>
+                        <span>{loading ? "Resetting" : "Reset password"}</span>
                     </Button>
                 </div>
 
                 <div
-                    className="cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300"
-                    onClick={() => navigate("/sign-in")}
+                    className={`cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300 ${loading ? "pointer-events-none opacity-50" : ""}`}
+                    onClick={() => !loading && navigate("/sign-in")}
                 >
-                    <HugeiconsIcon 
-                        icon={ArrowLeft02Icon} 
-                        size={16} 
-                        strokeWidth={1} 
+                    <HugeiconsIcon
+                        icon={ArrowLeft02Icon}
+                        size={16}
+                        strokeWidth={1}
                     />
                     <p className="font-medium">Back to login</p>
                 </div>

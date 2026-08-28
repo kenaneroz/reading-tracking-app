@@ -13,7 +13,7 @@ import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
 import { useAuth } from "../context/authContext"
 
 export default function EditProfileScreen() {
-    const { user, updateAccountDetails, deleteAccount } = useAuth()
+    const { user, updateProfile, deleteAccount } = useAuth()
 
     const initialData = useRef({
         profilePhoto: user.profilePhoto,
@@ -38,7 +38,7 @@ export default function EditProfileScreen() {
         const token = localStorage.getItem("token")
 
         try {
-            await updateAccountDetails(token, formData)
+            await updateProfile(token, formData)
             initialData.current = { ...formData }
         } catch (error) {
             setErrors(error.errors || {})

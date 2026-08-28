@@ -5,7 +5,9 @@ import {
     registerService,
     loginService,
     updateUserService,
-    deleteUserService
+    deleteUserService,
+    forgotPasswordService,
+    resetPasswordService
 } from "../services/authService.js"
 
 function generateToken(userId) {
@@ -73,15 +75,7 @@ export async function updateUser(req, res) {
     res.status(200).json({
         success: true,
         message: "Account information updated successfully",
-        data: {
-            user: {
-                _id: user._id,
-                profilePhoto: user.profilePhoto,
-                name: user.name,
-                surname: user.surname,
-                email: user.email
-            }
-        }
+        data: user
     })
 }
 
@@ -92,5 +86,28 @@ export async function deleteUser(req, res) {
         success: true,
         message: "Account deleted successfully",
         data: user
+    })
+}
+
+export async function forgotPassword(req, res) {
+    await forgotPasswordService(req.body.email)
+
+    res.status(200).json({
+        success: true,
+        message: "If this email is exist, a reset link was sent to the provided email",
+        data: []
+    })
+}
+
+export async function resetPassword(req, res) {
+    const { token } = req.query
+    const data = req.body
+
+    await resetPasswordService(token, data)
+
+    res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
+        data: []
     })
 }

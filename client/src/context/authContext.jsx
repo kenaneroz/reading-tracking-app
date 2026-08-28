@@ -3,8 +3,13 @@ import {
     getUser as getUserApi,
     login as loginApi, 
     register as registerApi,
-    updateUser as updateUserApi,
-    deleteUser as deleteUserApi
+    updateProfile as updateProfileApi,
+    updateEmail as updateEmailApi,
+    updatePassword as updatePasswordApi,
+    forgotPassword as forgotPasswordApi,
+    resetPassword as resetPasswordApi,
+    deleteUser as deleteUserApi,
+    verifyResetToken as verifyResetTokenApi
 } from "../services/authService"
 
 import { jwtDecode } from "jwt-decode"
@@ -84,14 +89,27 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
-    async function updateAccountDetails(token, data) {
-        const updatedUser = await updateUserApi(token, data)
+    async function updateProfile(token, data) {
+        const updatedUser = await updateProfileApi(token, data)
+        setUser(updatedUser)
+        return updatedUser
+    }
 
-        const { password, ...userWithoutPassword } = updatedUser.user
+    async function updateEmail(token, data) {
+        const updatedUser = await updateEmailApi(token, data)
+        setUser(updatedUser)
+        return updatedUser
+    }
 
-        setUser(userWithoutPassword)
+    async function updatePassword(token, data) {
+        await updatePasswordApi(token, data)
+    }
 
-        return userWithoutPassword
+    async function forgotPassword(data) {
+        await forgotPasswordApi(data)
+    }
+    async function resetPassword(resetToken, data) {
+        await resetPasswordApi(resetToken, data)
     }
 
     async function deleteAccount(token) {
@@ -100,6 +118,10 @@ export function AuthProvider({ children }) {
         return deletedAccount
     }
  
+    async function verifyResetToken(resetToken) {
+        await verifyResetTokenApi(resetToken)
+    }
+
     return (
         <AuthContext.Provider 
             value={
@@ -112,8 +134,13 @@ export function AuthProvider({ children }) {
                     login, 
                     register, 
                     logout,
-                    updateAccountDetails,
-                    deleteAccount
+                    updateProfile,
+                    updateEmail,
+                    updatePassword,
+                    forgotPassword,
+                    resetPassword,
+                    deleteAccount,
+                    verifyResetToken
                 }
             }
         >
