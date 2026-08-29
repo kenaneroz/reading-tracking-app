@@ -68,11 +68,25 @@ export async function updatePassword(token, data) {
     )
 }
 
-export async function deleteUser(token) {
+export async function requestDeleteAccount(token) {
     return apiFetch(
-        "/auth/me", 
-        { method: 'DELETE' }, 
+        "/auth/request-delete-account",
+        { method: 'POST' },
         token
+    )
+}
+
+export async function confirmDeleteAccount(token, deleteAcccountToken) {
+    return apiFetch(
+        `/auth/confirm-delete-account?token=${deleteAcccountToken}`,
+        { method: 'DELETE' },
+        token
+    )
+}
+
+export async function verifyDeleteAccountToken(deleteAccountToken) {
+    return apiFetch(
+        `/auth/confirm-delete-account/verify-token?token=${deleteAccountToken}`
     )
 }
 

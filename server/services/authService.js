@@ -133,16 +133,72 @@ export async function updateUserService(userId, data) {
     )
 }
 
-export async function deleteUserService(userId) {
-    const user = await User.findByIdAndDelete(userId)
+export async function requestDeleteAccountService(userId) {
+    const user = await User.findById(userId)
 
     if (!user) {
         throw new AppError("User not found", 400)
     }
 
-    await Book.deleteMany({ userId: userId })
+    await Token.deleteMany({ userId: user._id, type: "delete-account" })
 
-    return user
+    const rawToken = crypto.randomBytes(32).toString("hex")
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(rawToken)
+        .digest("hex")
+
+    await Token.create({
+        userId: user._id,
+        type: "delete-account",
+        token: hashedToken,
+        expiresAt: Date.now() + 900000
+    })
+
+    const link = `${process.env.CLIENT_URL}/confirm-delete-account?token=${rawToken}`
+
+    await resend.emails.send({
+      from: "noreply@reading-tracking-app.kenaneroz.com",
+      to: user.email,
+      subject: "Delete account – Reading Tracking App",
+      html: `<p>To confirm deleting your account <a href="${link}">click here</a>. The link expires in 15 minutes.</p>`,
+    })
+
+    return true
+}
+
+export async function confirmDeleteAccountService(userId, token) {
+    const user = await User.findById(userId)
+
+    if (!user) {
+        throw new AppError("User not found", 400)
+    }
+ 
+    const hashedToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex")
+
+    const t = await Token.findOne({ type: "delete-account", token: hashedToken })
+
+    if (
+        !t ||
+        t.expiresAt < Date.now()
+    ) {
+        throw new AppError(
+            "Invalid or expired token",
+            400,
+            {
+                token: "Invalid or expired token"
+            }
+        )
+    }
+
+    await User.findByIdAndDelete(userId)
+    await Book.deleteMany({ userId: userId })
+    await Token.deleteMany({ userId: userId })
+
+    return true
 }
 
 export async function forgotPasswordService(email) {

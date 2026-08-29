@@ -9,11 +9,11 @@ import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
 import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
-
 import { useAuth } from "../context/authContext"
+import Modal from "../components/shared/Modal"
 
 export default function EditProfileScreen() {
-    const { user, updateProfile, deleteAccount } = useAuth()
+    const { user, updateProfile, requestDeleteAccount } = useAuth()
 
     const initialData = useRef({
         profilePhoto: user.profilePhoto,
@@ -29,8 +29,22 @@ export default function EditProfileScreen() {
 
     const [errors, setErrors] = useState({})
     const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
-
+    const [sending, setSending] = useState(false)
     const navigate = useNavigate()
+
+    async function handleRequestDeleteAccount(params) {
+        setSending(true)
+
+        try {
+            await requestDeleteAccount(token)
+            navigate("/edit-profile/delete-account/check-email")
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setSending(false)
+            setIsConfirmPopupOpen(false)
+        }
+    }
 
     async function handleUpdate() {
         if (!hasChanges) return
@@ -132,14 +146,17 @@ export default function EditProfileScreen() {
                     Request delete account
                 </p>
 
-                {isConfirmPopupOpen &&
+                {sending &&
+                    <Modal>
+                        <p className="text-espresso h3 text-center">Sending...</p>
+                    </Modal>
+                }
+
+                {(!sending && isConfirmPopupOpen) &&
                     <ConfirmDeletePopup 
                         cancel={() => setIsConfirmPopupOpen(false)}
-                        delete_={() => {
-                            setIsConfirmPopupOpen(false)
-                            deleteAccount(token)
-                        }}
-                        message="This action cannot be undone once confirmed."
+                        delete_={handleRequestDeleteAccount}
+                        message="We will sent a confirmation link to your email. Click the link to permanently delete your account."
                     />
                 }
             </div>

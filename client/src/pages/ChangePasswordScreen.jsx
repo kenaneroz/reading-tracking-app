@@ -33,7 +33,7 @@ export default function ChangePasswordScreen() {
 
         try {
             await updatePassword(token, formData)
-            logout()
+            navigate("/edit-profile/change-password/success")
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)

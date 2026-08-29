@@ -8,7 +8,9 @@ import {
     updatePassword as updatePasswordApi,
     forgotPassword as forgotPasswordApi,
     resetPassword as resetPasswordApi,
-    deleteUser as deleteUserApi,
+    requestDeleteAccount as requestDeleteAccountApi,
+    confirmDeleteAccount as confirmDeleteAccountApi,
+    verifyDeleteAccountToken as verifyDeleteAccountTokenApi,
     verifyResetToken as verifyResetTokenApi
 } from "../services/authService"
 
@@ -112,12 +114,18 @@ export function AuthProvider({ children }) {
         await resetPasswordApi(resetToken, data)
     }
 
-    async function deleteAccount(token) {
-        const deletedAccount = await deleteUserApi(token)
-        logout()
-        return deletedAccount
+    async function requestDeleteAccount(token) {
+        await requestDeleteAccountApi(token)
     }
- 
+
+    async function confirmDeleteAccount(token, deleteAccountToken) {
+        await confirmDeleteAccountApi(token, deleteAccountToken)
+    }
+
+    async function verifyDeleteAccountToken(deleteAccountToken) {
+        await verifyDeleteAccountTokenApi(deleteAccountToken)
+    }
+
     async function verifyResetToken(resetToken) {
         await verifyResetTokenApi(resetToken)
     }
@@ -139,7 +147,9 @@ export function AuthProvider({ children }) {
                     updatePassword,
                     forgotPassword,
                     resetPassword,
-                    deleteAccount,
+                    requestDeleteAccount,
+                    verifyDeleteAccountToken,
+                    confirmDeleteAccount,
                     verifyResetToken
                 }
             }

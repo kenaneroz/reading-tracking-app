@@ -22,7 +22,6 @@ export default function CreateNewPasswordScreen() {
     const [searchParams] = useSearchParams()
     const token = searchParams.get("token")
     const [loading, setLoading] = useState(false)
-    const [success, setSuccess] = useState(false)
     const [verifying, setVerifying] = useState(true)
 
     const navigate = useNavigate()  
@@ -38,7 +37,6 @@ export default function CreateNewPasswordScreen() {
             try {
                 await verifyResetToken(token)
             } catch (error) {
-                setSuccess(false)
                 setErrors(error.errors || {})
                 console.error(error)
             } finally {
@@ -63,7 +61,7 @@ export default function CreateNewPasswordScreen() {
             }
 
             await resetPassword(token, formData)
-            setSuccess(true)
+            navigate("/reset-password/success")
         } catch (error) {
             setErrors(error.errors || {})
             console.error(error)
@@ -80,25 +78,13 @@ export default function CreateNewPasswordScreen() {
         )
     }
 
-    if (success) {
-        return (
-            <ConfirmationScreen 
-                iconVariant="success"
-                title="Password reset successful"
-                message="Your password has been successfully updated. You can now log in with your new password."
-                buttonText="Back to login"
-                buttonDestination="/sign-in"
-            />            
-        )
-    }
-
     if (errors.link) {
         return (
             <ConfirmationScreen 
                 title="Invalid or expired link"
                 message="This password reset link is invalid or has expired. Please request a new one."
                 buttonText="Request new link"
-                buttonDestination="/forgot-password"
+                onPrimaryClick={() => navigate("/forgot-password")}
             />           
         )        
     }

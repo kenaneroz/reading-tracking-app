@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { MailOpenIcon, PasswordValidationIcon } from "@hugeicons/core-free-icons"
 
@@ -25,13 +25,13 @@ import EditProfileScreen from "./pages/EditProfileScreen"
 import ChangeEmailAddressScreen from "./pages/ChangeEmailAddressScreen"
 import ChangePasswordScreen from "./pages/ChangePasswordScreen"
 import ConfirmationScreen from "./components/shared/ConfirmationScreen"
+import ConfirmDeleteAccountScreen from "./pages/ConfirmDeleteAccountScreen.jsx"
 
-function App() {
+function AppRoutes() {
+  const navigate = useNavigate()
+
   return (
-    <AuthProvider>
-      <BookProvider>
-        <BrowserRouter>
-          <Routes>
+    <Routes>
             <Route element={<AppLayout />}>
 
               {/* 1. Auth Flow (Only users who are NOT logged in) */}
@@ -44,11 +44,10 @@ function App() {
                   path="/forgot-password/check-email"
                   element={
                     <ConfirmationScreen
-                      icon={MailOpenIcon}
                       title="Check your email"
                       message="We sent a password reset link to your email."
                       buttonText="Back to login"
-                      buttonDestination="/sign-in"
+                      onPrimaryClick={() => navigate("/sign-in")}
                     />
                   }
                 />
@@ -57,12 +56,11 @@ function App() {
                   path="/reset-password/success"
                   element={
                     <ConfirmationScreen
-                      icon={PasswordValidationIcon}
                       iconVariant="success"
                       title="Password updated"
                       message="Your password has been changed successfully."
                       buttonText="Back to login"
-                      buttonDestination="/sign-in"
+                      onPrimaryClick={() => navigate("/sign-in")}
                     />
                   }
                 />
@@ -83,14 +81,14 @@ function App() {
                   element={<ChangeEmailAddressScreen />}
                 />
                 <Route
-                  path="/edit-profile/change-email/check-email"
+                  path="/edit-profile/change-email/success"
                   element={
                     <ConfirmationScreen
-                      icon={MailOpenIcon}
-                      title="Check your email"
-                      message="We sent a confirmation link to your new email address."
-                      buttonText="Back to profile"
-                      buttonDestination="/edit-profile"
+                      iconVariant="success"
+                      title="Email updated"
+                      message="Your email has been changed successfully."
+                      buttonText="Return to home"
+                      onPrimaryClick={() => navigate("/home")}
                     />
                   }
                 />
@@ -102,12 +100,11 @@ function App() {
                   path="/edit-profile/change-password/success"
                   element={
                     <ConfirmationScreen
-                      icon={PasswordValidationIcon}
                       iconVariant="success"
                       title="Password updated"
                       message="Your password has been changed successfully."
-                      buttonText="Back to profile"
-                      buttonDestination="/edit-profile"
+                      buttonText="Return to home"
+                      onPrimaryClick={() => navigate("/home")}
                     />
                   }
                 />
@@ -115,22 +112,48 @@ function App() {
                   path="/edit-profile/delete-account/check-email"
                   element={
                     <ConfirmationScreen
-                      icon={MailOpenIcon}
-                      iconVariant="neutral"
+                      iconVariant="success"
                       title="Check your email"
                       message="We sent a confirmation link to delete your account. This action cannot be undone once confirmed."
-                      buttonText="Back to login"
-                      buttonDestination="/sign-in"
+                      buttonText="Return to home"
+                      onPrimaryClick={() => navigate("/home")}
                     />
                   }
                 />
+                <Route 
+                  path="/confirm-delete-account"
+                  element={
+                    <ConfirmDeleteAccountScreen />
+                  }
+                />
+                <Route
+                  path="/confirm-delete-account/success"
+                  element={
+                    <ConfirmationScreen
+                      iconVariant="success"
+                      title="Your accound delete"
+                      message="Your account have been permanently deleted. We're sorry to hear that."
+                      buttonText="Create a new account"
+                      onPrimaryClick={() => navigate("/sign-up")}
+                    />
+                  }
+                />                
               </Route>
 
               {/* 3. Unrecognized URL Check (Redirect to the home page instead of a 404) */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
 
-          </Routes>
+    </Routes>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BookProvider>
+        <BrowserRouter>
+          <AppRoutes />
         </BrowserRouter>
       </BookProvider>
     </AuthProvider>

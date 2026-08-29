@@ -31,7 +31,7 @@ export default function ChangeEmailAddressScreen() {
 
         try {
             await updateEmail(token, formData)
-            logout()
+            navigate("/edit-profile/change-email/success")
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)

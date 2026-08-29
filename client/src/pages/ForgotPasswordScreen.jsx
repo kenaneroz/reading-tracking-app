@@ -17,7 +17,6 @@ export default function ForgotPasswordScreen() {
     const [formData, setFormData] = useState({ email: "" })
     const [errors, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
-    const [success, setSuccess] = useState(false)
 
     async function handleSendMail() {
         setLoading(true)
@@ -33,24 +32,12 @@ export default function ForgotPasswordScreen() {
             }
 
             await forgotPassword(formData)
-            setSuccess(true)
+            navigate("/forgot-password/check-email")
         } catch (error) {
             setErrors(error.errors || {})
         } finally {
             setLoading(false)
         }
-    }
-
-    if (success) {
-        return (
-            <ConfirmationScreen 
-                iconVariant="success"
-                title="Check your email"
-                message="If an account exists for that email, we've sent password reset instructions."
-                buttonText="Back to login"
-                buttonDestination="/sign-in"
-            />            
-        )
     }
 
     return (

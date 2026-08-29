@@ -5,7 +5,8 @@ import {
     registerService,
     loginService,
     updateUserService,
-    deleteUserService,
+    requestDeleteAccountService,
+    confirmDeleteAccountService,
     forgotPasswordService,
     resetPasswordService
 } from "../services/authService.js"
@@ -79,13 +80,25 @@ export async function updateUser(req, res) {
     })
 }
 
-export async function deleteUser(req, res) {
-    const user = await deleteUserService(req.userId)
+export async function requestDeleteAccount(req, res) {
+    await requestDeleteAccountService(req.userId)
 
     res.status(200).json({
         success: true,
-        message: "Account deleted successfully",
-        data: user
+        message: "We've sent a confirmation link to your email. Click it to permanently delete your account.",        
+        data: []
+    })
+}
+
+export async function confirmDeleteAccount(req, res) {
+    const { token } = req.query
+    const userId = req.userId
+    await confirmDeleteAccountService(userId, token)
+
+    res.status(200).json({
+        success: true,
+        message: "Your account have been permanently deleted. We're sorry to hear that.",
+        data: []
     })
 }
 

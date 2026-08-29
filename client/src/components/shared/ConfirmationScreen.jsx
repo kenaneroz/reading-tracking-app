@@ -1,23 +1,17 @@
-import { useNavigate } from "react-router-dom"
-
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Tick02Icon, Alert02Icon } from "@hugeicons/core-free-icons"
-
 
 import Button from "./Button"
 
 export default function ConfirmationScreen({
-    icon,
     iconVariant = "neutral",
     title,
     message,
     buttonText,
-    buttonDestination,
-    onClose,
+    onPrimaryClick,
     secondaryText,
     onSecondaryClick,
 }) {
-    const navigate = useNavigate()
 
     return (
         <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col justify-center overflow-y-auto px-5">
@@ -42,10 +36,7 @@ export default function ConfirmationScreen({
             </div>
 
             <Button 
-                onClick={() => {
-                    navigate(buttonDestination)
-                    onClose?.()
-                }}
+                onClick={onPrimaryClick}
                 className="mt-8"
             >
                 {buttonText}
@@ -54,7 +45,7 @@ export default function ConfirmationScreen({
             {secondaryText &&
                 <span 
                     onClick={onSecondaryClick}
-                    className="text-body-sm font-medium text-espresso mt-4 text-center"
+                    className="cursor-pointer text-body-sm font-medium text-espresso mt-4 text-center"
                 >
                     {secondaryText}
                 </span>

@@ -1,6 +1,6 @@
-export default function Loading(children) {
+export default function Loading({ children }) {
     return (
-        <div className="md:w-110 h-dvh md:h-239 bg-cream flex flex-col">
+        <div className="flex-1 w-full bg-cream flex flex-col items-center justify-center">
             {children}
         </div>
     )

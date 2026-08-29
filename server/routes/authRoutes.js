@@ -5,7 +5,8 @@ import {
     register, 
     login,
     updateUser,
-    deleteUser,
+    requestDeleteAccount,
+    confirmDeleteAccount,
     forgotPassword,
     resetPassword,
 } from "../controllers/authController.js"
@@ -20,6 +21,7 @@ import validateResetPassword from "../middlewares/validateResetPassword.js"
 
 import verifyToken from "../middlewares/verifyToken.js"
 import verifyResetToken from "../middlewares/verifyResetToken.js"
+import verifyDeleteAccountToken from "../middlewares/verifyDeleteAccountToken.js"
 
 const router = express.Router()
 
@@ -36,9 +38,14 @@ router
         verifyToken,
         getUser
     )
-    .delete("/me",
+    .post("/request-delete-account",
         verifyToken,
-        deleteUser
+        requestDeleteAccount
+    )
+    .get("/confirm-delete-account/verify-token", verifyDeleteAccountToken)
+    .delete("/confirm-delete-account",
+        verifyToken,
+        confirmDeleteAccount
     )
     .patch("/me",
         verifyToken,
