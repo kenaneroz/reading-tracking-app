@@ -7,7 +7,7 @@ import AppError from "../errors/AppError.js"
 
 import { jwtDecode } from "jwt-decode"
 import crypto from "crypto"
-import { transporter } from "../config/mailer.js"
+import { resend } from "../config/mailer.js"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -169,7 +169,7 @@ export async function forgotPasswordService(email) {
 
     const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${rawToken}`
 
-    await transporter.sendMail({
+    await resend.emails.send({
       from: "noreply@reading-tracking-app.kenaneroz.com",
       to: user.email,
       subject: "Reset password – Reading Tracking App",
