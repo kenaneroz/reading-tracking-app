@@ -70,9 +70,10 @@ export async function login(req, res) {
 export async function updateUser(req, res) {
     const user = await updateUserService(
         req.userId,
-        req.body
+        req.body,
+        req.file 
     )
-
+    
     res.status(200).json({
         success: true,
         message: "Account information updated successfully",

@@ -11,6 +11,10 @@ import { resend } from "../config/mailer.js"
 
 import dotenv from "dotenv"
 dotenv.config()
+
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
+
  
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
@@ -87,7 +91,7 @@ export async function loginService(data) {
     return user
 }
 
-export async function updateUserService(userId, data) {
+export async function updateUserService(userId, data, file) {
     const user = await User.findById(userId)
 
     if (!user) {
@@ -96,8 +100,14 @@ export async function updateUserService(userId, data) {
 
     const updateData = { ...data }
 
-    if (data.newPassword !== undefined) {
+    if (file) {
+        await deleteFromCloudinary("profile-photos", user.profilePhoto)
 
+        const uploadResult = await uploadToCloudinary(file.buffer, "profile-photos")
+        updateData.profilePhoto = uploadResult.secure_url
+    }
+
+    if (data.newPassword !== undefined) {
         const isCurrentPasswordCorrect = await bcrypt.compare(
             data.currentPassword,
             user.password
@@ -107,16 +117,11 @@ export async function updateUserService(userId, data) {
             throw new AppError(
                 "Current password is incorrect",
                 400,
-                {
-                    currentPassword: "Current password is incorrect"
-                }
+                { currentPassword: "Current password is incorrect" }
             )
         }
 
-        updateData.password = await bcrypt.hash(
-            data.newPassword,
-            10
-        )
+        updateData.password = await bcrypt.hash(data.newPassword, 10)
 
         delete updateData.currentPassword
         delete updateData.newPassword
@@ -126,10 +131,7 @@ export async function updateUserService(userId, data) {
     return User.findByIdAndUpdate(
         userId,
         updateData,
-        {
-            new: true,
-            runValidators: true
-        }
+        { new: true, runValidators: true }
     )
 }
 

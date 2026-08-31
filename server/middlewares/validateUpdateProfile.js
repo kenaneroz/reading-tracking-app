@@ -1,13 +1,11 @@
+import AppError from "../errors/AppError.js"
+
 export default function validateUpdateProfile(req, res, next) {
-    const allowedFields = [
-        "profilePhoto",
-        "name",
-        "surname"
-    ]
+    const allowedFields = ["name", "surname"]
 
     const requestFields = Object.keys(req.body)
 
-    if (requestFields.length === 0) {
+    if (requestFields.length === 0 && !req.file) {
         throw new AppError("No fields to update", 400)
     }
 
@@ -20,37 +18,17 @@ export default function validateUpdateProfile(req, res, next) {
     }
 
     const errors = {}
-
-    const {
-        profilePhoto,
-        name,
-        surname
-    } = req.body
+    const { name, surname } = req.body  
 
     const nameSurnameRegex = /^[\p{L}\s]+$/u
-
-    if (profilePhoto != null) {
-        if (typeof profilePhoto !== "string") {
-            errors.profilePhoto = "Profile photo must be a string"
-
-        } else if (profilePhoto.trim() === "") {
-            errors.profilePhoto = "Profile photo cannot be empty"
-
-        } else if (profilePhoto.length > 2048) {
-            errors.profilePhoto = "Profile photo URL cannot be longer than 2048 characters"
-        }
-    }
 
     if (name !== undefined) {
         if (typeof name !== "string" || name.trim() === "") {
             errors.name = "Name is required"
-
         } else if (name.trim().length < 2) {
             errors.name = "Name must be at least 2 characters long"
-
         } else if (name.trim().length > 50) {
             errors.name = "Name cannot be longer than 50 characters"
-
         } else if (!nameSurnameRegex.test(name.trim())) {
             errors.name = "Name must consist only of letters"
         }
@@ -59,13 +37,10 @@ export default function validateUpdateProfile(req, res, next) {
     if (surname !== undefined) {
         if (typeof surname !== "string" || surname.trim() === "") {
             errors.surname = "Surname is required"
-
         } else if (surname.trim().length < 2) {
             errors.surname = "Surname must be at least 2 characters long"
-
         } else if (surname.trim().length > 50) {
             errors.surname = "Surname cannot be longer than 50 characters"
-
         } else if (!nameSurnameRegex.test(surname.trim())) {
             errors.surname = "Surname must consist only of letters"
         }

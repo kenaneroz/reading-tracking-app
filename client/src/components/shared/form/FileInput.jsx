@@ -43,7 +43,7 @@ export default function FileInput({
                     type="file"
                     id={id}
                     name={id}
-                    accept="image/*"
+                    accept=".png, .jpg, .jpeg, .webp"
                     className="hidden"
                     onChange={handleFileChange}
                 />

@@ -28,11 +28,12 @@ export default function EditProfileScreen() {
     const hasChanges = Object.keys(initialData.current).some(key => formData[key] !== initialData.current[key])
 
     const [errors, setErrors] = useState({})
+    const[saving, setSaving] = useState(false)
     const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
     const [sending, setSending] = useState(false)
     const navigate = useNavigate()
 
-    async function handleRequestDeleteAccount(params) {
+    async function handleRequestDeleteAccount() {
         setSending(true)
 
         try {
@@ -47,20 +48,22 @@ export default function EditProfileScreen() {
     }
 
     async function handleUpdate() {
+        setErrors({})
         if (!hasChanges) return
 
         const token = localStorage.getItem("token")
 
         try {
+            setSaving(true)
             await updateProfile(token, formData)
             initialData.current = { ...formData }
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
+        } finally {
+            setSaving(false)
         }
     }
-
-    const token = localStorage.getItem("token")
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
@@ -85,7 +88,7 @@ export default function EditProfileScreen() {
                             id="profile-image"
                             label="Profile image"
                             placeholder="Tap to change the profile photo"
-                            onChange={(file) => setFormData(prev => ({...prev, profilePhoto: URL.createObjectURL(file)}))}
+                            onChange={(file) => setFormData(prev => ({...prev, profilePhoto: file}))}
                             errorMessage={errors.profilePhoto}
                             className="aspect-1/1 rounded-full"
                         />
@@ -114,9 +117,9 @@ export default function EditProfileScreen() {
                     <Button
                         onClick={handleUpdate}
                         className="mt-7"
-                        disabled={!hasChanges}
+                        disabled={!hasChanges || saving}
                     >
-                        <span>Save</span>
+                        <span>{saving ? "Saving" : "Save"}</span>
                     </Button>
                 </div>
 

@@ -6,7 +6,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
         {
             method,
             headers: {
-                ...(body !== undefined && { "Content-Type": "application/json" }),
+                ...((body !== undefined )&& { "Content-Type": "application/json" }),
                 ...(token && { Authorization: `Bearer ${token}` })
             },
             ...(body !== undefined && { body: JSON.stringify(body) })
@@ -45,11 +45,31 @@ export async function login(data) {
 }
 
 export async function updateProfile(token, data) {
-    return apiFetch(
-        "/auth/me", 
-        { method: 'PATCH', body: data }, 
-        token
+    const payload = new FormData()
+    if (data.profilePhoto instanceof File) {
+        payload.append("profilePhoto", data.profilePhoto)
+    }
+    payload.append("name", data.name)
+    payload.append("surname", data.surname)
+
+    const response = await fetch(
+        `${API_URL}/auth/me`,
+        {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: payload
+        }
     )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw result
+    }
+
+    return result.data
 }
 
 export async function updateEmail(token, data) {
