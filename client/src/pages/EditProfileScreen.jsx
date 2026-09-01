@@ -13,22 +13,26 @@ import { useAuth } from "../context/authContext"
 import Modal from "../components/shared/Modal"
 
 export default function EditProfileScreen() {
-    const { user, updateProfile, requestDeleteAccount } = useAuth()
+    const { user, updateProfile, updateProfilePhoto, requestDeleteAccount } = useAuth()
 
-    const initialData = useRef({
-        profilePhoto: user.profilePhoto,
+    const initalPp = useRef(user.profilePhoto)
+    const [pp, setPp] = useState(user.profilePhoto)
+
+    const initialFormData = useRef({
         name: user.name,
         surname: user.surname
     })
     const [formData, setFormData] = useState({
-        profilePhoto: user.profilePhoto,
         name: user.name,
         surname: user.surname
     })
-    const hasChanges = Object.keys(initialData.current).some(key => formData[key] !== initialData.current[key])
+
+    const hasChanges = 
+        Object.keys(initialFormData.current).some(key => formData[key] !== initialFormData.current[key]) ||
+        pp !== initalPp.current
 
     const [errors, setErrors] = useState({})
-    const[saving, setSaving] = useState(false)
+    const [saving, setSaving] = useState(false)
     const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
     const [sending, setSending] = useState(false)
     const navigate = useNavigate()
@@ -55,8 +59,12 @@ export default function EditProfileScreen() {
 
         try {
             setSaving(true)
+
+            await updateProfilePhoto(token, pp)
+            initalPp.current = pp
+
             await updateProfile(token, formData)
-            initialData.current = { ...formData }
+            initialFormData.current = { ...formData }
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
@@ -68,13 +76,18 @@ export default function EditProfileScreen() {
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <button 
+                    disabled={saving}
+                >
+                    <HugeiconsIcon 
+                        icon={ArrowLeft02Icon} 
+                        size={24} 
+                        strokeWidth={1.5} 
+                        className={saving ? "cursor-not-allowed text-taupe" : "cursor-pointer text-taupe hover:text-espresso transition-all duration-300"}
+                        onClick={() => navigate(-1)}
+                    />
+
+                </button>
             </div>
 
             <div className="mt-6 px-5">
@@ -88,7 +101,7 @@ export default function EditProfileScreen() {
                             id="profile-image"
                             label="Profile image"
                             placeholder="Tap to change the profile photo"
-                            onChange={(file) => setFormData(prev => ({...prev, profilePhoto: file}))}
+                            onChange={file => setPp(file)}
                             errorMessage={errors.profilePhoto}
                             className="aspect-1/1 rounded-full"
                         />

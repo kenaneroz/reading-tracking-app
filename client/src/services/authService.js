@@ -1,15 +1,17 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
 async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
+    const isFormData = body instanceof FormData
+
     const response = await fetch(
         `${API_URL}${endpoint}`, 
         {
             method,
             headers: {
-                ...((body !== undefined )&& { "Content-Type": "application/json" }),
+                ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
                 ...(token && { Authorization: `Bearer ${token}` })
             },
-            ...(body !== undefined && { body: JSON.stringify(body) })
+            ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
         }
     )
 
@@ -44,32 +46,23 @@ export async function login(data) {
     )
 }
 
-export async function updateProfile(token, data) {
-    const payload = new FormData()
-    if (data.profilePhoto instanceof File) {
-        payload.append("profilePhoto", data.profilePhoto)
-    }
-    payload.append("name", data.name)
-    payload.append("surname", data.surname)
+export async function updateProfilePhoto(token, file) {
+    const formData = new FormData()
+    formData.append("profilePhoto", file)
 
-    const response = await fetch(
-        `${API_URL}/auth/me`,
-        {
-            method: 'PATCH',
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: payload
-        }
+    return apiFetch(
+        "/auth/me/profile-photo",
+        { method: 'PATCH', body: formData },
+        token
     )
+}
 
-    const result = await response.json()
-
-    if (!response.ok) {
-        throw result
-    }
-
-    return result.data
+export async function updateProfile(token, data) {
+    return apiFetch(
+        "/auth/me",
+        { method: 'PATCH', body: data },
+        token
+    )
 }
 
 export async function updateEmail(token, data) {

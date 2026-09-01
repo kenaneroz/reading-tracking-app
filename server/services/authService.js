@@ -91,7 +91,33 @@ export async function loginService(data) {
     return user
 }
 
-export async function updateUserService(userId, data, file) {
+export async function updatePpService(userId, file) {
+    const user = await User.findById(userId)
+
+    if (!user) {
+        throw new AppError("User not found", 404)
+    }
+
+    if (file) {
+        const uploadResult = await uploadToCloudinary(file.buffer, "profile-photos")
+
+        if (user.profilePhoto) {
+            try {
+                await deleteFromCloudinary("profile-photos", user.profilePhoto)
+            } catch (error) {
+                console.error("Old profile photo deletion failed:", error)
+            }
+        }
+
+        user.profilePhoto = uploadResult.secure_url
+        await user.save()
+    }
+
+    user.password = undefined
+    return user
+}
+
+export async function updateUserService(userId, data) {
     const user = await User.findById(userId)
 
     if (!user) {
@@ -99,13 +125,6 @@ export async function updateUserService(userId, data, file) {
     }
 
     const updateData = { ...data }
-
-    if (file) {
-        await deleteFromCloudinary("profile-photos", user.profilePhoto)
-
-        const uploadResult = await uploadToCloudinary(file.buffer, "profile-photos")
-        updateData.profilePhoto = uploadResult.secure_url
-    }
 
     if (data.newPassword !== undefined) {
         const isCurrentPasswordCorrect = await bcrypt.compare(

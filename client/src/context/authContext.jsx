@@ -3,6 +3,7 @@ import {
     getUser as getUserApi,
     login as loginApi, 
     register as registerApi,
+    updateProfilePhoto as updateProfilePhotoApi,
     updateProfile as updateProfileApi,
     updateEmail as updateEmailApi,
     updatePassword as updatePasswordApi,
@@ -91,6 +92,11 @@ export function AuthProvider({ children }) {
         setUser(null)
     }
 
+    async function updateProfilePhoto(token, file) {
+        const updatedUser = await updateProfilePhotoApi(token, file)
+        setUser(updatedUser)
+        return updatedUser
+    }
     async function updateProfile(token, data) {
         const updatedUser = await updateProfileApi(token, data)
         setUser(updatedUser)
@@ -142,6 +148,7 @@ export function AuthProvider({ children }) {
                     login, 
                     register, 
                     logout,
+                    updateProfilePhoto,
                     updateProfile,
                     updateEmail,
                     updatePassword,

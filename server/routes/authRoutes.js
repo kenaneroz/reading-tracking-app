@@ -4,6 +4,7 @@ import {
     getUser,
     register, 
     login,
+    updatePp,
     updateUser,
     requestDeleteAccount,
     confirmDeleteAccount,
@@ -13,6 +14,7 @@ import {
 
 import validateRegister from "../middlewares/validateRegister.js"
 import validateLogin from "../middlewares/validateLogin.js"
+import validateUpdatePp from "../middlewares/validateUpdatePp.js"
 import validateUpdateProfile from "../middlewares/validateUpdateProfile.js"
 import validateUpdateEmail from "../middlewares/validateUpdateEmail.js"
 import validateUpdatePassword from "../middlewares/validateUpdatePassword.js"
@@ -49,9 +51,14 @@ router
         verifyToken,
         confirmDeleteAccount
     )
-    .patch("/me",
+    .patch("/me/profile-photo",
         verifyToken,
         uploadSingleImage("profilePhoto"),
+        validateUpdatePp,
+        updatePp
+    )
+    .patch("/me",
+        verifyToken,
         validateUpdateProfile,
         updateUser
     )
