@@ -1,6 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
-async function apiFetch(endpoint, { method, body } = {}) {
+async function apiFetch(endpoint, { method = 'GET', body } = {} = {}) {
+    const isFormData = body instanceof FormData
+
     const token = localStorage.getItem("token")
 
     const response = await fetch(
@@ -8,10 +10,10 @@ async function apiFetch(endpoint, { method, body } = {}) {
         {
             method,
             headers: {
-                ...(body !== undefined && { "Content-Type": "application/json" }),
+                ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
                 ...(token && { Authorization: `Bearer ${token}` })
             },
-            ...(body !== undefined && { body: JSON.stringify(body) })
+            ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
         }
     )
 
@@ -34,6 +36,15 @@ export function getBook(id) {
     return apiFetch(`/books/${id}`)
 }
 
+export function updateBookCover(id, file) {
+    const formData = new FormData()
+    formData.append("cover", file)
+
+    return apiFetch(
+        `/books/${id}/cover`,
+        { method: "PATCH", body: formData }
+    )
+}
 export function addBook(data) {
     return apiFetch(
         "/books", 

@@ -1,6 +1,7 @@
 import {
     getBooksService,
     getBookService,
+    updateBookCoverService,
     createBookService,
     updateBookService,
     deleteBookService,
@@ -37,6 +38,19 @@ export async function getBooks(req, res) {
     })
 }
 
+export async function updateBookCover(req, res) {
+    const cover =await updateBookCoverService(
+        req.params.id,
+        req.userId,
+        req.file
+    )
+
+    res.status(201).json({
+        success: true,
+        message: "Cover added successfully",
+        data: cover
+    })
+}
 export async function createBook(req, res) {
     const newBook = await createBookService({
         ...req.body,

@@ -14,7 +14,8 @@ dotenv.config()
 
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
-
+import deleteMultipleFromCloudinary from "../utils/deleteMultipleFromCloudinary.js"
+import getPublicIdFromCloudinaryUrl from "../utils/getPublicIdFromCloudinaryUrl.js"
  
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
@@ -215,6 +216,29 @@ export async function confirmDeleteAccountService(userId, token) {
         )
     }
 
+    // Delete all user's books and profile photo from Cloudinary
+    const urls = []
+
+    const books = await Book.find({ userId: userId }).select("cover")
+    urls.push(
+        ...books
+            .map(book => book.cover)
+            .filter(cover => cover && !cover.includes("default"))
+    )
+
+    if (user.profilePhoto && !user.profilePhoto.includes("default")) {
+        urls.push(user.profilePhoto)
+    }
+
+    const publicIds = urls
+        .map(url => getPublicIdFromCloudinaryUrl(url))
+        .filter(Boolean)
+
+    if (publicIds.length > 0) {
+        await deleteMultipleFromCloudinary(publicIds)
+    }
+
+    // Delete user, books, and tokens from the database
     await User.findByIdAndDelete(userId)
     await Book.deleteMany({ userId: userId })
     await Token.deleteMany({ userId: userId })

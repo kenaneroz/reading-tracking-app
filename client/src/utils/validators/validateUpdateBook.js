@@ -19,12 +19,6 @@ export default function validateUpdateBook(formData = {}, originalBook = {}) {
         } 
     }
 
-    if (formData.cover !== undefined) {
-        if (formData.cover === null || typeof formData.cover !== "string" || formData.cover.trim() === "") {
-            errors.cover = "Cover is required"
-        }
-    }
-
     if (formData.totalPages !== undefined) {
         const total = Number(formData.totalPages)
         if (formData.totalPages === null || formData.totalPages === "" || !Number.isFinite(total)) {

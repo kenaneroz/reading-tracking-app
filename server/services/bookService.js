@@ -1,6 +1,9 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 
+import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
+
 export async function getBookService(id, userId) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
@@ -16,6 +19,28 @@ export async function getBooksService(userId) {
     return books
 }
 
+export async function updateBookCoverService(id, userId, file) {
+    const book = await Book.findOne({ _id: id, userId: userId })
+
+    if (!book) {
+        throw new AppError("Book not found", 404)
+    }
+
+    const uploadResult = await uploadToCloudinary(file.buffer, "covers", "bookCover")
+
+    if (book.cover && !book.cover.includes("default")) {
+        try {
+            await deleteFromCloudinary("covers", book.cover)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    book.cover = uploadResult.secure_url
+    await book.save()
+
+    return book
+}
 export async function createBookService(data) {
     const {
         userId,
@@ -161,6 +186,14 @@ export async function deleteBookService(id, userId) {
 
     if (!deletedBook) {
         throw new AppError("Book not found", 404)
+    }
+
+    if (deletedBook.cover && !deletedBook.cover.includes("default")) {
+        try {
+            await deleteFromCloudinary("covers", deletedBook.cover)
+        } catch (error) {
+            console.error("Cloudinary cover deletion failed:", error)
+        }
     }
 
     return deletedBook

@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
     {
         profilePhoto: {
             type: String,
-            default: null,
+            default: "https://res.cloudinary.com/hribndmg/image/upload/v1788348918/default-avatar.png",
             trim: true
         },
         name: {

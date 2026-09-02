@@ -15,30 +15,45 @@ import { FORMAT_OPTIONS } from "../../../../shared/constants/formatOptions.js"
 
 import { useBooks } from "../../context/BookContext"
 import validateUpdateBook from "../../utils/validators/validateUpdateBook.js"
+import { useRef } from "react"
 
 export default function EditDetails({ book, setIsEditPopupOpen }) {
-    const { updateBook } = useBooks()
+    const { updateBook, updateBookCover } = useBooks()
     const [isLoading, setIsLoading] = useState(false)
     const [errors, setErrors] = useState({})
 
+    const initialFormData = useRef({
+        title: book.title,
+        author: book.author,
+        genre: book.genre,
+        currentPage: book.currentPage,
+        totalPages: book.totalPages,
+        rating: book.rating,
+        format: book.format
+    })
     const [formData, setFormData] = useState({
         title: book.title,
         author: book.author,
         genre: book.genre,
-        cover: book.cover,
         currentPage: book.currentPage,
         totalPages: book.totalPages,
         rating: book.rating,
         format: book.format
     })
 
-    const changedFields = {}
-    Object.keys(formData).forEach(field => {
-        if (formData[field] !== book[field]) {
-            changedFields[field] = formData[field]
+    const initialBookCover = useRef(book.cover)
+    const [bookCover, setBookCover] = useState(book.cover)
+
+    const changedFields = Object.keys(formData).reduce((acc, key) => {
+        if (formData[key] !== initialFormData.current[key]) {
+            acc[key] = formData[key]
         }
-    })
-    const hasChanges = Object.keys(changedFields).length > 0
+        return acc
+    }, {})
+    
+    const hasChanges = 
+        Object.keys(changedFields).length > 0 || 
+        bookCover !== initialBookCover.current
 
     const validationErrors = validateUpdateBook(formData, book)
     const hasErrors = Object.keys(validationErrors).length > 0
@@ -55,7 +70,12 @@ export default function EditDetails({ book, setIsEditPopupOpen }) {
         setErrors({})
 
         try {
-            await updateBook(book._id, changedFields)
+            if (Object.keys(changedFields).length > 0) {
+                await updateBook(book._id, changedFields)
+            }
+            if (bookCover !== initialBookCover.current) {
+                await updateBookCover(book._id, bookCover)
+            }
             setIsEditPopupOpen(false)
         } catch (error) {
             setErrors(error.errors || {})
@@ -83,7 +103,7 @@ export default function EditDetails({ book, setIsEditPopupOpen }) {
                     label="Cover Image"
                     placeholder="Tap to change the cover"
                     errorMessage={errors.cover}
-                    onChange={(file) => setFormData(prev => ({ ...prev, cover: URL.createObjectURL(file) }))}
+                    onChange={file => setBookCover(file)}
                 />
 
                 <div className="flex flex-col gap-5 mt-6">

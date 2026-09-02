@@ -8,7 +8,6 @@ export default function validateUpdateBook(req, res, next) {
         "title",
         "author",
         "genre",
-        "cover",
         "currentPage",
         "totalPages",
         "rating",
@@ -36,7 +35,6 @@ export default function validateUpdateBook(req, res, next) {
         title,
         author,
         genre,
-        cover,
         currentPage,
         totalPages,
         rating,
@@ -70,16 +68,6 @@ export default function validateUpdateBook(req, res, next) {
             errors.genre = "Genre must be a text value"
         } else if (!GENRE_OPTIONS.includes(genre)) {
             errors.genre = "Invalid genre"
-        }
-    }
-
-    if (cover !== undefined) {
-        if (cover === null) {
-            errors.cover = "Cover is required"
-        } else if (typeof cover !== "string") {
-            errors.cover = "Cover must be a text value"
-        } else if (cover.trim() === "") {
-            errors.cover = "Cover is required"
         }
     }
 

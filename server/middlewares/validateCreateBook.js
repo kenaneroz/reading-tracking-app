@@ -9,7 +9,6 @@ export default function validateCreateBook(req, res, next) {
         title,
         author,
         genre,
-        cover,
         currentPage,
         totalPages,
         rating,
@@ -29,10 +28,6 @@ export default function validateCreateBook(req, res, next) {
         errors.genre = "Genre is required"
     } else if (!GENRE_OPTIONS.includes(genre.trim())) {
         errors.genre = "Invalid genre"
-    }
-
-    if (typeof cover !== "string" || cover.trim() === "") {
-        errors.cover = "Cover is required"
     }
 
     if (typeof format !== "string" || format.trim() === "") {
@@ -73,7 +68,6 @@ export default function validateCreateBook(req, res, next) {
 
     req.body.title = title.trim()
     req.body.author = author.trim()
-    req.body.cover = cover.trim()
     req.body.genre = genre.trim()
     req.body.format = format.trim()
 

@@ -37,6 +37,8 @@ export default function EditProfileScreen() {
     const [sending, setSending] = useState(false)
     const navigate = useNavigate()
 
+    const token = localStorage.getItem("token")
+
     async function handleRequestDeleteAccount() {
         setSending(true)
 

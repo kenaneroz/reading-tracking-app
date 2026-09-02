@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { 
     getBooks as getBooksApi,
+    updateBookCover as updateBookCoverApi,
     addBook as addBookApi,
     updateBook as updateBookApi,
     deleteBook as deleteBookApi,
@@ -40,6 +41,12 @@ export function BookProvider({ children }) {
 
     /* *************** Book *************** */
 
+    async function updateBookCover(id, file) {
+        const updatedBook = await updateBookCoverApi(id, file)
+
+        setBooks(prev => prev.map(book => (book._id === id ? updatedBook : book)))
+        return updatedBook
+    }
     async function addBook(bookData) {
         const newBook = await addBookApi(bookData)
 
@@ -141,6 +148,7 @@ export function BookProvider({ children }) {
                     loading, 
                     setLoading, 
                     getBooks,
+                    updateBookCover,
                     addBook,
                     updateBook,
                     deleteBook,

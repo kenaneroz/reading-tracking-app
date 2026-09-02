@@ -10,7 +10,6 @@ export default function ConfirmDeleteAccountScreen() {
     const [searchParams] = useSearchParams()
     const [errors, setErrors] = useState({})
     const deleteAccountToken = searchParams.get("token")
-    console.log(deleteAccountToken)
     const token = localStorage.getItem("token")
 
     const [verifying, setVerifying] = useState(true)

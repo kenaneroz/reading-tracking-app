@@ -17,10 +17,6 @@ export default function validateAddBook(formData, books = []) {
         errors.author = "Author is required"
     }
 
-    if (!formData.cover || formData.cover.trim() === "") {
-        errors.cover = "Cover is required"
-    }
-
     if (!formData.genre || formData.genre.trim() === "") {
         errors.genre = "Genre is required"
     }

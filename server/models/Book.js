@@ -64,7 +64,7 @@ const bookSchema = new mongoose.Schema(
         },
         cover: {
             type: String,
-            required: true,
+            default: "https://res.cloudinary.com/hribndmg/image/upload/v1788348964/default-cover.jpg",
             trim: true
         },
         currentPage: {

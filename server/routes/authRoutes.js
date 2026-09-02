@@ -14,7 +14,7 @@ import {
 
 import validateRegister from "../middlewares/validateRegister.js"
 import validateLogin from "../middlewares/validateLogin.js"
-import validateUpdatePp from "../middlewares/validateUpdatePp.js"
+import validateSingleFile from "../middlewares/validateSingleFile.js"
 import validateUpdateProfile from "../middlewares/validateUpdateProfile.js"
 import validateUpdateEmail from "../middlewares/validateUpdateEmail.js"
 import validateUpdatePassword from "../middlewares/validateUpdatePassword.js"
@@ -25,7 +25,6 @@ import { uploadSingleImage } from "../middlewares/upload.js"
 import verifyToken from "../middlewares/verifyToken.js"
 import verifyResetToken from "../middlewares/verifyResetToken.js"
 import verifyDeleteAccountToken from "../middlewares/verifyDeleteAccountToken.js"
-
 
 const router = express.Router()
 
@@ -54,7 +53,7 @@ router
     .patch("/me/profile-photo",
         verifyToken,
         uploadSingleImage("profilePhoto"),
-        validateUpdatePp,
+        validateSingleFile,
         updatePp
     )
     .patch("/me",

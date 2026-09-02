@@ -2,6 +2,7 @@ import express from "express"
 import { 
     getBooks,
     getBook, 
+    updateBookCover,
     createBook, 
     updateBook, 
     deleteBook,
@@ -12,6 +13,7 @@ import {
     updateLatestReadingActivity
 } from "../controllers/bookController.js"
 
+import validateSingleFile from "../middlewares/validateSingleFile.js"
 import validateCreateBook from "../middlewares/validateCreateBook.js"
 import validateUpdateBook from "../middlewares/validateUpdateBook.js"
 import validateCreateNote from "../middlewares/validateCreateNote.js"
@@ -19,6 +21,8 @@ import validateUpdateNote from "../middlewares/validateUpdateNote.js"
 import validateUpdateActivity from "../middlewares/validateUpdateActivity.js"
 
 import verifyToken from "../middlewares/verifyToken.js"
+
+import { uploadSingleImage } from "../middlewares/upload.js"
 
 const router = express.Router()
 
@@ -34,6 +38,11 @@ router
     .patch("/:id", 
         validateUpdateBook,
         updateBook
+    )
+    .patch("/:id/cover", 
+        uploadSingleImage("cover"),
+        validateSingleFile,
+        updateBookCover
     )
     .delete("/:id", deleteBook)
 

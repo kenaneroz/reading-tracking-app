@@ -1,6 +1,6 @@
 import AppError from "../errors/AppError.js"
 
-export default function validateUpdateProfile(req, res, next) {
+export default function validateSingleFile(req, res, next) {
     const requestFields = Object.keys(req.body || {})
     if (requestFields.length > 0) {
         throw new AppError("Invalid field/s included in update", 400)

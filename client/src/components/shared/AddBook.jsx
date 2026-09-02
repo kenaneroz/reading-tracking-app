@@ -17,12 +17,11 @@ import { useBooks } from "../../context/BookContext"
 import validateAddBook from "../../utils/validators/validateAddBook.js"
 
 export default function AddBook({ setIsAddBookPopupActive }) {
-    const { books, addBook } = useBooks()
+    const { books, addBook, updateBookCover } = useBooks()
     const [errors, setErrors] = useState({})
-    const [isLoading, setIsLoading] = useState(false)
+    const [isAdding, setIsAdding] = useState(false)
 
     const [formData, setFormData] = useState({
-        cover: "",
         title: "",
         author: "",
         totalPages: null,
@@ -31,6 +30,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
         rating: null,
         format: ""
     })
+    const [cover, setCover] = useState(null)
 
     function hideAddBookPopup() {
         setIsAddBookPopupActive(false)
@@ -45,29 +45,34 @@ export default function AddBook({ setIsAddBookPopupActive }) {
             return
         }
 
-        setIsLoading(true)
+        setIsAdding(true)
         setErrors({})
 
         try {
-            await addBook(formData)
+            const newBook = await addBook(formData)
+            if (cover) {
+                await updateBookCover(newBook._id, cover)
+            }
             hideAddBookPopup()
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
         } finally {
-            setIsLoading(false)
+            setIsAdding(false)
         }
     }
     
     return (
         <Modal>
-            <HugeiconsIcon
-                icon={Cancel01Icon}
-                size={24} 
-                strokeWidth={1.5}
-                className="text-espresso cursor-pointer"
-                onClick={hideAddBookPopup}
-            />
+            <button disabled={isAdding} >
+                <HugeiconsIcon
+                    icon={Cancel01Icon}
+                    size={24} 
+                    strokeWidth={1.5}
+                    className={isAdding ? "cursor-not-allowed text-taupe" : "cursor-pointer text-taupe hover:text-espresso transition-all duration-300"}
+                    onClick={hideAddBookPopup}
+                />
+            </button>
         
             <div className="mt-8">
                 <p className="h2 text-espresso">Add a new book</p>
@@ -82,7 +87,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                     label="Cover Image"
                     placeholder="Tap to upload"
                     errorMessage={errors.cover}
-                    onChange={(file) => setFormData(prev => ({...prev, cover: URL.createObjectURL(file)}))}
+                    onChange={(file) => setCover(file)}
                     className="aspect-5/8 rounded-[10px]"
                 />
 
@@ -170,9 +175,9 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                 <div className="mt-8">
                     <Button
                         onClick={handleAddBook}
-                        disabled={isLoading}
+                        disabled={isAdding}
                     >
-                        <span>{isLoading ? "Adding..." : "Add Book"}</span>
+                        <span>{isAdding ? "Adding..." : "Add Book"}</span>
                     </Button>
                 </div>
             </div>
