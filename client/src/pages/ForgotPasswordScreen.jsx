@@ -8,7 +8,7 @@ import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
 import { useAuth } from "../context/authContext"
 import validateForgotPassword from "../utils/validators/validateForgotPassword"
-import ConfirmationScreen from "../components/shared/ConfirmationScreen"
+import BackButton from "../components/shared/BackButton"
 
 export default function ForgotPasswordScreen() {
     const navigate = useNavigate()
@@ -16,10 +16,10 @@ export default function ForgotPasswordScreen() {
 
     const [formData, setFormData] = useState({ email: "" })
     const [errors, setErrors] = useState({})
-    const [loading, setLoading] = useState(false)
+    const [sending, setSending] = useState(false)
 
     async function handleSendMail() {
-        setLoading(true)
+        setSending(true)
         setErrors({})
 
         try {
@@ -36,20 +36,14 @@ export default function ForgotPasswordScreen() {
         } catch (error) {
             setErrors(error.errors || {})
         } finally {
-            setLoading(false)
+            setSending(false)
         }
     }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon
-                    icon={ArrowLeft02Icon}
-                    size={24}
-                    strokeWidth={1.5}
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <BackButton disabled={sending} />
             </div>
 
             <div className="mt-15 px-5">
@@ -84,22 +78,10 @@ export default function ForgotPasswordScreen() {
                     <Button
                         onClick={handleSendMail}
                         className="mt-5"
-                        disabled={loading}
+                        disabled={sending}
                     >
-                        <span>{loading ? "Sending" : "Send reset link"}</span>
+                        <span>{sending ? "Sending" : "Send reset link"}</span>
                     </Button>
-                </div>
-
-                <div
-                    className={`cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300 ${loading ? "pointer-events-none opacity-50" : ""}`}
-                    onClick={() => !loading && navigate("/sign-in")}
-                >
-                    <HugeiconsIcon
-                        icon={ArrowLeft02Icon}
-                        size={16}
-                        strokeWidth={1}
-                    />
-                    <p className="font-medium">Back to login</p>
                 </div>
             </div>
         </div>

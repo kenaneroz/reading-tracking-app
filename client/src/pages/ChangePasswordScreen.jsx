@@ -8,6 +8,7 @@ import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 
 import { useAuth } from "../context/authContext"
+import BackButton from "../components/shared/BackButton"
 
 export default function ChangePasswordScreen() {
     const { logout, updatePassword } = useAuth()
@@ -22,6 +23,8 @@ export default function ChangePasswordScreen() {
         formData.newPassword.trim() !== "" &&
         formData.confirmNewPassword.trim() !== ""
 
+    const [updating, setUpdating] = useState(false)
+    
     const [errors, setErrors] = useState({})
     
     const navigate = useNavigate()
@@ -43,13 +46,7 @@ export default function ChangePasswordScreen() {
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <BackButton disabled={updating} />
             </div>
 
             <div className="mt-15 px-5">

@@ -91,16 +91,6 @@ export default function CreateNewPasswordScreen() {
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
-            <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
-            </div>
-
             <div className="mt-15 px-5">
                 <div className="relative flex justify-center items-center">
                     <img src="/neutral.svg" alt="" className="h-25 w-25" />

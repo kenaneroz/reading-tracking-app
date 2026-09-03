@@ -2,7 +2,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon, MoreVerticalIcon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
+import ConfirmDeletePopup from "../shared/ConfirmDeletePopup"
+import BackButton from "../shared/BackButton"
 
 import { useBooks } from "../../context/BookContext"
 
@@ -30,11 +31,7 @@ export default function DetailsHeader({ book, setIsEditPopupOpen }) {
 
     return (
         <div className="w-full flex justify-between items-center absolute left-0 z-50 px-6 pt-6">
-            <button className="cursor-pointer text-cream"
-                onClick={() => navigate(-1)}
-            >
-                <HugeiconsIcon icon={ArrowLeft02Icon} size={24} strokeWidth={1.5} />
-            </button>
+            <BackButton background="dark" />
   
             { isMenuOpen ?
                 <button className="cursor-pointer text-cream"
@@ -43,7 +40,7 @@ export default function DetailsHeader({ book, setIsEditPopupOpen }) {
                     <HugeiconsIcon icon={Cancel01Icon} size={24} strokeWidth={1.5} />
                 </button>
                 :
-                <button className="cursor-pointer text-cream"
+                <button className="cursor-pointer text-cream/80 hover:text-cream transition-all duration-300"
                     onClick={() => setIsMenuOpen(true)}
                 >
                     <HugeiconsIcon icon={MoreVerticalIcon} size={24} strokeWidth={1.5} />

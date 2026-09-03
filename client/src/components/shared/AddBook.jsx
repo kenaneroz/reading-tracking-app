@@ -88,7 +88,7 @@ export default function AddBook({ setIsAddBookPopupActive }) {
                     placeholder="Tap to upload"
                     errorMessage={errors.cover}
                     onChange={(file) => setCover(file)}
-                    className="aspect-5/8 rounded-[10px]"
+                    onRemove={() => setCover(null)}
                 />
 
                 <div className="flex flex-col gap-5 mt-6">

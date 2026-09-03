@@ -104,6 +104,7 @@ export default function EditDetails({ book, setIsEditPopupOpen }) {
                     placeholder="Tap to change the cover"
                     errorMessage={errors.cover}
                     onChange={file => setBookCover(file)}
+                    onRemove={() => setBookCover(initialBookCover.current)}
                 />
 
                 <div className="flex flex-col gap-5 mt-6">

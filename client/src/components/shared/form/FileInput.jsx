@@ -1,8 +1,13 @@
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ImageAdd02Icon } from "@hugeicons/core-free-icons"
+import { ImageAdd02Icon, Cancel01Icon } from "@hugeicons/core-free-icons"
 import { useState } from "react"
 
 import ErrorMessage from "../ErrorMessage"
+
+const variantStyles = {
+    cover: "aspect-5/8 rounded-[10px]",
+    profilePhoto: "aspect-1/1 rounded-full"
+}
 
 export default function FileInput({
     label,
@@ -10,7 +15,8 @@ export default function FileInput({
     placeholder,
     errorMessage,
     onChange,
-    className
+    variant = "cover",
+    onRemove
 }) {
     const [preview, setPreview] = useState(null)
 
@@ -49,12 +55,28 @@ export default function FileInput({
                 />
 
                 {preview
-                    ? <div className="py-2 h-full">
-                        <img
-                            src={preview}
-                            alt="Preview"
-                            className={`h-full object-cover ${className}`}
-                        />
+                    ? <div className="py-2 h-full flex gap-2">
+                        <div className="relative h-full">
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className={`h-full object-cover ${variantStyles[variant]}`}
+                            />
+                            <div 
+                                className="h-5 w-5 bg-espresso/60 rounded-full absolute top-1 right-1 flex justify-center items-center cursor-pointer text-beige hover:bg-espresso transition-all duration-300 border border-beige" 
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setPreview(null)
+                                    onRemove()
+                                }}
+                            >
+                                <HugeiconsIcon
+                                    icon={Cancel01Icon}
+                                    size={20}
+                                    strokeWidth={1.25}
+                                />
+                            </div>
+                        </div>
                     </div>
                     : <>
                         <HugeiconsIcon

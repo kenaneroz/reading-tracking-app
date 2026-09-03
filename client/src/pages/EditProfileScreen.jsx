@@ -1,9 +1,6 @@
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft02Icon, CheckmarkCircle02Icon } from "@hugeicons/core-free-icons"
-
 import FileInput from "../components/shared/form/FileInput"
 import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
@@ -11,6 +8,7 @@ import HorizontalDivider from "../components/shared/HorizontalDivider"
 import ConfirmDeletePopup from "../components/shared/ConfirmDeletePopup"
 import { useAuth } from "../context/authContext"
 import Modal from "../components/shared/Modal"
+import BackButton from "../components/shared/BackButton"
 
 export default function EditProfileScreen() {
     const { user, updateProfile, updateProfilePhoto, requestDeleteAccount } = useAuth()
@@ -74,22 +72,11 @@ export default function EditProfileScreen() {
             setSaving(false)
         }
     }
-
+    
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <button 
-                    disabled={saving}
-                >
-                    <HugeiconsIcon 
-                        icon={ArrowLeft02Icon} 
-                        size={24} 
-                        strokeWidth={1.5} 
-                        className={saving ? "cursor-not-allowed text-taupe" : "cursor-pointer text-taupe hover:text-espresso transition-all duration-300"}
-                        onClick={() => navigate(-1)}
-                    />
-
-                </button>
+                <BackButton disabled={saving} />
             </div>
 
             <div className="mt-6 px-5">
@@ -105,7 +92,8 @@ export default function EditProfileScreen() {
                             placeholder="Tap to change the profile photo"
                             onChange={file => setPp(file)}
                             errorMessage={errors.profilePhoto}
-                            className="aspect-1/1 rounded-full"
+                            variant="profilePhoto"
+                            onRemove={() => setPp(initalPp.current)}
                         />
 
                         <div className="flex items-center gap-3">

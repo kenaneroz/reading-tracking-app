@@ -5,6 +5,7 @@ import { ArrowLeft02Icon, MailEdit01Icon } from "@hugeicons/core-free-icons"
 
 import Input from "../components/shared/form/Input"
 import Button from "../components/shared/Button"
+import BackButton from "../components/shared/BackButton"
 import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
@@ -20,12 +21,16 @@ export default function ChangeEmailAddressScreen() {
     })
     const hasChanges = Object.keys(initialData.current).some(key => formData[key] !== initialData.current[key])
 
+    const [updating, setUpdating] = useState(false)
+
     const [errors, setErrors] = useState({})
 
     const navigate = useNavigate()
 
     async function handleUpdate() {
         if (!hasChanges) return
+
+        setUpdating(true)
 
         const token = localStorage.getItem("token")
 
@@ -35,19 +40,15 @@ export default function ChangeEmailAddressScreen() {
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
+        } finally {
+            setUpdating(false)
         }
     }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <BackButton disabled={updating} />
             </div>
 
             <div className="mt-15 px-5">
