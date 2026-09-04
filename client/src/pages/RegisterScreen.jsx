@@ -7,11 +7,12 @@ import Input from "../components/shared/form/Input"
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
+import BackButton from "../components/shared/BackButton"
 import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
 
-export default function SignUpScreen() {
+export default function RegisterScreen() {
     const { register } = useAuth() 
     const [formData, setFormData] = useState({
         name: "",
@@ -20,35 +21,29 @@ export default function SignUpScreen() {
         password: ""
     })
     const [errors, setErrors] = useState({})
-    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isRegistering, setIsRegistering] = useState(false)
 
     const navigate = useNavigate()
 
     async function handleRegister(e) {
+        setIsRegistering(true)
+        setErrors({})
         e.preventDefault()
-        try {
-            setIsSubmitting(true)
-            setErrors({})
 
+        try {
             await register(formData)
         } catch (error) {
            setErrors(error.errors || {})
            console.log(error)
         } finally {
-            setIsSubmitting(false)
+            setIsRegistering(false)
         }
     }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <BackButton disabled={isRegistering} />
             </div>
 
             <div className="mt-8 px-5">
@@ -103,9 +98,9 @@ export default function SignUpScreen() {
                     <Button
                         onClick={handleRegister}
                         className="mt-7"
-                        disabled={isSubmitting}
+                        disabled={isRegistering}
                     >
-                        <span>{isSubmitting ? "Signing up" : "Sign up"}</span>
+                        <span>{isRegistering ? "Registering..." : "Register"}</span>
                     </Button>
                 </div>
 
@@ -140,9 +135,9 @@ export default function SignUpScreen() {
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
                     Already have an account?  <span 
                         className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/sign-in")}
+                        onClick={() => navigate("/login")}
                     > 
-                        Sign in
+                        Log in
                     </span>
                 </p>
             </div>

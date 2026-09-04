@@ -1,4 +1,4 @@
-export default function validateResetPassword(formData = {}) {
+export default function validateNewPassword(formData = {}) {
     const errors = {}
     const { 
         newPassword,

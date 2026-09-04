@@ -8,7 +8,7 @@ import Button from "../components/shared/Button"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
-import validateResetPassword from "../utils/validators/validateResetPassword"
+import validateNewPassword from "../utils/validators/validateNewPassword"
 import ConfirmationScreen from "../components/shared/ConfirmationScreen"
 import { useEffect } from "react"
 
@@ -52,7 +52,7 @@ export default function CreateNewPasswordScreen() {
         setErrors({})
 
         try {
-            const validationErrors = validateResetPassword(formData)
+            const validationErrors = validateNewPassword(formData)
             const hasErrors = Object.keys(validationErrors).length > 0
 
             if (hasErrors) {
@@ -139,7 +139,7 @@ export default function CreateNewPasswordScreen() {
 
                 <div
                     className={`cursor-pointer text-body-sm text-espresso mt-6 mb-10 text-center flex items-center justify-center gap-2 hover:gap-4 transition-all duration-300 ${loading ? "pointer-events-none opacity-50" : ""}`}
-                    onClick={() => !loading && navigate("/sign-in")}
+                    onClick={() => !loading && navigate("/login")}
                 >
                     <HugeiconsIcon
                         icon={ArrowLeft02Icon}

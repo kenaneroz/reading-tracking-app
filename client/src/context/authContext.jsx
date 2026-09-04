@@ -19,26 +19,23 @@ import { jwtDecode } from "jwt-decode"
 
 const AuthContext = createContext(null)
 
+function isTokenExpired(token) {
+    try {
+        const decoded = jwtDecode(token)
+        return decoded.exp * 1000 < Date.now()
+    } catch (error) {
+        return true
+    }
+}
+
 export function AuthProvider({ children }) {
     const [token, setToken] = useState(() => {
         const t = localStorage.getItem("token")
-        
-        if (t) {
-            try {
-                const exp = jwtDecode(t)?.exp
-    
-                if (exp * 1000 < Date.now()) {
-                    localStorage.removeItem("token")
-                    return null
-                } 
-            } catch (error) {
-                console.error(error)
-                localStorage.removeItem("token")
-                return null
-            }
-        }
 
-        return t
+        if (t && !isTokenExpired(t)) return t
+
+        localStorage.removeItem("token")
+        return null
     })
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(Boolean(token))
@@ -135,6 +132,19 @@ export function AuthProvider({ children }) {
     async function verifyResetToken(resetToken) {
         await verifyResetTokenApi(resetToken)
     }
+
+    // Check isTokenExpired
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const token = localStorage.getItem("token")
+            
+            if (token && isTokenExpired(token)) {
+                logout()
+            }
+        }, 15000)
+
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <AuthContext.Provider 

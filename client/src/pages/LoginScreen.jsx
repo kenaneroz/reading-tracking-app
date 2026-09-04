@@ -7,14 +7,13 @@ import Input from "../components/shared/form/Input"
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 import HorizontalDivider from "../components/shared/HorizontalDivider"
+import BackButton from "../components/shared/BackButton"
 import { useNavigate } from "react-router-dom"
-
-import { login } from "../services/authService.js"
 
 import { useBooks } from "../context/BookContext"
 import { useAuth } from "../context/authContext"
 
-export default function SignInScreen() {
+export default function LoginScreen() {
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -22,10 +21,14 @@ export default function SignInScreen() {
     const [errors, setErrors] = useState({})
     const { getBooks } = useBooks()
     const { login } = useAuth()
+    const [isLoggingIn, setIsLoggingIn] = useState(false)
 
     const navigate = useNavigate()
 
     async function handleLogin() {
+        setIsLoggingIn(true)
+        setErrors({})
+
         try {
             setErrors({})
 
@@ -40,25 +43,21 @@ export default function SignInScreen() {
         } catch (error) {
             setErrors(error.errors || {})
             console.error(error)
+        } finally {
+            setIsLoggingIn(false)
         }
     }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <HugeiconsIcon 
-                    icon={ArrowLeft02Icon} 
-                    size={24} 
-                    strokeWidth={1.5} 
-                    className="cursor-pointer text-espresso"
-                    onClick={() => navigate(-1)}
-                />
+                <BackButton disabled={isLoggingIn} />
             </div>
 
             <div className="mt-8 px-5">
                 <div className="text-center">
                     <h1 className="h1 text-espresso">Welcome back!</h1>
-                    <p className="text-body-sm text-taupe mt-2">Sign in to continue your tracking journey.</p>
+                    <p className="text-body-sm text-taupe mt-2">Log in to continue your tracking journey.</p>
                 </div>
 
                 <div className="mt-8">
@@ -95,8 +94,9 @@ export default function SignInScreen() {
                     <Button
                         onClick={handleLogin}
                         className="mt-6"
+                        disabled={isLoggingIn}
                     >
-                        <span>Sign in</span>
+                        <span>{isLoggingIn ? "Logging in..." : "Log in"}</span>
                     </Button>
                 </div>
 
@@ -112,7 +112,7 @@ export default function SignInScreen() {
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
                         variant="outline"
-                        onClick=""
+                        onClick={() => {}}
                     >
                         <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
                         <span>Continue with Google</span>
@@ -120,7 +120,7 @@ export default function SignInScreen() {
 
                     <Button
                         variant="outline"
-                        onClick=""
+                        onClick={() => {}}
                     >
                         <img src="/apple-icon-logo.svg" alt="" className="h-5 w-5" />
                         <span>Continue with Apple</span>
@@ -131,9 +131,9 @@ export default function SignInScreen() {
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
                     New to Bookly? <span 
                         className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/sign-up")}
+                        onClick={() => navigate("/register")}
                     > 
-                        Sign up
+                        Create an account
                     </span>
                 </p>
             </div>

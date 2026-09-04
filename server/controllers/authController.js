@@ -14,7 +14,7 @@ import {
 
 function generateToken(userId) {
     return jwt.sign({ userId: userId }, process.env.JWT_SECRET, { 
-        expiresIn: "30m" 
+        expiresIn: "1h" 
     })
 }
 

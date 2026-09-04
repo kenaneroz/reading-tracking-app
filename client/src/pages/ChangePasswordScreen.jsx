@@ -2,13 +2,15 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
+import { ResetPasswordIcon } from "@hugeicons/core-free-icons"
 
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
 
 import { useAuth } from "../context/authContext"
 import BackButton from "../components/shared/BackButton"
+
+import validateNewPassword from "../utils/validators/validateNewPassword.js"
 
 export default function ChangePasswordScreen() {
     const { logout, updatePassword } = useAuth()
@@ -18,12 +20,13 @@ export default function ChangePasswordScreen() {
         newPassword: "",
         confirmNewPassword: ""
     })
+    
     const hasChanges = 
         formData.currentPassword.trim() !== "" &&
         formData.newPassword.trim() !== "" &&
         formData.confirmNewPassword.trim() !== ""
 
-    const [updating, setUpdating] = useState(false)
+    const [isUpdating, setIsUpdating] = useState(false)
     
     const [errors, setErrors] = useState({})
     
@@ -31,22 +34,35 @@ export default function ChangePasswordScreen() {
 
     async function handleUpdate() {
         if (!hasChanges) return
-
-        const token = localStorage.getItem("token")
-
+        
         try {
+            setIsUpdating(true)
+            setErrors({})
+            
+            const validationErrors = validateNewPassword(formData)
+            const hasErrors = Object.keys(validationErrors).length > 0
+            
+            if (hasErrors) {
+                setErrors(validationErrors)
+                return
+            }
+            
+            const token = localStorage.getItem("token")
             await updatePassword(token, formData)
+
             navigate("/edit-profile/change-password/success")
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
+        } finally {
+            setIsUpdating(false)
         }
     }
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
-                <BackButton disabled={updating} />
+                <BackButton disabled={isUpdating} />
             </div>
 
             <div className="mt-15 px-5">
@@ -99,7 +115,7 @@ export default function ChangePasswordScreen() {
                     <Button
                         onClick={handleUpdate}
                         className="mt-7"
-                        disabled={!hasChanges}
+                        disabled={!hasChanges || isUpdating}
                     >
                         <span>Update password</span>
                     </Button>

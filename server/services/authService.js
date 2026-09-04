@@ -127,17 +127,34 @@ export async function updateUserService(userId, data) {
 
     const updateData = { ...data }
 
-    if (data.newPassword !== undefined) {
+    if (updateData.email === user.email) {
+        throw new AppError(
+            "Validation failed",
+            400,
+            { email: "This is already your current email address" }
+        )
+    }
+
+    if (updateData.newPassword !== undefined) {
         const isCurrentPasswordCorrect = await bcrypt.compare(
-            data.currentPassword,
+            updateData.currentPassword,
             user.password
         )
 
         if (!isCurrentPasswordCorrect) {
             throw new AppError(
-                "Current password is incorrect",
+                "Validation failed",
                 400,
                 { currentPassword: "Current password is incorrect" }
+            )
+        }
+
+        
+        if (updateData.currentPassword === updateData.newPassword) {
+            throw new AppError(
+                "Validation failed",
+                400,
+                { newPassword: "New password must be different from the current password" }
             )
         }
 
@@ -283,7 +300,7 @@ export async function forgotPasswordService(email) {
 export async function resetPasswordService(token, data) {
     if (!token) {
         throw new AppError(
-            "Invalid or expired link", 
+            "Validation failed", 
             400,
             {
                 link: "Invalid or expired link"
@@ -302,7 +319,7 @@ export async function resetPasswordService(token, data) {
         t.expiresAt < Date.now()
     ) {
         throw new AppError(
-            "Invalid or expired link", 
+            "Validation failed", 
             400,
             {
                 link: "Invalid or expired link"
@@ -310,12 +327,29 @@ export async function resetPasswordService(token, data) {
         )    
     }
 
-    await Token.deleteOne({ _id: token._id })
+    const user = await User.findById(t.userId)
+
+    if (!user) {
+        throw new AppError("User not found", 400)
+    }
+
+    const isSame = await bcrypt.compare(
+        data.newPassword,
+        user.password
+    )
+
+    if (isSame) {
+        throw new AppError(
+            "Validation failed",
+            400,
+            { newPassword: "New password must be different from the current password" }
+        )        
+    }
+
+    await Token.deleteOne({ _id: t._id })
 
     const hashedPassword = await bcrypt.hash(data.newPassword, 10)
 
-    return User.findByIdAndUpdate(
-        t.userId,
-        { password: hashedPassword }
-    )
+    user.password = hashedPassword
+    return await user.save()
 }

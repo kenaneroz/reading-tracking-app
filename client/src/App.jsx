@@ -13,8 +13,8 @@ import AppLayout from "./layouts/AppLayout"
 import BottomNavLayout from "./layouts/BottomNavLayout"
 
 import StartScreen from "./pages/StartScreen"
-import SignUpScreen from "./pages/SignUpScreen"
-import SignInScreen from "./pages/SignInScreen"
+import RegisterScreen from "./pages/RegisterScreen"
+import LoginScreen from "./pages/LoginScreen"
 import ForgotPasswordScreen from "./pages/ForgotPasswordScreen"
 import CreateNewPasswordScreen from "./pages/CreateNewPasswordScreen"
 
@@ -37,17 +37,18 @@ function AppRoutes() {
               {/* 1. Auth Flow (Only users who are NOT logged in) */}
               <Route element={<PublicRoute />}>
                 <Route path="/" element={<StartScreen />} />
-                <Route path="/sign-up" element={<SignUpScreen />} />
-                <Route path="/sign-in" element={<SignInScreen />} />
+                <Route path="/register" element={<RegisterScreen />} />
+                <Route path="/login" element={<LoginScreen />} />
                 <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
                 <Route
                   path="/forgot-password/check-email"
                   element={
                     <ConfirmationScreen
+                      iconVariant="success"
                       title="Check your email"
                       message="We sent a password reset link to your email."
                       buttonText="Back to login"
-                      onPrimaryClick={() => navigate("/sign-in")}
+                      onPrimaryClick={() => navigate("/login")}
                     />
                   }
                 />
@@ -60,7 +61,7 @@ function AppRoutes() {
                       title="Password updated"
                       message="Your password has been changed successfully."
                       buttonText="Back to login"
-                      onPrimaryClick={() => navigate("/sign-in")}
+                      onPrimaryClick={() => navigate("/login")}
                     />
                   }
                 />
@@ -134,7 +135,7 @@ function AppRoutes() {
                       title="Your accound delete"
                       message="Your account have been permanently deleted. We're sorry to hear that."
                       buttonText="Create a new account"
-                      onPrimaryClick={() => navigate("/sign-up")}
+                      onPrimaryClick={() => navigate("/register")}
                     />
                   }
                 />                

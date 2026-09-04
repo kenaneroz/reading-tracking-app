@@ -31,7 +31,7 @@ export default function StartScreen() {
 
                 <Button
                     className="mt-8"
-                    onClick={() => navigate("/sign-up")}
+                    onClick={() => navigate("/register")}
                 >
                     <span>Get started</span>
                 </Button>
@@ -39,9 +39,9 @@ export default function StartScreen() {
                 <p className="text-body-sm text-taupe mt-4">
                     Already have an account?  <span 
                         className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/sign-in")}
+                        onClick={() => navigate("/login")}
                     > 
-                        Sign in
+                        Log in
                     </span>
                 </p>
             </div>
