@@ -138,6 +138,7 @@ export async function verifyResetToken(resetPasswordToken) {
 
 export async function logout() {
     return apiFetch(
-        "/auth/logout"
+        "/auth/logout",
+        { method: 'POST' }
     )
 }
