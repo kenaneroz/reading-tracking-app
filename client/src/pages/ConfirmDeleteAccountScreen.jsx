@@ -10,7 +10,6 @@ export default function ConfirmDeleteAccountScreen() {
     const [searchParams] = useSearchParams()
     const [errors, setErrors] = useState({})
     const deleteAccountToken = searchParams.get("token")
-    const token = localStorage.getItem("token")
 
     const [verifying, setVerifying] = useState(true)
     const [deleting, setDeleting] = useState(false)
@@ -42,7 +41,7 @@ export default function ConfirmDeleteAccountScreen() {
         setDeleting(true)
 
         try {
-            await confirmDeleteAccount(token, deleteAccountToken)
+            await confirmDeleteAccount(deleteAccountToken)
             logout()
             navigate("/confirm-delete-account/success")
         } catch (error) {

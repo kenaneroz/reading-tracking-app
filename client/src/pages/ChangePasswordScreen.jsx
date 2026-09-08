@@ -47,8 +47,7 @@ export default function ChangePasswordScreen() {
                 return
             }
             
-            const token = localStorage.getItem("token")
-            await updatePassword(token, formData)
+            await updatePassword(formData)
 
             navigate("/edit-profile/change-password/success")
         } catch (error) {

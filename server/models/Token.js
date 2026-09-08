@@ -9,7 +9,7 @@ const tokenSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["reset-password", "delete-account"],
+        enum: ["refresh-token", "access-token", "reset-password", "delete-account"],
         required: true
     },
     token: {

@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken"
-
 import {
     getUserService,
     registerService,
@@ -9,14 +7,13 @@ import {
     requestDeleteAccountService,
     confirmDeleteAccountService,
     forgotPasswordService,
-    resetPasswordService
+    resetPasswordService,
+    logoutService,
+    generateNewAccessTokenService
 } from "../services/authService.js"
 
-function generateToken(userId) {
-    return jwt.sign({ userId: userId }, process.env.JWT_SECRET, { 
-        expiresIn: "1h" 
-    })
-}
+const secure = process.env.NODE_ENV === "production"
+const sameSite = secure ? "none" : "lax"
 
 export async function getUser(req, res) {
     const user = await getUserService(req.userId)
@@ -29,51 +26,80 @@ export async function getUser(req, res) {
 }
 
 export async function register(req, res) {
-    const newUser = await registerService(req.body)
+    const {
+        accessToken,
+        refreshToken,
+        newUser
+    } = await registerService(req.body)
 
-    const token = generateToken(newUser._id)
-
+    res.cookie(
+        "refreshToken",
+        refreshToken,
+        {
+            maxAge: Number(process.env.JWT_REFRESH_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
+    res.cookie(
+        "accessToken",
+        accessToken,
+        {
+            maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
     res.status(201).json({
         success: true,
         message: "Registration successful",
-        data: {
-            user: {
-                _id: newUser._id,
-                name: newUser.name,
-                surname: newUser.surname,
-                email: newUser.email                
-            },
-            token
-        }
+        data: newUser
     })
 }
 
 export async function login(req, res) {
-    const user = await loginService(req.body)
+    const {
+        accessToken,
+        refreshToken,
+        user
+    } = await loginService(req.body)
 
-    const token = generateToken(user._id)
+    res.cookie(
+        "refreshToken",
+        refreshToken,
+        {
+            maxAge: Number(process.env.JWT_REFRESH_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
+    res.cookie(
+        "accessToken",
+        accessToken,
+        {
+            maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
 
     res.status(200).json({
         success: true,
-        message: "Log in successful",
-        data: {
-            user: {
-                _id: user._id,
-                name: user.name,
-                surname: user.surname,
-                email: user.email                
-            },
-            token
-        }        
+        message: "Login successful",
+        data: user
     })
 }
 
 export async function updatePp(req, res) {
     const user = await updatePpService(
         req.userId,
-        req.file 
+        req.file
     )
-    
+
     res.status(200).json({
         success: true,
         message: "Profile photo updated successfully",
@@ -85,7 +111,7 @@ export async function updateUser(req, res) {
         req.userId,
         req.body,
     )
-    
+
     res.status(200).json({
         success: true,
         message: "Account information updated successfully",
@@ -98,7 +124,7 @@ export async function requestDeleteAccount(req, res) {
 
     res.status(200).json({
         success: true,
-        message: "We've sent a confirmation link to your email. Click it to permanently delete your account.",        
+        message: "We've sent a confirmation link to your email. Click it to permanently delete your account.",
         data: []
     })
 }
@@ -134,6 +160,51 @@ export async function resetPassword(req, res) {
     res.status(200).json({
         success: true,
         message: "Password updated successfully",
+        data: []
+    })
+}
+
+export async function logout(req, res) {
+    const refreshToken = req.cookies.refreshToken
+
+    await logoutService(refreshToken)
+
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure,
+        sameSite
+    })
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure,
+        sameSite
+    })
+
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully",
+        data: []
+    })
+}
+
+export async function generateNewAccessToken(req, res) {
+    const refreshToken = req.cookies.refreshToken
+    const newAccessToken = await generateNewAccessTokenService(refreshToken)
+
+    res.cookie(
+        "accessToken",
+        newAccessToken,
+        {
+            maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
+
+    res.status(201).json({
+        success: true,
+        message: "Access token refreshed successfully",
         data: []
     })
 }

@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
-async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
+async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
     const isFormData = body instanceof FormData
 
     const response = await fetch(
@@ -9,8 +9,8 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
             method,
             headers: {
                 ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
-                ...(token && { Authorization: `Bearer ${token}` })
             },
+            credentials: "include",
             ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
         }
     )
@@ -18,17 +18,36 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, token) {
     const result = await response.json()
 
     if (!response.ok) {
+        if (isRetry) {
+            throw result
+        }
+
+        if (response.status === 401) {
+            const response = await fetch(
+                `${API_URL}/auth/refresh`, 
+                { 
+                    method: "POST",
+                    credentials: "include" 
+                }
+            )
+
+            if (!response.ok) {
+                const result = await response.json()
+                throw result
+            }
+
+            return apiFetch(endpoint, { method: 'POST', body }, true)
+        }
+
         throw result
     }
 
     return result.data
 }
 
-export async function getUser(token) {
+export async function getUser() {
     return apiFetch(
         "/auth/me", 
-        {}, 
-        token
     )
 }
 
@@ -46,54 +65,48 @@ export async function login(data) {
     )
 }
 
-export async function updateProfilePhoto(token, file) {
+export async function updateProfilePhoto(file) {
     const formData = new FormData()
     formData.append("profilePhoto", file)
 
     return apiFetch(
         "/auth/me/profile-photo",
         { method: 'PATCH', body: formData },
-        token
     )
 }
 
-export async function updateProfile(token, data) {
+export async function updateProfile(data) {
     return apiFetch(
         "/auth/me",
         { method: 'PATCH', body: data },
-        token
     )
 }
 
-export async function updateEmail(token, data) {
+export async function updateEmail(data) {
     return apiFetch(
         "/auth/me/email", 
         { method: 'PATCH', body: data }, 
-        token
     )
 }
 
-export async function updatePassword(token, data) {
+export async function updatePassword(data) {
     return apiFetch(
         "/auth/me/password", 
         { method: 'PATCH', body: data }, 
-        token
     )
 }
 
-export async function requestDeleteAccount(token) {
+export async function requestDeleteAccount() {
     return apiFetch(
         "/auth/request-delete-account",
         { method: 'POST' },
-        token
     )
 }
 
-export async function confirmDeleteAccount(token, deleteAcccountToken) {
+export async function confirmDeleteAccount(deleteAcccountToken) {
     return apiFetch(
         `/auth/confirm-delete-account?token=${deleteAcccountToken}`,
         { method: 'DELETE' },
-        token
     )
 }
 
@@ -120,5 +133,11 @@ export async function resetPassword(resetPasswordToken, data) {
 export async function verifyResetToken(resetPasswordToken) {
     return apiFetch(
         `/auth/reset-password/verify-token?token=${resetPasswordToken}`
+    )
+}
+
+export async function logout() {
+    return apiFetch(
+        "/auth/logout"
     )
 }

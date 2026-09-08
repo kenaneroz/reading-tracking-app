@@ -1,9 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
-async function apiFetch(endpoint, { method = 'GET', body } = {} = {}) {
+async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
     const isFormData = body instanceof FormData
-
-    const token = localStorage.getItem("token")
 
     const response = await fetch(
         `${API_URL}${endpoint}`, 
@@ -11,8 +9,8 @@ async function apiFetch(endpoint, { method = 'GET', body } = {} = {}) {
             method,
             headers: {
                 ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
-                ...(token && { Authorization: `Bearer ${token}` })
             },
+            credentials: "include",
             ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
         }
     )
@@ -20,6 +18,27 @@ async function apiFetch(endpoint, { method = 'GET', body } = {} = {}) {
     const result = await response.json()
 
     if (!response.ok) {
+        if (isRetry) {
+            throw result
+        }
+
+        if (response.status === 401) {
+            const response = await fetch(
+                `${API_URL}/auth/refresh`, 
+                { 
+                    method: "POST",
+                    credentials: "include" 
+                }
+            )
+
+            if (!response.ok) {
+                const result = await response.json()
+                throw result
+            }
+
+            return apiFetch(endpoint, { method: 'POST', body }, true)
+        }
+
         throw result
     }
 

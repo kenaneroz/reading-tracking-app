@@ -12,16 +12,17 @@ import {
     deleteLatestReadingActivityService as deleteReadingActivityApi
 } from "../services/bookService.js"
 
+import { useAuth } from "./authContext.jsx"
+
 const BookContext = createContext(null)
 
 export function BookProvider({ children }) {
+    const { isAuthenticated } = useAuth()
     const [books, setBooks] = useState([])
     const [loading, setLoading] = useState(false)
 
     async function getBooks() {
-        const token = localStorage.getItem("token")
-
-        if (!token) {
+        if (!isAuthenticated) {
             setBooks([])
             setLoading(false)
             return

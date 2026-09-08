@@ -35,13 +35,11 @@ export default function EditProfileScreen() {
     const [sending, setSending] = useState(false)
     const navigate = useNavigate()
 
-    const token = localStorage.getItem("token")
-
     async function handleRequestDeleteAccount() {
         setSending(true)
 
         try {
-            await requestDeleteAccount(token)
+            await requestDeleteAccount()
             navigate("/edit-profile/delete-account/check-email")
         } catch (error) {
             console.error(error)
@@ -55,15 +53,13 @@ export default function EditProfileScreen() {
         setErrors({})
         if (!hasChanges) return
 
-        const token = localStorage.getItem("token")
-
         try {
             setSaving(true)
 
-            await updateProfilePhoto(token, pp)
+            await updateProfilePhoto(pp)
             initalPp.current = pp
 
-            await updateProfile(token, formData)
+            await updateProfile(formData)
             initialFormData.current = { ...formData }
         } catch (error) {
             setErrors(error.errors || {})

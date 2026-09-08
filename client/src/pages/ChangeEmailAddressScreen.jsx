@@ -32,10 +32,8 @@ export default function ChangeEmailAddressScreen() {
 
         setUpdating(true)
 
-        const token = localStorage.getItem("token")
-
         try {
-            await updateEmail(token, formData)
+            await updateEmail(formData)
             navigate("/edit-profile/change-email/success")
         } catch (error) {
             setErrors(error.errors || {})

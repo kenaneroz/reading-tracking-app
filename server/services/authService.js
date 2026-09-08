@@ -5,18 +5,35 @@ import { Token } from "../models/Token.js"
 
 import AppError from "../errors/AppError.js"
 
-import { jwtDecode } from "jwt-decode"
 import crypto from "crypto"
 import { resend } from "../config/mailer.js"
 
 import dotenv from "dotenv"
 dotenv.config()
 
+import jwt from "jsonwebtoken"
+
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
 import deleteMultipleFromCloudinary from "../utils/deleteMultipleFromCloudinary.js"
 import getPublicIdFromCloudinaryUrl from "../utils/getPublicIdFromCloudinaryUrl.js"
  
+function generateRefreshToken(userId) {
+    return jwt.sign(
+        { userId: userId }, 
+        process.env.JWT_REFRESH_SECRET, 
+        { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
+    )
+}
+
+function generateAccessToken(userId) {
+    return jwt.sign(
+        { userId: userId }, 
+        process.env.JWT_ACCESS_SECRET, 
+        { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
+    )
+}
+
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
 
@@ -40,9 +57,7 @@ export async function registerService(data) {
         throw new AppError(
             "Validation failed", 
             400, 
-            {
-                email: "This email address is already in use"
-            }
+            { email: "This email address is already in use" }
         )
     }
 
@@ -56,7 +71,21 @@ export async function registerService(data) {
         password: hashedPassword
     })
 
-    return newUser
+    const refreshToken = generateRefreshToken(newUser._id)
+    const accessToken = generateAccessToken(newUser._id)
+
+    await Token.create({
+        userId: newUser._id,
+        type: "refresh-token",
+        token: refreshToken,
+        expiresAt: Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN_MS)
+    })
+
+    return {
+        refreshToken,
+        accessToken, 
+        newUser
+    }
 }
 
 export async function loginService(data) {
@@ -65,7 +94,7 @@ export async function loginService(data) {
         password 
     } = data
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).select("+password")
     if (!user) {
         throw new AppError(
             "Validation failed", 
@@ -89,7 +118,21 @@ export async function loginService(data) {
         )
     }
 
-    return user
+    const refreshToken = generateRefreshToken(user._id)
+    const accessToken = generateAccessToken(user._id)
+
+    await Token.create({
+        userId: user._id,
+        type: "refresh-token",
+        token: refreshToken,
+        expiresAt: Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN_MS)
+    })
+
+    return {
+        refreshToken,
+        accessToken,
+        user
+    }
 }
 
 export async function updatePpService(userId, file) {
@@ -352,4 +395,39 @@ export async function resetPasswordService(token, data) {
 
     user.password = hashedPassword
     return await user.save()
+}
+
+export async function logoutService(refreshToken) {
+    if (refreshToken) {
+        await Token.deleteOne({ token: refreshToken, type: "refresh-token" })
+    }
+
+    return true
+}
+
+export async function generateNewAccessTokenService(refreshToken) {
+    if (!refreshToken) {
+        throw new AppError("Unauthorized", 401)
+    }
+
+    let decoded
+    try {
+        decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+    } catch (error) {
+        throw new AppError("Invalid or expired refresh token", 401)
+    }
+
+    const storedToken = await Token.findOne({
+        userId: decoded.userId,
+        type: "refresh-token",
+        token: refreshToken
+    })
+
+    if (!storedToken || storedToken.expiresAt < Date.now()) {
+        throw new AppError("Invalid or expired refresh token", 401)
+    }
+
+    const newAccessToken = generateAccessToken(decoded.userId)
+
+    return newAccessToken
 }

@@ -12,43 +12,22 @@ import {
     requestDeleteAccount as requestDeleteAccountApi,
     confirmDeleteAccount as confirmDeleteAccountApi,
     verifyDeleteAccountToken as verifyDeleteAccountTokenApi,
-    verifyResetToken as verifyResetTokenApi
+    verifyResetToken as verifyResetTokenApi,
+    logout as logoutApi
 } from "../services/authService"
-
-import { jwtDecode } from "jwt-decode"
 
 const AuthContext = createContext(null)
 
-function isTokenExpired(token) {
-    try {
-        const decoded = jwtDecode(token)
-        return decoded.exp * 1000 < Date.now()
-    } catch (error) {
-        return true
-    }
-}
-
 export function AuthProvider({ children }) {
-    const [token, setToken] = useState(() => {
-        const t = localStorage.getItem("token")
-
-        if (t && !isTokenExpired(t)) return t
-
-        localStorage.removeItem("token")
-        return null
-    })
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(Boolean(token))
+    const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        if (!token) {
-            setUser(null)
-            return
-        }
-        
+    const isAuthenticated = Boolean(user)
+
+    useEffect(() => {    
         (async () => {
             try {
-                const userData = await getUserApi(token)
+                const userData = await getUserApi()
                 setUser(userData)
             } catch (error) {
                 console.error(error)
@@ -57,57 +36,46 @@ export function AuthProvider({ children }) {
                 setLoading(false)
             }
         })()
-    }, [token])
+    }, [])
 
     async function login(credentials) {
-        const data = await loginApi(credentials)
-
-        if (data?.token) {
-            localStorage.setItem("token", data.token)
-            setToken(data.token)
-            setUser(data.user)
-        }
+        const user = await loginApi(credentials)
+        if (user) setUser(user)
         
-        return data
+        return user
     }
 
     async function register(credentials) {
-        const data = await registerApi(credentials)
-        
-        if (data?.token) {
-            localStorage.setItem("token", data.token)
-            setToken(data.token)
-            setUser(data.user)
-        }
-        
-        return data
+        const user = await registerApi(credentials)
+        if (user) setUser(user)
+
+        return user
     }
 
     function logout() {
-        localStorage.removeItem("token")
-        setToken(null)
+        logoutApi()
         setUser(null)
     }
 
-    async function updateProfilePhoto(token, file) {
-        const updatedUser = await updateProfilePhotoApi(token, file)
+    async function updateProfilePhoto(file) {
+        const updatedUser = await updateProfilePhotoApi(file)
         setUser(updatedUser)
         return updatedUser
     }
-    async function updateProfile(token, data) {
-        const updatedUser = await updateProfileApi(token, data)
-        setUser(updatedUser)
-        return updatedUser
-    }
-
-    async function updateEmail(token, data) {
-        const updatedUser = await updateEmailApi(token, data)
+    async function updateProfile(data) {
+        const updatedUser = await updateProfileApi(data)
         setUser(updatedUser)
         return updatedUser
     }
 
-    async function updatePassword(token, data) {
-        await updatePasswordApi(token, data)
+    async function updateEmail(data) {
+        const updatedUser = await updateEmailApi(data)
+        setUser(updatedUser)
+        return updatedUser
+    }
+
+    async function updatePassword(data) {
+        await updatePasswordApi(data)
     }
 
     async function forgotPassword(data) {
@@ -117,12 +85,12 @@ export function AuthProvider({ children }) {
         await resetPasswordApi(resetToken, data)
     }
 
-    async function requestDeleteAccount(token) {
-        await requestDeleteAccountApi(token)
+    async function requestDeleteAccount() {
+        await requestDeleteAccountApi()
     }
 
-    async function confirmDeleteAccount(token, deleteAccountToken) {
-        await confirmDeleteAccountApi(token, deleteAccountToken)
+    async function confirmDeleteAccount(deleteAccountToken) {
+        await confirmDeleteAccountApi(deleteAccountToken)
     }
 
     async function verifyDeleteAccountToken(deleteAccountToken) {
@@ -133,27 +101,14 @@ export function AuthProvider({ children }) {
         await verifyResetTokenApi(resetToken)
     }
 
-    // Check isTokenExpired
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const token = localStorage.getItem("token")
-            
-            if (token && isTokenExpired(token)) {
-                logout()
-            }
-        }, 15000)
-
-        return () => clearInterval(interval)
-    }, [])
-
+ 
     return (
         <AuthContext.Provider 
             value={
                 { 
-                    token, 
                     user, 
                     setUser,
-                    isAuthenticated: Boolean(token), 
+                    isAuthenticated, 
                     loading,
                     login, 
                     register, 

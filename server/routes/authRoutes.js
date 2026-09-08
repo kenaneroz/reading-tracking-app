@@ -10,6 +10,8 @@ import {
     confirmDeleteAccount,
     forgotPassword,
     resetPassword,
+    logout,
+    generateNewAccessToken
 } from "../controllers/authController.js"
 
 import validateRegister from "../middlewares/validateRegister.js"
@@ -80,6 +82,8 @@ router
         validateResetPassword,
         resetPassword
     )
+    .post("/logout", logout)
+    .post("/refresh", generateNewAccessToken)
 
 
 export default router
