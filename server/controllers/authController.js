@@ -1,7 +1,10 @@
+import AppError from "../errors/AppError.js"
+import User from "../models/User.js"
 import {
     getUserService,
     registerService,
     loginService,
+    googleLoginService,
     updatePpService,
     updateUserService,
     requestDeleteAccountService,
@@ -93,6 +96,49 @@ export async function login(req, res) {
         data: user
     })
 }
+
+export async function googleLogin(req, res) {
+    const { access_token } = req.body
+
+    if (!access_token) {
+        throw new AppError("No token found", 400)
+    }
+
+    const {
+        accessToken,
+        refreshToken,
+        user
+    } = await googleLoginService(access_token)
+
+    res.cookie(
+        "refreshToken", 
+        refreshToken,
+        {
+            maxAge: Number(process.env.JWT_REFRESH_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
+    res.cookie(
+        "accessToken", 
+        accessToken,
+        {
+            maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_MS),
+            httpOnly: true,
+            secure,
+            sameSite
+        }
+    )
+
+    res.status(200).json(
+        { 
+            success: true,
+            message: "Login successful", 
+            data: user 
+        }
+    )
+} 
 
 export async function updatePp(req, res) {
     const user = await updatePpService(

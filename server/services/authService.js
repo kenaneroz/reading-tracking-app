@@ -88,6 +88,50 @@ export async function registerService(data) {
     }
 }
 
+export async function googleLoginService(token) {
+    const response = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo", 
+        { headers: { Authorization: `Bearer ${token}` } }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw new AppError(
+            "Invalid Google authorization", 
+            400
+        )
+    }
+
+    const { 
+        given_name, 
+        family_name, 
+        email 
+    } = result
+
+    let user = await User.findOne({ email })
+
+    if (!user) {
+        user = await User.create(
+            {
+                name: given_name || "Name",
+                surname: family_name || "Surname",
+                email: email,
+                password: Math.random().toString(36).slice(-10) + "Google1!"
+            }
+        )
+    }
+
+    const refreshToken = generateRefreshToken(user._id)
+    const accessToken = generateAccessToken(user._id)
+
+    return {
+        refreshToken,
+        accessToken,
+        user
+    }
+}
+
 export async function loginService(data) {
     const {
         email,

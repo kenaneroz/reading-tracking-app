@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { 
     getUser as getUserApi,
     login as loginApi, 
+    loginWithGoogle as loginWithGoogleApi,
     register as registerApi,
     updateProfilePhoto as updateProfilePhotoApi,
     updateProfile as updateProfileApi,
@@ -43,6 +44,13 @@ export function AuthProvider({ children }) {
         if (user) setUser(user)
         
         return user
+    }
+
+    async function loginWithGoogle(accessToken) {
+        const userData = await loginWithGoogleApi(accessToken)
+        if (userData) setUser(userData)
+
+        return userData
     }
 
     async function register(credentials) {
@@ -111,6 +119,7 @@ export function AuthProvider({ children }) {
                     isAuthenticated, 
                     loading,
                     login, 
+                    loginWithGoogle,
                     register, 
                     logout,
                     updateProfilePhoto,

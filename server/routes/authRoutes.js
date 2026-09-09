@@ -4,6 +4,7 @@ import {
     getUser,
     register, 
     login,
+    googleLogin,
     updatePp,
     updateUser,
     requestDeleteAccount,
@@ -38,6 +39,9 @@ router
     .post("/login", 
         validateLogin, 
         login
+    )
+    .post("/google",
+        googleLogin
     )
     .get("/me",
         verifyToken,

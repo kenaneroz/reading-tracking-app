@@ -41,7 +41,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
 
         throw result
     }
-
+    
     return result.data
 }
 
@@ -62,6 +62,13 @@ export async function login(data) {
     return apiFetch(
         "/auth/login", 
         { method: 'POST', body: data }
+    )
+}
+
+export async function loginWithGoogle(accessToken) {
+    return apiFetch(
+        "/auth/google",
+        { method: 'POST', body: { access_token: accessToken } }
     )
 }
 

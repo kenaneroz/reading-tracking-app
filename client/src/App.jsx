@@ -26,6 +26,7 @@ import ChangeEmailAddressScreen from "./pages/ChangeEmailAddressScreen"
 import ChangePasswordScreen from "./pages/ChangePasswordScreen"
 import ConfirmationScreen from "./components/shared/ConfirmationScreen"
 import ConfirmDeleteAccountScreen from "./pages/ConfirmDeleteAccountScreen.jsx"
+import { GoogleOAuthProvider } from "@react-oauth/google"
 
 function AppRoutes() {
   const navigate = useNavigate()
@@ -150,14 +151,18 @@ function AppRoutes() {
 }
 
 function App() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+  
   return (
-    <AuthProvider>
-      <BookProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </BookProvider>
-    </AuthProvider>
+    <GoogleOAuthProvider clientId={clientId} >
+      <AuthProvider>
+        <BookProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </BookProvider>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   )
 }
 

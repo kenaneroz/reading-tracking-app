@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom"
 
 import { useBooks } from "../context/BookContext"
 import { useAuth } from "../context/authContext"
+import { useGoogleLogin } from "@react-oauth/google"
 
 export default function LoginScreen() {
     const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function LoginScreen() {
     })
     const [errors, setErrors] = useState({})
     const { getBooks } = useBooks()
-    const { login } = useAuth()
+    const { login, loginWithGoogle } = useAuth()
     const [isLoggingIn, setIsLoggingIn] = useState(false)
 
     const navigate = useNavigate()
@@ -37,8 +38,6 @@ export default function LoginScreen() {
                 password: formData.password
             })
 
-            await getBooks()
-
             navigate("/home")
         } catch (error) {
             setErrors(error.errors || {})
@@ -47,6 +46,25 @@ export default function LoginScreen() {
             setIsLoggingIn(false)
         }
     }
+
+    const handleCustomGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setIsLoggingIn(true)
+            setErrors({})
+            
+            try {
+                await loginWithGoogle(tokenResponse.access_token)
+                navigate("/home")
+            } catch (error) {
+                console.error("Google login error:", error)
+                setErrors(error.errors || { general: "Unable to sign with Google" })
+            } finally {
+                setIsLoggingIn(false)
+            }
+        }, onError: (error) => {
+            console.error("Google window error:", error)
+        }
+    })
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
@@ -112,7 +130,7 @@ export default function LoginScreen() {
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
                         variant="outline"
-                        onClick={() => {}}
+                        onClick={() => handleCustomGoogleLogin()}
                     >
                         <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
                         <span>Continue with Google</span>

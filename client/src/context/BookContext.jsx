@@ -22,12 +22,6 @@ export function BookProvider({ children }) {
     const [loading, setLoading] = useState(false)
 
     async function getBooks() {
-        if (!isAuthenticated) {
-            setBooks([])
-            setLoading(false)
-            return
-        }
-
         try {
             setLoading(true)
             const books = await getBooksApi()
@@ -39,6 +33,10 @@ export function BookProvider({ children }) {
             setLoading(false)
         }
     }
+    
+    useEffect(() => {
+        if (isAuthenticated) getBooks()
+    }, [isAuthenticated])
 
     /* *************** Book *************** */
 
@@ -135,10 +133,6 @@ export function BookProvider({ children }) {
 
         return updatedBook
     }
-
-    useEffect(() => {
-        getBooks()
-    }, [])    
 
     return (
         <BookContext.Provider 
