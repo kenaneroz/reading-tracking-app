@@ -16,7 +16,7 @@ import {
 } from "../services/authService.js"
 
 const secure = process.env.NODE_ENV === "production"
-const sameSite = secure ? "none" : "lax"
+const sameSite = "lax"
 
 export async function getUser(req, res) {
     const user = await getUserService(req.userId)
