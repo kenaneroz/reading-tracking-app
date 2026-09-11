@@ -65,10 +65,10 @@ export async function login(data) {
     )
 }
 
-export async function loginWithGoogle(accessToken) {
+export async function googleAuth(access_token) {
     return apiFetch(
         "/auth/google",
-        { method: 'POST', body: { access_token: accessToken } }
+        { method: 'POST', body: { access_token: access_token } }
     )
 }
 

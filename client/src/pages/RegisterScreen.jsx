@@ -11,9 +11,10 @@ import BackButton from "../components/shared/BackButton"
 import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
+import { useGoogleLogin } from "@react-oauth/google"
 
 export default function RegisterScreen() {
-    const { register } = useAuth() 
+    const { register, googleAuth } = useAuth() 
     const [formData, setFormData] = useState({
         name: "",
         surname: "",
@@ -39,6 +40,23 @@ export default function RegisterScreen() {
             setIsRegistering(false)
         }
     }
+    const handleCustomGoogleRegister = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setIsRegistering(true)
+            setErrors({})
+            try {
+                await googleAuth(tokenResponse.access_token)
+                navigate("/home")
+            } catch (error) {
+                console.error("Google login error:", error)
+                setErrors(error.errors || { general: "Unable to sign with Google" })
+            } finally {
+                setIsRegistering(false)
+            }
+        }, onError: (error) => {
+            console.error("Google window error:", error)
+        }
+    })
 
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
@@ -116,7 +134,7 @@ export default function RegisterScreen() {
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
                         variant="outline"
-                        onClick=""
+                        onClick={handleCustomGoogleRegister}
                     >
                         <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
                         <span>Continue with Google</span>

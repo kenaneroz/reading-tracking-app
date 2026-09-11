@@ -4,7 +4,7 @@ import {
     getUser,
     register, 
     login,
-    googleLogin,
+    googleAuth,
     updatePp,
     updateUser,
     requestDeleteAccount,
@@ -12,7 +12,7 @@ import {
     forgotPassword,
     resetPassword,
     logout,
-    generateNewAccessToken
+    generateNewAccessToken,
 } from "../controllers/authController.js"
 
 import validateRegister from "../middlewares/validateRegister.js"
@@ -41,7 +41,7 @@ router
         login
     )
     .post("/google",
-        googleLogin
+        googleAuth
     )
     .get("/me",
         verifyToken,

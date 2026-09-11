@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { 
     getUser as getUserApi,
-    login as loginApi, 
-    loginWithGoogle as loginWithGoogleApi,
     register as registerApi,
+    login as loginApi, 
+    googleAuth as googleAuthApi,
     updateProfilePhoto as updateProfilePhotoApi,
     updateProfile as updateProfileApi,
     updateEmail as updateEmailApi,
@@ -46,15 +46,14 @@ export function AuthProvider({ children }) {
         return user
     }
 
-    async function loginWithGoogle(accessToken) {
-        const userData = await loginWithGoogleApi(accessToken)
-        if (userData) setUser(userData)
-
-        return userData
-    }
-
     async function register(credentials) {
         const user = await registerApi(credentials)
+        if (user) setUser(user)
+
+        return user
+    }
+    async function googleAuth(credentials) {
+        const user = await googleAuthApi(credentials)
         if (user) setUser(user)
 
         return user
@@ -118,9 +117,9 @@ export function AuthProvider({ children }) {
                     setUser,
                     isAuthenticated, 
                     loading,
-                    login, 
-                    loginWithGoogle,
                     register, 
+                    login, 
+                    googleAuth,
                     logout,
                     updateProfilePhoto,
                     updateProfile,

@@ -4,7 +4,7 @@ import {
     getUserService,
     registerService,
     loginService,
-    googleLoginService,
+    googleAuthService,
     updatePpService,
     updateUserService,
     requestDeleteAccountService,
@@ -12,7 +12,7 @@ import {
     forgotPasswordService,
     resetPasswordService,
     logoutService,
-    generateNewAccessTokenService
+    generateNewAccessTokenService,
 } from "../services/authService.js"
 
 const secure = process.env.NODE_ENV === "production"
@@ -97,21 +97,21 @@ export async function login(req, res) {
     })
 }
 
-export async function googleLogin(req, res) {
+export async function googleAuth(req, res) {
     const { access_token } = req.body
 
     if (!access_token) {
-        throw new AppError("No token found", 400)
+        throw new AppError("Invalid Google authorization", 400)
     }
 
     const {
-        accessToken,
         refreshToken,
+        accessToken,
         user
-    } = await googleLoginService(access_token)
+    } = await googleAuthService(access_token)
 
     res.cookie(
-        "refreshToken", 
+        "refreshToken",
         refreshToken,
         {
             maxAge: Number(process.env.JWT_REFRESH_EXPIRES_IN_MS),
@@ -121,7 +121,7 @@ export async function googleLogin(req, res) {
         }
     )
     res.cookie(
-        "accessToken", 
+        "accessToken",
         accessToken,
         {
             maxAge: Number(process.env.JWT_ACCESS_EXPIRES_IN_MS),
@@ -131,14 +131,12 @@ export async function googleLogin(req, res) {
         }
     )
 
-    res.status(200).json(
-        { 
-            success: true,
-            message: "Login successful", 
-            data: user 
-        }
-    )
-} 
+    res.status(200).json({
+        success: true,
+        message: "Google auth successful",
+        data: user
+    })
+}
 
 export async function updatePp(req, res) {
     const user = await updatePpService(

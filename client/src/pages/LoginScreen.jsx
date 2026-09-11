@@ -21,7 +21,7 @@ export default function LoginScreen() {
     })
     const [errors, setErrors] = useState({})
     const { getBooks } = useBooks()
-    const { login, loginWithGoogle } = useAuth()
+    const { login, googleAuth } = useAuth()
     const [isLoggingIn, setIsLoggingIn] = useState(false)
 
     const navigate = useNavigate()
@@ -53,7 +53,7 @@ export default function LoginScreen() {
             setErrors({})
             
             try {
-                await loginWithGoogle(tokenResponse.access_token)
+                await googleAuth(tokenResponse.access_token)
                 navigate("/home")
             } catch (error) {
                 console.error("Google login error:", error)
