@@ -1,6 +1,7 @@
 import { GENRE_OPTIONS } from "../../shared/constants/genreOptions.js"
 import { FORMAT_OPTIONS } from "../../shared/constants/formatOptions.js"
 import { RATING_OPTIONS } from "../../shared/constants/ratingOptions.js"
+import { TITLE_ERRORS, AUTHOR_ERRORS, GENRE_ERRORS, FORMAT_ERRORS, TOTAL_PAGES_ERRORS, CURRENT_PAGE_ERRORS, RATING_ERRORS, BOOK_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default function validateCreateBook(req, res, next) {
     const errors = {}
@@ -17,45 +18,45 @@ export default function validateCreateBook(req, res, next) {
 
     if (
         typeof title !== "string" || title.trim() === "") {
-        errors.title = "Title is required"
+        errors.title = TITLE_ERRORS.REQUIRED
     }
 
     if (typeof author !== "string" || author.trim() === "") {
-        errors.author = "Author is required"
+        errors.author = AUTHOR_ERRORS.REQUIRED
     }
 
     if (typeof genre !== "string" || genre.trim() === "") {
-        errors.genre = "Genre is required"
+        errors.genre = GENRE_ERRORS.REQUIRED
     } else if (!GENRE_OPTIONS.includes(genre.trim())) {
-        errors.genre = "Invalid genre"
+        errors.genre = GENRE_ERRORS.INVALID
     }
 
     if (typeof format !== "string" || format.trim() === "") {
-        errors.format = "Format is required"
+        errors.format = FORMAT_ERRORS.REQUIRED
     } else if (!FORMAT_OPTIONS.includes(format.trim())) {
-        errors.format = "Invalid format"
+        errors.format = FORMAT_ERRORS.INVALID
     }
 
     if (totalPages == null || !Number.isFinite(totalPages)) {
-        errors.totalPages = "Total pages must be a valid number"
+        errors.totalPages = TOTAL_PAGES_ERRORS.INVALID
     } else if (totalPages < 1) {
-        errors.totalPages = "Total pages must be at least 1"
+        errors.totalPages = TOTAL_PAGES_ERRORS.TOO_LOW
     }
 
     const hasCurrentPage = currentPage !== undefined && currentPage !== null && currentPage !== ""
     if (hasCurrentPage) {
         if (!Number.isFinite(currentPage)) {
-            errors.currentPage = "Current page must be a valid number"
+            errors.currentPage = CURRENT_PAGE_ERRORS.INVALID
         } else if (currentPage < 0) {
-            errors.currentPage = "Current page cannot be negative"
+            errors.currentPage = CURRENT_PAGE_ERRORS.NEGATIVE
         } else if (!errors.totalPages && currentPage > totalPages) {
-            errors.currentPage = "Current page cannot exceed total pages"
+            errors.currentPage = BOOK_ERRORS.PAGE_EXCEEDS_TOTAL
         }
     }
 
     const hasRating = rating !== undefined && rating !== null && rating !== ""
     if (hasRating && !RATING_OPTIONS.includes(rating)) {
-        errors.rating = "Invalid rating"
+        errors.rating = RATING_ERRORS.INVALID
     }
 
     if (Object.keys(errors).length > 0) {

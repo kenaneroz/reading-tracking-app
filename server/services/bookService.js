@@ -1,5 +1,6 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
+import { BOOK_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
 
 import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
@@ -8,7 +9,7 @@ export async function getBookService(id, userId) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     return book
@@ -23,7 +24,7 @@ export async function updateBookCoverService(id, userId, file) {
     const book = await Book.findOne({ _id: id, userId: userId })
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const uploadResult = await uploadToCloudinary(file.buffer, "covers", "bookCover")
@@ -61,9 +62,9 @@ export async function createBookService(data) {
     })
     if (existingBook) {
         throw new AppError(
-            "This book is already in your library", 
+            BOOK_ERRORS.ALREADY_IN_LIBRARY,
             409,
-            { title: "This book is already in your library" }
+            { title: BOOK_ERRORS.ALREADY_IN_LIBRARY }
         )
     }
 
@@ -97,7 +98,7 @@ export async function updateBookService(id, userId, data) {
     const book = await Book.findOne({ _id: id, userId: userId })
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const {
@@ -116,20 +117,20 @@ export async function updateBookService(id, userId, data) {
 
     if (currentPage_ > totalPages_) {
         throw new AppError(
-            "Validation failed",
+            ERRORS.VALIDATION_FAILED,
             400,
             {
-                currentPage: "Current page cannot exceed total pages"
+                currentPage: BOOK_ERRORS.PAGE_EXCEEDS_TOTAL
             }
         )
     }
 
     if (currentPage_ < book.currentPage) {
         throw new AppError(
-            "Validation failed",
+            ERRORS.VALIDATION_FAILED,
             400,
             {
-                currentPage: "Current page cannot be less than the previous page"
+                currentPage: BOOK_ERRORS.PAGE_BELOW_PREVIOUS
             }
         )
     }
@@ -185,7 +186,7 @@ export async function deleteBookService(id, userId) {
     const deletedBook = await Book.findOneAndDelete({ _id: id, userId: userId })
 
     if (!deletedBook) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     if (deletedBook.cover && !deletedBook.cover.includes("default")) {

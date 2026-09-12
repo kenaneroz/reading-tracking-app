@@ -1,16 +1,17 @@
 import { Token } from "../models/Token.js"
 import AppError from "../errors/AppError.js"
 import crypto from "crypto"
+import { AUTH_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default async function verifyDeleteAccountToken(req, res) {
     const { token } = req.query
 
     if (!token) {
         throw new AppError(
-            "Invalid or expired link", 
+            AUTH_ERRORS.INVALID_OR_EXPIRED_LINK, 
             400,
             {
-                link: "Invalid or expired link"
+                link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
             }
         )
     }
@@ -26,10 +27,10 @@ export default async function verifyDeleteAccountToken(req, res) {
         t.expiresAt < Date.now()
     ) {
         throw new AppError(
-            "Invalid or expired link", 
+            AUTH_ERRORS.INVALID_OR_EXPIRED_LINK, 
             400,
             {
-                link: "Invalid or expired link"
+                link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
             }
         )    
     }

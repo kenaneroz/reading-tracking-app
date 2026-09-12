@@ -25,7 +25,7 @@ export default function EditProfileScreen() {
         surname: user.surname
     })
 
-    const hasChanges = 
+    const hasChanges =
         Object.keys(initialFormData.current).some(key => formData[key] !== initialFormData.current[key]) ||
         pp !== initalPp.current
 
@@ -56,11 +56,31 @@ export default function EditProfileScreen() {
         try {
             setSaving(true)
 
-            await updateProfilePhoto(pp)
-            initalPp.current = pp
+            const promises = []
 
-            await updateProfile(formData)
-            initialFormData.current = { ...formData }
+            if (pp !== initalPp.current) {
+                promises.push(
+                    updateProfilePhoto(pp).then(() => {
+                        initalPp.current = pp
+                    })
+                )
+            }
+
+            if (
+                formData.name !== initialFormData.current.name ||
+                formData.surname !== initialFormData.current.surname
+            ) {
+                promises.push(
+                    updateProfile(formData).then(() => {
+                        initialFormData.current = { ...formData }
+                    })
+                )
+            }
+
+            console.log(promises)
+            if (promises.length > 0) {
+                await Promise.all(promises)
+            }
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
@@ -68,7 +88,8 @@ export default function EditProfileScreen() {
             setSaving(false)
         }
     }
-    
+
+
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="px-5 pt-5">
@@ -82,7 +103,7 @@ export default function EditProfileScreen() {
 
                 <div className="mt-7">
                     <div className="flex flex-col gap-5">
-                        <FileInput 
+                        <FileInput
                             id="profile-image"
                             label="Profile image"
                             placeholder="Tap to change the profile photo"
@@ -93,21 +114,21 @@ export default function EditProfileScreen() {
                         />
 
                         <div className="flex items-center gap-3">
-                            <Input 
+                            <Input
                                 id="name"
                                 label="Name"
                                 placeholder="Ellison"
                                 value={formData.name}
-                                onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                                 errorMessage={errors.name}
                             />
 
-                            <Input 
+                            <Input
                                 id="surname"
                                 label="Surname"
                                 placeholder="Elliot"
                                 value={formData.surname}
-                                onChange={(e) => setFormData(prev => ({...prev, surname: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, surname: e.target.value }))}
                                 errorMessage={errors.surname}
                             />
                         </div>
@@ -141,7 +162,7 @@ export default function EditProfileScreen() {
 
                 </div>
 
-                <p 
+                <p
                     className="text-body-sm text-red mt-7 mb-10 text-center cursor-pointer"
                     onClick={() => setIsConfirmPopupOpen(true)}
                 >
@@ -155,7 +176,7 @@ export default function EditProfileScreen() {
                 }
 
                 {(!sending && isConfirmPopupOpen) &&
-                    <ConfirmDeletePopup 
+                    <ConfirmDeletePopup
                         cancel={() => setIsConfirmPopupOpen(false)}
                         delete_={handleRequestDeleteAccount}
                         message="We will sent a confirmation link to your email. Click the link to permanently delete your account."

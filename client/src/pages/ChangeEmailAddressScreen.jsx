@@ -10,8 +10,10 @@ import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
 
+import validateUpdateEmail from "../utils/validators/validateUpdateEmail.js"
+
 export default function ChangeEmailAddressScreen() {
-    const { user, updateEmail, logout } = useAuth()
+    const { user, updateEmail } = useAuth()
     
     const initialData = useRef({
         email: user.email
@@ -19,7 +21,8 @@ export default function ChangeEmailAddressScreen() {
     const [formData, setFormData] = useState({
         email: user.email
     })
-    const hasChanges = Object.keys(initialData.current).some(key => formData[key] !== initialData.current[key])
+    
+    const hasChanges = initialData.current.email !== formData.email
 
     const [updating, setUpdating] = useState(false)
 
@@ -29,6 +32,13 @@ export default function ChangeEmailAddressScreen() {
 
     async function handleUpdate() {
         if (!hasChanges) return
+        setErrors({})
+
+        const validationErrors = validateUpdateEmail(formData.email)
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors)
+            return
+        }
 
         setUpdating(true)
 
@@ -74,7 +84,7 @@ export default function ChangeEmailAddressScreen() {
                         placeholder="name@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                        errorMessage=""
+                        errorMessage={errors.email}
                     />
 
                     <Button

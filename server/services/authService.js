@@ -18,6 +18,7 @@ import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
 import deleteMultipleFromCloudinary from "../utils/deleteMultipleFromCloudinary.js"
 import getPublicIdFromCloudinaryUrl from "../utils/getPublicIdFromCloudinaryUrl.js"
 import { ref } from "process"
+import { AUTH_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
  
 function generateRefreshToken(userId) {
     return jwt.sign(
@@ -39,7 +40,7 @@ export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
 
     if (!user) {
-        throw new AppError("User not found", 400)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
 
     return user
@@ -56,9 +57,9 @@ export async function registerService(data) {
     const existingUser = await User.findOne({ email })
     if (existingUser) {
         throw new AppError(
-            "Validation failed", 
+            ERRORS.VALIDATION_FAILED, 
             400, 
-            { email: "This email address is already in use" }
+            { email: AUTH_ERRORS.EMAIL_IN_USE }
         )
     }
 
@@ -98,11 +99,11 @@ export async function loginService(data) {
     const user = await User.findOne({ email }).select("+password")
     if (!user) {
         throw new AppError(
-            "Validation failed", 
+            ERRORS.VALIDATION_FAILED, 
             400, 
             {
-                email: "Invalid email or password",
-                password: "Invalid email or password"
+                email: AUTH_ERRORS.INVALID_CREDENTIALS,
+                password: AUTH_ERRORS.INVALID_CREDENTIALS
             }
         )
     }
@@ -110,11 +111,11 @@ export async function loginService(data) {
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
         throw new AppError(
-            "Validation failed", 
+            ERRORS.VALIDATION_FAILED, 
             400, 
             {
-                email: "Invalid email or password",
-                password: "Invalid email or password"
+                email: AUTH_ERRORS.INVALID_CREDENTIALS,
+                password: AUTH_ERRORS.INVALID_CREDENTIALS
             }
         )
     }
@@ -146,7 +147,7 @@ export async function googleAuthService(access_token) {
 
     if (!response.ok) {
         throw new AppError(
-            "Invalid Google authorization", 
+            "Invalid Google token", 
             400
         )
     }
@@ -191,7 +192,7 @@ export async function updatePpService(userId, file) {
     const user = await User.findById(userId)
 
     if (!user) {
-        throw new AppError("User not found", 404)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
 
     if (file) {
@@ -214,23 +215,25 @@ export async function updatePpService(userId, file) {
 }
 
 export async function updateUserService(userId, data) {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).select("+password")
 
     if (!user) {
-        throw new AppError("User not found", 404)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
 
     const updateData = { ...data }
 
-    if (updateData.email === user.email) {
-        throw new AppError(
-            "Validation failed",
-            400,
-            { email: "This is already your current email address" }
-        )
+    if (updateData.email !== undefined) {
+        if (updateData.email === user.email) {
+            throw new AppError(
+                ERRORS.VALIDATION_FAILED,
+                400,
+                { email: AUTH_ERRORS.EMAIL_SAME }
+            )
+        }
     }
 
-    if (updateData.newPassword !== undefined) {
+    if (updateData.currentPassword !== undefined) {
         const isCurrentPasswordCorrect = await bcrypt.compare(
             updateData.currentPassword,
             user.password
@@ -238,18 +241,17 @@ export async function updateUserService(userId, data) {
 
         if (!isCurrentPasswordCorrect) {
             throw new AppError(
-                "Validation failed",
+                ERRORS.VALIDATION_FAILED,
                 400,
-                { currentPassword: "Current password is incorrect" }
+                { currentPassword: AUTH_ERRORS.WRONG_CURRENT_PASSWORD }
             )
         }
-
         
         if (updateData.currentPassword === updateData.newPassword) {
             throw new AppError(
-                "Validation failed",
+                ERRORS.VALIDATION_FAILED,
                 400,
-                { newPassword: "New password must be different from the current password" }
+                { newPassword: AUTH_ERRORS.SAME_PASSWORD }
             )
         }
 
@@ -271,7 +273,7 @@ export async function requestDeleteAccountService(userId) {
     const user = await User.findById(userId)
 
     if (!user) {
-        throw new AppError("User not found", 400)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
 
     await Token.deleteMany({ userId: user._id, type: "delete-account" })
@@ -305,7 +307,7 @@ export async function confirmDeleteAccountService(userId, token) {
     const user = await User.findById(userId)
 
     if (!user) {
-        throw new AppError("User not found", 400)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
  
     const hashedToken = crypto
@@ -320,10 +322,10 @@ export async function confirmDeleteAccountService(userId, token) {
         t.expiresAt < Date.now()
     ) {
         throw new AppError(
-            "Invalid or expired token",
+            AUTH_ERRORS.INVALID_OR_EXPIRED_TOKEN,
             400,
             {
-                token: "Invalid or expired token"
+                token: AUTH_ERRORS.INVALID_OR_EXPIRED_TOKEN
             }
         )
     }
@@ -395,10 +397,10 @@ export async function forgotPasswordService(email) {
 export async function resetPasswordService(token, data) {
     if (!token) {
         throw new AppError(
-            "Validation failed", 
+            ERRORS.VALIDATION_FAILED, 
             400,
             {
-                link: "Invalid or expired link"
+                link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
             }
         )
     }
@@ -414,10 +416,10 @@ export async function resetPasswordService(token, data) {
         t.expiresAt < Date.now()
     ) {
         throw new AppError(
-            "Validation failed", 
+            ERRORS.VALIDATION_FAILED, 
             400,
             {
-                link: "Invalid or expired link"
+                link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
             }
         )    
     }
@@ -425,7 +427,7 @@ export async function resetPasswordService(token, data) {
     const user = await User.findById(t.userId)
 
     if (!user) {
-        throw new AppError("User not found", 400)
+        throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
 
     const isSame = await bcrypt.compare(
@@ -435,9 +437,9 @@ export async function resetPasswordService(token, data) {
 
     if (isSame) {
         throw new AppError(
-            "Validation failed",
+            ERRORS.VALIDATION_FAILED,
             400,
-            { newPassword: "New password must be different from the current password" }
+            { newPassword: AUTH_ERRORS.SAME_PASSWORD }
         )        
     }
 
@@ -459,14 +461,14 @@ export async function logoutService(refreshToken) {
 
 export async function generateNewAccessTokenService(refreshToken) {
     if (!refreshToken) {
-        throw new AppError("Unauthorized", 401)
+        throw new AppError(AUTH_ERRORS.UNAUTHORIZED, 401)
     }
 
     let decoded
     try {
         decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
     } catch (error) {
-        throw new AppError("Invalid or expired refresh token", 401)
+        throw new AppError(AUTH_ERRORS.INVALID_OR_EXPIRED_REFRESH, 401)
     }
 
     const storedToken = await Token.findOne({
@@ -476,7 +478,7 @@ export async function generateNewAccessTokenService(refreshToken) {
     })
 
     if (!storedToken || storedToken.expiresAt < Date.now()) {
-        throw new AppError("Invalid or expired refresh token", 401)
+        throw new AppError(AUTH_ERRORS.INVALID_OR_EXPIRED_REFRESH, 401)
     }
 
     const newAccessToken = generateAccessToken(decoded.userId)

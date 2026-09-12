@@ -1,5 +1,6 @@
 import AppError from "../errors/AppError.js"
 import User from "../models/User.js"
+import { AUTH_ERRORS } from "../../shared/constants/errorMessages.js"
 import {
     getUserService,
     registerService,
@@ -101,7 +102,7 @@ export async function googleAuth(req, res) {
     const { access_token } = req.body
 
     if (!access_token) {
-        throw new AppError("Invalid Google authorization", 400)
+        throw new AppError(AUTH_ERRORS.INVALID_GOOGLE_TOKEN, 400)
     }
 
     const {
@@ -180,7 +181,7 @@ export async function confirmDeleteAccount(req, res) {
 
     res.status(200).json({
         success: true,
-        message: "Your account have been permanently deleted. We're sorry to hear that.",
+        message: "Your account has been permanently deleted. We're sorry to hear that.",
         data: []
     })
 }
@@ -190,7 +191,7 @@ export async function forgotPassword(req, res) {
 
     res.status(200).json({
         success: true,
-        message: "If this email is exist, a reset link was sent to the provided email",
+        message: "If this email exists, a reset link was sent to the provided email",
         data: []
     })
 }

@@ -1,12 +1,13 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
+import { BOOK_ERRORS, READING_ACTIVITY_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
 
 export async function updateLatestReadingActivityService(id, userId, data) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
         throw new AppError(
-            "Book not found",
+            BOOK_ERRORS.NOT_FOUND,
             404
         )
     }
@@ -15,7 +16,7 @@ export async function updateLatestReadingActivityService(id, userId, data) {
 
     if (!latestActivity) {
         throw new AppError(
-            "No reading activity found",
+            READING_ACTIVITY_ERRORS.NOT_FOUND,
             404
         )
     }
@@ -36,20 +37,20 @@ export async function updateLatestReadingActivityService(id, userId, data) {
 
     if (currentPage < latestActivity.previousPage) {
         throw new AppError(
-            "Validation failed",
+            ERRORS.VALIDATION_FAILED,
             400,
             {
-                currentPage: "Current page cannot be less than the previous page"
+                currentPage: BOOK_ERRORS.PAGE_BELOW_PREVIOUS
             }
         )
     }
 
     if (currentPage > book.totalPages) {
         throw new AppError(
-            "Validation failed",
+            ERRORS.VALIDATION_FAILED,
             400,
             {
-                currentPage: "Current page cannot exceed total pages"
+                currentPage: BOOK_ERRORS.PAGE_EXCEEDS_TOTAL
             }
         )
     }
@@ -66,13 +67,13 @@ export async function deleteLatestReadingActivityService(id, userId) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const latestActivity = book.readingActivity.pop()
 
     if (!latestActivity) {
-        throw new AppError("No reading activity found", 404)
+        throw new AppError(READING_ACTIVITY_ERRORS.NOT_FOUND, 404)
     }
 
     book.currentPage = latestActivity.previousPage

@@ -1,30 +1,32 @@
+import { TITLE_ERRORS, AUTHOR_ERRORS, GENRE_ERRORS, TOTAL_PAGES_ERRORS, CURRENT_PAGE_ERRORS, FORMAT_ERRORS, BOOK_ERRORS } from "../../../../shared/constants/errorMessages.js"
+
 export default function validateUpdateBook(formData = {}, originalBook = {}) {
     const errors = {}
 
     if (formData.title !== undefined) {
         if (formData.title === null || typeof formData.title !== "string" || formData.title.trim() === "") {
-            errors.title = "Title is required"
+            errors.title = TITLE_ERRORS.REQUIRED
         }
     }
 
     if (formData.author !== undefined) {
         if (formData.author === null || typeof formData.author !== "string" || formData.author.trim() === "") {
-            errors.author = "Author is required"
+            errors.author = AUTHOR_ERRORS.REQUIRED
         }
     }
 
     if (formData.genre !== undefined) {
         if (formData.genre === null || typeof formData.genre !== "string" || formData.genre.trim() === "") {
-            errors.genre = "Genre is required"
+            errors.genre = GENRE_ERRORS.REQUIRED
         } 
     }
 
     if (formData.totalPages !== undefined) {
         const total = Number(formData.totalPages)
         if (formData.totalPages === null || formData.totalPages === "" || !Number.isFinite(total)) {
-            errors.totalPages = "Total pages must be a valid number"
+            errors.totalPages = TOTAL_PAGES_ERRORS.INVALID
         } else if (total < 1) {
-            errors.totalPages = "Total pages must be at least 1"
+            errors.totalPages = TOTAL_PAGES_ERRORS.TOO_LOW
         }
     }
 
@@ -40,19 +42,19 @@ export default function validateUpdateBook(formData = {}, originalBook = {}) {
         const current = Number(formData.currentPage)
 
         if (formData.currentPage === null || formData.currentPage === "" || !Number.isFinite(current)) {
-            errors.currentPage = "Current page must be a valid number"
+            errors.currentPage = CURRENT_PAGE_ERRORS.INVALID
         } else if (current < 0) {
-            errors.currentPage = "Current page cannot be negative"
+            errors.currentPage = CURRENT_PAGE_ERRORS.NEGATIVE
         } else if (previousCurrent !== null && current < previousCurrent) {
-            errors.currentPage = "Current page cannot be less than previous page"
+            errors.currentPage = BOOK_ERRORS.PAGE_BELOW_PREVIOUS
         } else if (total && current > total) {
-            errors.currentPage = "Current page cannot exceed total pages"
+            errors.currentPage = BOOK_ERRORS.PAGE_EXCEEDS_TOTAL
         }
     }
 
     if (formData.format !== undefined) {
         if (formData.format === null || typeof formData.format !== "string" || formData.format.trim() === "") {
-            errors.format = "Format is required"
+            errors.format = FORMAT_ERRORS.REQUIRED
         }
     }
 

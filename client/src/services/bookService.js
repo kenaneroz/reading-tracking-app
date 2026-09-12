@@ -36,7 +36,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
                 throw result
             }
 
-            return apiFetch(endpoint, { method: 'POST', body }, true)
+            return apiFetch(endpoint, { method, body }, true)
         }
 
         throw result

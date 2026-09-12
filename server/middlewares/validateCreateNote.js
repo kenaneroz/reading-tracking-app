@@ -1,4 +1,5 @@
 import AppError from "../errors/AppError.js"
+import { NOTE_CONTENT_ERRORS, PAGE_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default function validateCreateNote(req, res, next) {
     const errors = {}
@@ -6,18 +7,18 @@ export default function validateCreateNote(req, res, next) {
     const { content, page } = req.body
 
     if (content == null) {
-        errors.content = "Note content is required"
+        errors.content = NOTE_CONTENT_ERRORS.REQUIRED
     } else if (typeof content !== "string") {
-        errors.content = "Note content must be a text value"
+        errors.content = NOTE_CONTENT_ERRORS.NOT_STRING
     } else if (content.trim() === "") {
-        errors.content = "Note content is required"
+        errors.content = NOTE_CONTENT_ERRORS.REQUIRED
     }
 
     if (page !== undefined && page !== null) {
         if (!Number.isFinite(page)) {
-            errors.page = "Page must be a valid number"
+            errors.page = PAGE_ERRORS.INVALID
         } else if (page < 1) {
-            errors.page = "Page must be at least 1"
+            errors.page = PAGE_ERRORS.TOO_LOW
         }
     }
 

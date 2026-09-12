@@ -3,7 +3,7 @@ export default function DetailsHero({ title, author, cover, status }) {
         <div>
             <div className="w-full h-48 relative">
                 <div className="h-full w-full bg-linear-to-b from-transparent to-cream absolute inset-0 z-10"></div>
-                <img src="/background.jpg" className="h-full w-full object-cover absolute inset-0 z-0" />
+                <img src="/background.webp" className="h-full w-full object-cover absolute inset-0 z-0" />
             </div>
             <div className="w-full flex flex-col items-center px-6">
                 <img src={cover} alt="" className="w-[165px] aspect-5/8 rounded-[14px]" />

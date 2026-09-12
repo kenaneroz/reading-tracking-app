@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken"
 import AppError from "../errors/AppError.js"
+import { AUTH_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default function verifyToken(req, res, next) {
     const accessToken = req.cookies.accessToken
 
     if (!accessToken) {
-        return next(new AppError("No token provided", 401))
+        return next(new AppError(AUTH_ERRORS.INVALID_OR_EXPIRED_TOKEN, 401))
     }
 
     try {
@@ -14,6 +15,6 @@ export default function verifyToken(req, res, next) {
      
         next()
     } catch (error) {
-        return next(new AppError("Invalid or expired token", 401))
+        return next(new AppError(AUTH_ERRORS.INVALID_OR_EXPIRED_TOKEN, 401))
     }
 }

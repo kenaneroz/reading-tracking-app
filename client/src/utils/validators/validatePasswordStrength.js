@@ -1,6 +1,6 @@
-import { PASSWORD_ERRORS } from "../../shared/constants/errorMessages.js"
+import { PASSWORD_ERRORS } from "../../../../shared/constants/errorMessages.js"
 
-export function validatePasswordStrength(password) {
+export default function validatePasswordStrength(password) {
     if (typeof password !== "string" || password === "") {
         return PASSWORD_ERRORS.NEW_REQUIRED
     }

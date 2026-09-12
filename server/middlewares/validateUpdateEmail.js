@@ -1,10 +1,13 @@
+import AppError from "../errors/AppError.js"
+import { ERRORS, EMAIL_ERRORS } from "../../shared/constants/errorMessages.js"
+
 export default function validateUpdateEmail(req, res, next) {
     const allowedFields = [ "email" ]
 
     const requestFields = Object.keys(req.body)
 
     if (requestFields.length === 0) {
-        throw new AppError("No fields to update", 400)
+        throw new AppError(ERRORS.NO_FIELDS, 400)
     }
 
     const hasValidFields = requestFields.every(field =>
@@ -12,7 +15,7 @@ export default function validateUpdateEmail(req, res, next) {
     )
 
     if (!hasValidFields) {
-        throw new AppError("Invalid field/s included in update", 400)
+        throw new AppError(ERRORS.INVALID_FIELDS, 400)
     }
 
     const errors = {}
@@ -23,14 +26,13 @@ export default function validateUpdateEmail(req, res, next) {
 
     if (email !== undefined) {
         if (typeof email !== "string" || email.trim() === "") {
-            errors.email = "Email is required"
+            errors.email = EMAIL_ERRORS.REQUIRED
 
         } else if (email.length > 254) {
-            errors.email =
-                "Email cannot be longer than 254 characters"
+            errors.email = EMAIL_ERRORS.TOO_LONG
 
         } else if (!emailRegex.test(email.trim())) {
-            errors.email = "Invalid email address"
+            errors.email = EMAIL_ERRORS.INVALID
         }
     }
 

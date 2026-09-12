@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft02Icon, ResetPasswordIcon } from "@hugeicons/core-free-icons"
 
@@ -10,7 +8,8 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../context/authContext"
 import validateNewPassword from "../utils/validators/validateNewPassword"
 import ConfirmationScreen from "../components/shared/ConfirmationScreen"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { AUTH_ERRORS } from "../../../shared/constants/errorMessages.js"
 
 export default function CreateNewPasswordScreen() {
     const [formData, setFormData] = useState({
@@ -28,7 +27,7 @@ export default function CreateNewPasswordScreen() {
 
     useEffect(() => {
         if (!token) {
-            setErrors({ link: "Invalid or expired link" })
+            setErrors({ link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK })
             setVerifying(false)
             return
         }

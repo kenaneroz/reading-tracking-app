@@ -13,42 +13,42 @@ import BackButton from "../components/shared/BackButton"
 import validateNewPassword from "../utils/validators/validateNewPassword.js"
 
 export default function ChangePasswordScreen() {
-    const { logout, updatePassword } = useAuth()
-    
+    const { updatePassword } = useAuth()
+
     const [formData, setFormData] = useState({
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: ""
     })
-    
-    const hasChanges = 
+
+    const hasChanges =
         formData.currentPassword.trim() !== "" &&
         formData.newPassword.trim() !== "" &&
         formData.confirmNewPassword.trim() !== ""
 
     const [isUpdating, setIsUpdating] = useState(false)
-    
+
     const [errors, setErrors] = useState({})
-    
+
     const navigate = useNavigate()
 
     async function handleUpdate() {
         if (!hasChanges) return
-        
-        try {
-            setIsUpdating(true)
-            setErrors({})
-            
-            const validationErrors = validateNewPassword(formData)
-            const hasErrors = Object.keys(validationErrors).length > 0
-            
-            if (hasErrors) {
-                setErrors(validationErrors)
-                return
-            }
-            
-            await updatePassword(formData)
+        setErrors({})
 
+        const validationErrors = validateNewPassword(formData)
+
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors)
+            console.log(validationErrors)
+            return
+        }
+
+        setIsUpdating(true)
+
+        try {
+            const test = await updatePassword(formData)
+            console.log(test)
             navigate("/edit-profile/change-password/success")
         } catch (error) {
             setErrors(error.errors || {})
@@ -68,12 +68,12 @@ export default function ChangePasswordScreen() {
                 <div className="relative flex justify-center items-center">
                     <img src="/neutral.svg" alt="" className="h-25 w-25" />
 
-                    <HugeiconsIcon 
-                        icon={ResetPasswordIcon} 
-                        size={40} 
-                        strokeWidth={1.5} 
+                    <HugeiconsIcon
+                        icon={ResetPasswordIcon}
+                        size={40}
+                        strokeWidth={1.5}
                         className="text-espresso absolute"
-                    />                    
+                    />
                 </div>
 
                 <div className="mt-6 text-center">
@@ -83,30 +83,30 @@ export default function ChangePasswordScreen() {
 
                 <div className="mt-8">
                     <div className="flex flex-col gap-5">
-                        <PasswordInput 
+                        <PasswordInput
                             id="current-password"
                             label="Current password"
                             placeholder="Current password"
                             value={formData.currentPassword}
-                            onChange={(e) => setFormData(prev => ({...prev, currentPassword: e.target.value}))}
+                            onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
                             errorMessage={errors.currentPassword}
                         />
 
-                        <PasswordInput 
+                        <PasswordInput
                             id="new-password"
                             label="New password"
                             placeholder="New password"
                             value={formData.newPassword}
-                            onChange={(e) => setFormData(prev => ({...prev, newPassword: e.target.value}))}
+                            onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
                             errorMessage={errors.newPassword}
                         />
 
-                        <PasswordInput 
+                        <PasswordInput
                             id="confirm-new-password"
                             label="Confirm new password"
                             placeholder="Confirm new password"
                             value={formData.confirmNewPassword}
-                            onChange={(e) => setFormData(prev => ({...prev, confirmNewPassword: e.target.value}))}
+                            onChange={(e) => setFormData(prev => ({ ...prev, confirmNewPassword: e.target.value }))}
                             errorMessage={errors.confirmNewPassword}
                         />
                     </div>

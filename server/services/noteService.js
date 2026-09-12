@@ -1,11 +1,12 @@
 import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
+import { BOOK_ERRORS, NOTE_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
 
 export async function createNoteService(id, userId, data) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const { content, page } = data
@@ -13,10 +14,10 @@ export async function createNoteService(id, userId, data) {
     if (page !== undefined && page !== null) {
         if (page > book.totalPages) {
             throw new AppError(
-                "Validation failed",
+                ERRORS.VALIDATION_FAILED,
                 400,
                 {
-                    page: "Page cannot exceed total pages"
+                    page: NOTE_ERRORS.PAGE_EXCEEDS_TOTAL
                 }
             )
         }
@@ -41,13 +42,13 @@ export async function updateNoteService(id, userId, noteId, data) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const note = book.notes.id(noteId)
 
     if (!note) {
-        throw new AppError("Note not found", 404)
+        throw new AppError(NOTE_ERRORS.NOT_FOUND, 404)
     }
 
     const { content, page } = data
@@ -55,10 +56,10 @@ export async function updateNoteService(id, userId, noteId, data) {
     if (page !== undefined && page !== null) {
         if (page > book.totalPages) {
             throw new AppError(
-                "Validation failed",
+                ERRORS.VALIDATION_FAILED,
                 400,
                 {
-                    page: "Page cannot exceed total pages"
+                    page: NOTE_ERRORS.PAGE_EXCEEDS_TOTAL
                 }
             )
         }
@@ -83,13 +84,13 @@ export async function deleteNoteService(id, userId, noteId) {
     const book = await Book.findOne({ _id: id, userId: userId})
 
     if (!book) {
-        throw new AppError("Book not found", 404)
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
     const note = book.notes.id(noteId)
 
     if (!note) {
-        throw new AppError("Note not found", 404)
+        throw new AppError(NOTE_ERRORS.NOT_FOUND, 404)
     }
 
     note.deleteOne()

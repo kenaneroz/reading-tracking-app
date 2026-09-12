@@ -1,3 +1,5 @@
+import { NOTE_CONTENT_ERRORS, PAGE_ERRORS, NOTE_ERRORS } from "../../../../shared/constants/errorMessages.js"
+
 export default function validateAddNote(formData = {}, book = {}) {
     const errors = {}
 
@@ -7,15 +9,15 @@ export default function validateAddNote(formData = {}, book = {}) {
     const MIN_CONTENT_LENGTH = 3
 
     if (content == null) {
-        errors.content = "Note content is required"
+        errors.content = NOTE_CONTENT_ERRORS.REQUIRED
     } else if (typeof content !== "string") {
-        errors.content = "Note content must be a text value"
+        errors.content = NOTE_CONTENT_ERRORS.NOT_STRING
     } else if (content.trim() === "") {
-        errors.content = "Note content is required"
+        errors.content = NOTE_CONTENT_ERRORS.REQUIRED
     } else if (content.trim().length < MIN_CONTENT_LENGTH) {
-        errors.content = `Note content must be at least ${MIN_CONTENT_LENGTH} characters`
+        errors.content = NOTE_CONTENT_ERRORS.TOO_SHORT
     } else if (content.trim().length > MAX_CONTENT_LENGTH) {
-        errors.content = `Note content cannot exceed ${MAX_CONTENT_LENGTH} characters`
+        errors.content = NOTE_CONTENT_ERRORS.TOO_LONG
     }
 
     if (page !== undefined && page !== null && page !== "") {
@@ -25,11 +27,11 @@ export default function validateAddNote(formData = {}, book = {}) {
             : null
 
         if (!Number.isFinite(pageNum)) {
-            errors.page = "Page must be a valid number"
+            errors.page = PAGE_ERRORS.INVALID
         } else if (pageNum < 1) {
-            errors.page = "Page must be at least 1"
+            errors.page = PAGE_ERRORS.TOO_LOW
         } else if (totalPages !== null && Number.isFinite(totalPages) && pageNum > totalPages) {
-            errors.page = "Page cannot exceed total pages"
+            errors.page = NOTE_ERRORS.PAGE_EXCEEDS_TOTAL
         }
     }
 

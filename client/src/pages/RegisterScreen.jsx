@@ -139,15 +139,6 @@ export default function RegisterScreen() {
                         <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
                         <span>Continue with Google</span>
                     </Button>
-
-                    <Button
-                        variant="outline"
-                        onClick=""
-                    >
-                        <img src="/apple-icon-logo.svg" alt="" className="h-5 w-5" />
-                        <span>Continue with Apple</span>
-                    </Button>
-
                 </div>
 
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">

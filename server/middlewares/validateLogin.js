@@ -1,3 +1,5 @@
+import { EMAIL_ERRORS, PASSWORD_ERRORS } from "../../shared/constants/errorMessages.js"
+
 export default function validateLogin(req, res, next) {
     const errors = {}
 
@@ -9,13 +11,13 @@ export default function validateLogin(req, res, next) {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
 
     if (email == null || typeof email !== "string" || email.trim() === "") {
-        errors.email = "Email is required"
+        errors.email = EMAIL_ERRORS.REQUIRED
     } else if (!emailRegex.test(email.trim())) {
-        errors.email = "Invalid email address"
+        errors.email = EMAIL_ERRORS.INVALID
     }
 
     if (password == null || typeof password !== "string" || password.trim() === "") {
-        errors.password = "Password is required"
+        errors.password = PASSWORD_ERRORS.REQUIRED
     }
 
     if (Object.keys(errors).length > 0) {

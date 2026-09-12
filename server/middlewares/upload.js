@@ -1,5 +1,6 @@
 import multer from "multer"
 import AppError from "../errors/AppError.js"
+import { FILE_ERRORS } from "../../shared/constants/errorMessages.js"
 
 const storage = multer.memoryStorage()
 
@@ -12,7 +13,7 @@ const multerInstance = multer({
         if (allowedMimeTypes.includes(file.mimetype)) {
             cb(null, true)
         } else {
-            cb(new AppError("Only JPEG, PNG, and WEBP formats are allowed", 400), false)
+            cb(new AppError(FILE_ERRORS.INVALID_FORMAT, 400), false)
         }
     }
 })
@@ -28,7 +29,7 @@ export function uploadSingleImage(fieldName) {
                         success: false,
                         message: "Validation failed",
                         errors: {
-                            [fieldName]: "File size cannot exceed 5MB"
+                            [fieldName]: FILE_ERRORS.SIZE_EXCEEDED
                         }
                     })
                 }

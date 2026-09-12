@@ -3,6 +3,7 @@ import Button from "../components/shared/Button"
 
 import { useAuth } from "../context/authContext"
 import { useEffect, useState } from "react"
+import { AUTH_ERRORS } from "../../../shared/constants/errorMessages.js"
 import ConfirmationScreen from "../components/shared/ConfirmationScreen"
 
 export default function ConfirmDeleteAccountScreen() {
@@ -18,7 +19,7 @@ export default function ConfirmDeleteAccountScreen() {
 
     useEffect(() => {
         if (!deleteAccountToken) {
-            setErrors({ link: "Invalid or expired link" })
+            setErrors({ link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK })
             setVerifying(false)
             return
         }

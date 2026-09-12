@@ -2,6 +2,7 @@ import AppError from "../errors/AppError.js"
 import { GENRE_OPTIONS } from "../../shared/constants/genreOptions.js"
 import { RATING_OPTIONS } from "../../shared/constants/ratingOptions.js"
 import { FORMAT_OPTIONS } from "../../shared/constants/formatOptions.js"
+import { ERRORS, TITLE_ERRORS, AUTHOR_ERRORS, GENRE_ERRORS, FORMAT_ERRORS, TOTAL_PAGES_ERRORS, CURRENT_PAGE_ERRORS, RATING_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default function validateUpdateBook(req, res, next) {
     const allowedFields = [
@@ -18,7 +19,7 @@ export default function validateUpdateBook(req, res, next) {
     const requestFields = Object.keys(req.body)
 
     if (requestFields.length === 0) {
-        throw new AppError("No fields to update", 400)
+        throw new AppError(ERRORS.NO_FIELDS, 400)
     }
 
     const hasValidFields = requestFields.every(field =>
@@ -26,7 +27,7 @@ export default function validateUpdateBook(req, res, next) {
     )
 
     if (!hasValidFields) {
-        throw new AppError("Invalid field/s included in update", 400)
+        throw new AppError(ERRORS.INVALID_FIELDS, 400)
     }
 
     const errors = {}
@@ -43,63 +44,63 @@ export default function validateUpdateBook(req, res, next) {
 
     if (title !== undefined) {
         if (title === null) {
-            errors.title = "Title is required"
+            errors.title = TITLE_ERRORS.REQUIRED
         } else if (typeof title !== "string") {
-            errors.title = "Title must be a text value"
+            errors.title = TITLE_ERRORS.NOT_STRING
         } else if (title.trim() === "") {
-            errors.title = "Title is required"
+            errors.title = TITLE_ERRORS.REQUIRED
         }
     }
 
     if (author !== undefined) {
         if (author === null) {
-            errors.author = "Author is required"
+            errors.author = AUTHOR_ERRORS.REQUIRED
         } else if (typeof author !== "string") {
-            errors.author = "Author must be a text value"
+            errors.author = AUTHOR_ERRORS.NOT_STRING
         } else if (author.trim() === "") {
-            errors.author = "Author is required"
+            errors.author = AUTHOR_ERRORS.REQUIRED
         }
     }
 
     if (genre !== undefined) {
         if (genre === null || genre === "") {
-            errors.genre = "Genre is required"
+            errors.genre = GENRE_ERRORS.REQUIRED
         } else if (typeof genre !== "string") {
-            errors.genre = "Genre must be a text value"
+            errors.genre = GENRE_ERRORS.NOT_STRING
         } else if (!GENRE_OPTIONS.includes(genre)) {
-            errors.genre = "Invalid genre"
+            errors.genre = GENRE_ERRORS.INVALID
         }
     }
 
     if (currentPage !== undefined) {
         if (!Number.isFinite(currentPage)) {
-            errors.currentPage = "Current page must be a valid number"
+            errors.currentPage = CURRENT_PAGE_ERRORS.INVALID
         } else if (currentPage < 0) {
-            errors.currentPage = "Current page cannot be negative"
+            errors.currentPage = CURRENT_PAGE_ERRORS.NEGATIVE
         }
     }
 
     if (totalPages !== undefined) {
         if (!Number.isFinite(totalPages)) {
-            errors.totalPages = "Total pages must be a valid number"
+            errors.totalPages = TOTAL_PAGES_ERRORS.INVALID
         } else if (totalPages < 1) {
-            errors.totalPages = "Total pages must be at least 1"
+            errors.totalPages = TOTAL_PAGES_ERRORS.TOO_LOW
         }
     }
 
     if (rating !== undefined) {
         if (!RATING_OPTIONS.includes(rating)) {
-            errors.rating = "Invalid rating"
+            errors.rating = RATING_ERRORS.INVALID
         }
     }
 
     if (format !== undefined) {
         if (format === null || format === "") {
-            errors.format = "Format is required"
+            errors.format = FORMAT_ERRORS.REQUIRED
         } else if (typeof format !== "string") {
-            errors.format = "Format must be a text value"
+            errors.format = FORMAT_ERRORS.NOT_STRING
         } else if (!FORMAT_OPTIONS.includes(format)) {
-            errors.format = "Invalid format"
+            errors.format = FORMAT_ERRORS.INVALID
         }
     }
     

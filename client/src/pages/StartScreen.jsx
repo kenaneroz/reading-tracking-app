@@ -11,7 +11,7 @@ export default function StartScreen() {
     return (
         <div className="flex-1 overflow-y-auto flex flex-col">
             <div className="relative w-full flex-1 min-h-0">
-                <img src="/background-2.jpg" alt="" className="w-full h-full object-cover" />
+                <img src="/background-2.webp" alt="" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cream"></div>
 
                 <h1 className="h1 text-espresso absolute z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">Bookly</h1>

@@ -1,4 +1,5 @@
 import AppError from "../errors/AppError.js"
+import { ERRORS, NOTE_CONTENT_ERRORS, PAGE_ERRORS } from "../../shared/constants/errorMessages.js"
 
 export default function validateUpdateNote(req, res, next) {
     const allowedFields = [
@@ -9,7 +10,7 @@ export default function validateUpdateNote(req, res, next) {
     const requestFields = Object.keys(req.body)
 
     if (requestFields.length === 0) {
-        throw new AppError("No fields to update", 400)
+        throw new AppError(ERRORS.NO_FIELDS, 400)
     }
 
     const hasValidFields = requestFields.every(field =>
@@ -17,7 +18,7 @@ export default function validateUpdateNote(req, res, next) {
     )
 
     if (!hasValidFields) {
-        throw new AppError("Invalid field/s included in update", 400)
+        throw new AppError(ERRORS.INVALID_FIELDS, 400)
     }
 
     const errors = {}
@@ -26,19 +27,19 @@ export default function validateUpdateNote(req, res, next) {
 
     if (content !== undefined) {
         if (content === null) {
-            errors.content = "Note content is required"
+            errors.content = NOTE_CONTENT_ERRORS.REQUIRED
         } else if (typeof content !== "string") {
-            errors.content = "Note content must be a text value"
+            errors.content = NOTE_CONTENT_ERRORS.NOT_STRING
         } else if (content.trim() === "") {
-            errors.content = "Note content is required"
+            errors.content = NOTE_CONTENT_ERRORS.REQUIRED
         }
     }
 
     if (page !== undefined && page !== null) {
         if (!Number.isFinite(page)) {
-            errors.page = "Page must be a valid number"
+            errors.page = PAGE_ERRORS.INVALID
         } else if (page < 1) {
-            errors.page = "Page must be at least 1"
+            errors.page = PAGE_ERRORS.TOO_LOW
         }
     }
 
