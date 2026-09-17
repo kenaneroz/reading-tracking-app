@@ -1,6 +1,3 @@
 {
-    "type": "module",
-    "dependencies": {
-        "cloudinary-build-url": "^0.2.4"
-    }
+    "type": "module"
 }

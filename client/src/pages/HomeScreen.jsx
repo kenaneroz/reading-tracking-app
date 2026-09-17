@@ -77,7 +77,7 @@ export default function HomeScreen() {
             setIsDeleting(false)
         }
     }
-    
+    console.log(bookIdsToDelete)
     return (
         <>
             {isBottomSheetOpen &&
@@ -134,9 +134,7 @@ export default function HomeScreen() {
 
                             <Button
                                 variant="outline"
-                                onClick={() => setBookIdsToDelete(
-                                    books.map(book => book._id)
-                                )}
+                                onClick={() => setBookIdsToDelete(books.map(book => book._id))}
                                 disabled={bookIdsToDelete.length === books.length}
                             >
                                 Select all
