@@ -1,8 +1,5 @@
 import { useNavigate } from "react-router-dom"
 
-import { HugeiconsIcon } from "@hugeicons/react"
-import { LibrariesIcon } from "@hugeicons/core-free-icons"
-
 import Button from "../components/shared/Button"
 
 export default function StartScreen() {
@@ -18,13 +15,6 @@ export default function StartScreen() {
             </div>
 
             <div className="w-full h-fit flex flex-col items-center text-center px-5 mt-6 mb-10 shrink-0">
-                <HugeiconsIcon 
-                    icon={LibrariesIcon} 
-                    size={40} 
-                    strokeWidth={1.75} 
-                    className="text-espresso"
-                />
-
                 <h2 className="h1 text-espresso mt-6">Track every book, build a habit that sticks.</h2>
 
                 <p className="text-body text-coffee mt-4">See your progress at a glance, celebrate your streaks, and keep the momentum going.</p>

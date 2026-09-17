@@ -4,7 +4,8 @@ import Button from "./Button"
 export default function ConfirmDeletePopup({ 
     cancel, 
     delete_,
-    message 
+    message,
+    isDeleting
 }) {
     return (
         <Modal>
@@ -17,6 +18,7 @@ export default function ConfirmDeletePopup({
                 <Button
                     variant="text"
                     onClick={cancel}
+                    disabled={isDeleting}
                 >
                     <span>Cancel</span>
                 </Button>
@@ -24,8 +26,9 @@ export default function ConfirmDeletePopup({
                 <Button
                     variant="danger"
                     onClick={delete_}
+                    disabled={isDeleting}
                 >
-                    <span>Delete</span>
+                    <span>{isDeleting ? "Deleting" : "Delete"}</span>
                 </Button>
             </div>
         </Modal>

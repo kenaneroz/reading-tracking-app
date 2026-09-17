@@ -5,6 +5,7 @@ import {
     createBookService,
     updateBookService,
     deleteBookService,
+    deleteBooksService
 } from "../services/bookService.js"
 
 import {
@@ -74,7 +75,7 @@ export async function updateBook(req, res) {
     })
 }
 
-export async function deleteBook (req, res) {
+export async function deleteBook(req, res) {
     const deletedBook = await deleteBookService(req.params.id, req.userId)
 
     res.json({
@@ -82,6 +83,18 @@ export async function deleteBook (req, res) {
         message: "Book deleted successfully",
         data: deletedBook
     })        
+}
+
+export async function deleteBooks(req, res) {
+    const bookIds = req.body
+    const userId = req.userId
+    const deletedBooks = await deleteBooksService(bookIds, userId)
+    console.log(req.userId)
+    res.json({
+        success: true,
+        message: "Book/s deleted successfully",
+        data: deletedBooks
+    })
 }
 
 export async function createNote(req, res) {

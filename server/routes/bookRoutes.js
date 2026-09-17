@@ -6,6 +6,7 @@ import {
     createBook, 
     updateBook, 
     deleteBook,
+    deleteBooks,
     createNote,
     updateNote,
     deleteNote,
@@ -45,7 +46,7 @@ router
         updateBookCover
     )
     .delete("/:id", deleteBook)
-
+    .delete("/", deleteBooks)
     .post("/:id/notes/", 
         validateCreateNote,
         createNote

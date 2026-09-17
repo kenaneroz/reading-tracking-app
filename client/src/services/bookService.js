@@ -94,6 +94,16 @@ export function deleteBook(id) {
     )
 }
 
+export function deleteBooks(bookIdsToDelete) {
+    return apiFetch(
+        "/books", 
+        {
+            method: "DELETE",
+            body: bookIdsToDelete
+        }
+    )
+}
+
 /* *************** Notes *************** */
 
 export function addNoteService(id, data) {

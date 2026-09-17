@@ -2,8 +2,7 @@ import Book from "../models/Book.js"
 import AppError from "../errors/AppError.js"
 import { BOOK_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
 
-import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
-import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
+import { uploadToCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } from "../utils/cloudinaryUtils.js"
 
 export async function getBookService(id, userId) {
     const book = await Book.findOne({ _id: id, userId: userId})
@@ -31,7 +30,7 @@ export async function updateBookCoverService(id, userId, file) {
 
     if (book.cover && !book.cover.includes("default")) {
         try {
-            await deleteFromCloudinary("covers", book.cover)
+            await deleteFromCloudinary(book.cover)
         } catch (error) {
             console.error(error)
         }
@@ -191,11 +190,36 @@ export async function deleteBookService(id, userId) {
 
     if (deletedBook.cover && !deletedBook.cover.includes("default")) {
         try {
-            await deleteFromCloudinary("covers", deletedBook.cover)
+            await deleteFromCloudinary(deletedBook.cover)
         } catch (error) {
             console.error("Cloudinary cover deletion failed:", error)
         }
     }
 
     return deletedBook
+}
+
+export async function deleteBooksService(bookIds, userId) {
+    const booksToDelete = await Book.find({
+        _id: { $in: bookIds },
+        userId: userId
+    })
+
+    if (!booksToDelete.length) {
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
+    }
+
+    const covers = booksToDelete
+        .filter(b => !b.cover.includes("default"))
+
+    if (covers.length > 0) {
+        await deleteMultipleFromCloudinary(covers)
+    }
+
+    await Book.deleteMany({
+        _id: { $in: bookIds },
+        userId: userId
+    })
+
+    return booksToDelete
 }

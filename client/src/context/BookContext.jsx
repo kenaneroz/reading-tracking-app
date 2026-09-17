@@ -5,6 +5,7 @@ import {
     addBook as addBookApi,
     updateBook as updateBookApi,
     deleteBook as deleteBookApi,
+    deleteBooks as deleteBooksApi,
     addNoteService as addNoteApi,
     updateNoteService as updateNoteApi,
     deleteNoteService as deleteNoteApi,
@@ -63,9 +64,22 @@ export function BookProvider({ children }) {
     async function deleteBook(id) {
         const deletedBook = await deleteBookApi(id)
 
-        setBooks(prev => prev.filter(book => book._id !== id))
+        setBooks(prev => 
+            prev.filter(book => book._id !== id)
+        
+        )
         return deletedBook
     }
+
+    async function deleteBooks(bookIdsToDelete) {
+        const deletedBooks = await deleteBooksApi(bookIdsToDelete)
+
+        setBooks(prev => 
+            prev.filter(book => !bookIdsToDelete.includes(book._id))
+        )
+
+        return deletedBooks
+    }    
 
     /* *************** Note *************** */
     
@@ -147,6 +161,7 @@ export function BookProvider({ children }) {
                     addBook,
                     updateBook,
                     deleteBook,
+                    deleteBooks,
                     addNote,
                     updateNote,
                     deleteNote,

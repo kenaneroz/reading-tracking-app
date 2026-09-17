@@ -13,11 +13,7 @@ dotenv.config()
 
 import jwt from "jsonwebtoken"
 
-import { uploadToCloudinary } from "../utils/uploadToCloudinary.js"
-import { deleteFromCloudinary } from "../utils/deleteFromCloudinary.js"
-import deleteMultipleFromCloudinary from "../utils/deleteMultipleFromCloudinary.js"
-import getPublicIdFromCloudinaryUrl from "../utils/getPublicIdFromCloudinaryUrl.js"
-import { ref } from "process"
+import { uploadToCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } from "../utils/cloudinaryUtils.js"
 import { AUTH_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
  
 function generateRefreshToken(userId) {
@@ -200,7 +196,7 @@ export async function updatePpService(userId, file) {
 
         if (user.profilePhoto) {
             try {
-                await deleteFromCloudinary("profile-photos", user.profilePhoto)
+                await deleteFromCloudinary(user.profilePhoto)
             } catch (error) {
                 console.error("Old profile photo deletion failed:", error)
             }
@@ -344,12 +340,8 @@ export async function confirmDeleteAccountService(userId, token) {
         urls.push(user.profilePhoto)
     }
 
-    const publicIds = urls
-        .map(url => getPublicIdFromCloudinaryUrl(url))
-        .filter(Boolean)
-
     if (publicIds.length > 0) {
-        await deleteMultipleFromCloudinary(publicIds)
+        await deleteMultipleFromCloudinary(urls)
     }
 
     // Delete user, books, and tokens from the database

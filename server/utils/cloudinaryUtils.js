@@ -1,5 +1,6 @@
 import { cloudinary } from "../config/cloudinary.js"
 import streamifier from "streamifier"
+import { extractPublicId } from "cloudinary-build-url"
 
 const UPLOAD_PRESETS = {
     pp: {
@@ -15,7 +16,6 @@ const UPLOAD_PRESETS = {
         gravity: "auto"
     }
 }
-
 export function uploadToCloudinary(fileBuffer, folder, type = "pp") {
     const selectedPreset = UPLOAD_PRESETS[type] || UPLOAD_PRESETS.pp
 
@@ -35,4 +35,39 @@ export function uploadToCloudinary(fileBuffer, folder, type = "pp") {
         )
         streamifier.createReadStream(fileBuffer).pipe(stream)
     })
+}
+
+export async function deleteFromCloudinary(url) {
+    try {
+        if (!url) return null
+
+        const publicIdWithPath = extractPublicId(url)
+        if (!publicIdWithPath) return null
+
+        return await cloudinary.uploader.destroy(publicIdWithPath)
+    } catch (error) {
+        console.error("Cloudinary single delete error:", error)
+        throw error
+    }
+}
+
+export async function deleteMultipleFromCloudinary(urls) {
+    try {
+        if (!urls || !Array.isArray(urls) || urls.length === 0) {
+            return null
+        }
+
+        const publicIdsWithPath = urls
+            .map(url => extractPublicId(url))
+            .filter(Boolean)
+
+        if (publicIdsWithPath.length === 0) {
+            return null
+        }
+
+        return await cloudinary.api.delete_resources(publicIdsWithPath)
+    } catch (error) {
+        console.error("Cloudinary multiple delete error:", error)
+        throw error
+    }
 }
