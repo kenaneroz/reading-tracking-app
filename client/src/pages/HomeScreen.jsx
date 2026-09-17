@@ -128,16 +128,18 @@ export default function HomeScreen() {
                                 variant="outline"
                                 onClick={() => setBookIdsToDelete([])}
                                 disabled={bookIdsToDelete.length === 0}
+                                className="flex-2"
                             >
                                 Clear
                             </Button>
 
                             <Button
                                 variant="outline"
-                                onClick={() => setBookIdsToDelete(books.map(book => book._id))}
-                                disabled={bookIdsToDelete.length === books.length}
+                                onClick={() => setBookIdsToDelete(books.slice(0, 3).map(book => book._id))}
+                                disabled={bookIdsToDelete.length === 50 || bookIdsToDelete.length === books.length}
+                                className="flex-3"
                             >
-                                Select all
+                                Select all <span className="font-normal text-taupe text-body-xs">(up to 50)</span>
                             </Button>
                         </div>
 

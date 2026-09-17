@@ -20,6 +20,7 @@ import validateUpdateBook from "../middlewares/validateUpdateBook.js"
 import validateCreateNote from "../middlewares/validateCreateNote.js"
 import validateUpdateNote from "../middlewares/validateUpdateNote.js"
 import validateUpdateActivity from "../middlewares/validateUpdateActivity.js"
+import validateDeleteBooks from "../middlewares/validateDeleteBooks.js"
 
 import verifyToken from "../middlewares/verifyToken.js"
 
@@ -46,7 +47,10 @@ router
         updateBookCover
     )
     .delete("/:id", deleteBook)
-    .delete("/", deleteBooks)
+    .delete("/", 
+        validateDeleteBooks,
+        deleteBooks
+    )
     .post("/:id/notes/", 
         validateCreateNote,
         createNote
