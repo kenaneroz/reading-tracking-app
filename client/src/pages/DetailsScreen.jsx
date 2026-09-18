@@ -17,6 +17,9 @@ import Button from "../components/shared/Button"
 import { getBookStatus } from "../utils/bookUtils.js"
 import { useBooks } from "../context/BookContext"
 
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Settings03Icon } from "@hugeicons/core-free-icons"
+
 export default function DetailsScreen() {
     const { books, loading } = useBooks()
     const { id } = useParams()
@@ -28,6 +31,7 @@ export default function DetailsScreen() {
     const [isEditNotePopupOpen, setIsEditNotePopupOpen] = useState(false)
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false)
     const [selectedNoteId, setSelectedNoteId] = useState(null)
+    const [noteIdsToDelete, setNoteIdsToDelete] = useState([])
 
     const book = books?.find(b => b._id === id)
 
@@ -96,11 +100,18 @@ export default function DetailsScreen() {
             <div className="mt-8 mx-6 pb-6">
                 <div className="flex justify-between items-center">
                     <h2 className="text-espresso h4">Personal notes</h2>
+
                     <button 
-                        className="text-taupe text-body-sm hover:text-espresso transition-all duration-300 cursor-pointer"
+                        className="cursor-pointer flex items-center gap-2 group text-taupe hover:text-espresso transition-all duration-300 ease-in-out"
                         onClick={() => setIsAllNotesPopupOpen(true)}
-                    >
-                        View all
+                        >
+                            <span className="text-body-sm">Manage notes</span>
+    
+                            <HugeiconsIcon
+                                icon={Settings03Icon}
+                                size={16}   
+                                strokeWidth={1.25}
+                            />
                     </button>
                 </div>
 
@@ -141,6 +152,8 @@ export default function DetailsScreen() {
                         setIsAllNotesPopupOpen={setIsAllNotesPopupOpen} 
                         setSelectedNoteId={setSelectedNoteId} 
                         setIsEditNotePopupOpen={setIsEditNotePopupOpen} 
+                        noteIdsToDelete={noteIdsToDelete}
+                        setNoteIdsToDelete={setNoteIdsToDelete}
                     />
                 )}
 
@@ -172,6 +185,7 @@ export default function DetailsScreen() {
                     book={book} 
                     closeEditNotePopup={() => setIsEditNotePopupOpen(false)} 
                     selectedNoteId={selectedNoteId}
+                    setNoteIdsToDelete={setNoteIdsToDelete}
                 />
             )}
         </div>

@@ -77,7 +77,7 @@ export default function HomeScreen() {
             setIsDeleting(false)
         }
     }
-    console.log(bookIdsToDelete)
+
     return (
         <>
             {isBottomSheetOpen &&
@@ -135,11 +135,11 @@ export default function HomeScreen() {
 
                             <Button
                                 variant="outline"
-                                onClick={() => setBookIdsToDelete(books.slice(0, 3).map(book => book._id))}
+                                onClick={() => setBookIdsToDelete(books.slice(0, 50).map(book => book._id))}
                                 disabled={bookIdsToDelete.length === 50 || bookIdsToDelete.length === books.length}
                                 className="flex-3"
                             >
-                                Select all <span className="font-normal text-taupe text-body-xs">(up to 50)</span>
+                                Select all <span className="font-normal text-espresso/80 text-body-xs">(up to 50)</span>
                             </Button>
                         </div>
 

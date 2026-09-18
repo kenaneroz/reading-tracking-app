@@ -135,6 +135,16 @@ export function deleteNoteService(id, noteId) {
     )
 }
 
+export function deleteNotesService(id, noteIds) {
+    return apiFetch(
+        `/books/${id}/notes/`, 
+        {
+            method: "DELETE",
+            body: noteIds
+        }
+    )
+}
+
 /* *************** Reading activity *************** */
 
 export function updateLatestReadingActivityService(id, data) {

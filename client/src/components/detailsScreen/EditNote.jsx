@@ -12,7 +12,14 @@ import ConfirmDeletePopup from "../shared/ConfirmDeletePopup.jsx"
 import { useBooks } from "../../context/BookContext"
 import validateUpdateNote from "../../utils/validators/validateUpdateNote.js"
 
-export default function EditNote({ book, closeEditNotePopup, selectedNoteId }) {
+export default function EditNote(
+    { 
+        book, 
+        closeEditNotePopup, 
+        selectedNoteId,
+        setNoteIdsToDelete
+    }
+) {
     const { updateNote, deleteNote } = useBooks()
     
     const note = book?.notes?.find(n => n._id === selectedNoteId) || {}
@@ -64,8 +71,10 @@ export default function EditNote({ book, closeEditNotePopup, selectedNoteId }) {
 
     async function handleDeleteNote() {
         setLoading(true)
+
         try {
             await deleteNote(book._id, selectedNoteId)
+            setNoteIdsToDelete(prev => prev.filter(noteId => noteId !== selectedNoteId))
             setIsDeleteConfirmPopupOpen(false)
             closeEditNotePopup()
         } catch (error) {

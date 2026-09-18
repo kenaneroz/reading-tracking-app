@@ -2,7 +2,6 @@ import { NOTE_CONTENT_ERRORS, PAGE_ERRORS, NOTE_ERRORS } from "../../../../share
 
 export default function validateAddNote(formData = {}, book = {}) {
     const errors = {}
-
     const { content, page } = formData
 
     const MAX_CONTENT_LENGTH = 500

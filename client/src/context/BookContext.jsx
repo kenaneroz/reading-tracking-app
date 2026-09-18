@@ -9,6 +9,7 @@ import {
     addNoteService as addNoteApi,
     updateNoteService as updateNoteApi,
     deleteNoteService as deleteNoteApi,
+    deleteNotesService as deleteNotesApi,
     updateLatestReadingActivityService as updateReadingActivityApi,
     deleteLatestReadingActivityService as deleteReadingActivityApi
 } from "../services/bookService.js"
@@ -134,6 +135,23 @@ export function BookProvider({ children }) {
         return deletedNote
     }
 
+    async function deleteNotes(id, noteIds) {
+        const deletedNotes = await deleteNotesApi(id, noteIds)
+
+        setBooks(prev => prev.map(book =>
+            book._id === id
+            ? {
+                ...book,
+                notes: book.notes.filter(note => 
+                    !noteIds.includes(note._id.toString())
+                )
+            }
+            : book
+        ))
+
+        return deletedNotes
+    }
+
     /* *************** Reading activity *************** */
 
     async function deleteReadingActivity(id) {
@@ -165,6 +183,7 @@ export function BookProvider({ children }) {
                     addNote,
                     updateNote,
                     deleteNote,
+                    deleteNotes,
                     deleteReadingActivity
                 }
             }

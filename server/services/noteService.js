@@ -99,3 +99,24 @@ export async function deleteNoteService(id, userId, noteId) {
 
     return note
 }
+
+export async function deleteNotesService(id, userId, noteIds) {
+    const book = await Book.findOne({ _id: id, userId })
+
+    if (!book) {
+        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
+    }
+
+    const initialCount = book.notes.length
+
+    book.notes = book.notes
+        .filter(note => 
+            !noteIds.includes(note._id.toString())
+        )
+
+    const deletedCount = initialCount - book.notes.length
+
+    await book.save()
+
+    return deletedCount
+}

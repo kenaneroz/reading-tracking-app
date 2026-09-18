@@ -163,4 +163,6 @@ export const PAGE_ERRORS = {
 export const NOTE_CONTENT_ERRORS = {
     REQUIRED:   "Note content is required",
     NOT_STRING: "Note content must be a text value",
+    TOO_SHORT:      "Note content must be at least 3 characters long",
+    TOO_LONG:       "Note content cannot be longer than 500 characters",
 }

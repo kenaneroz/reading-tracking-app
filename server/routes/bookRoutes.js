@@ -10,6 +10,7 @@ import {
     createNote,
     updateNote,
     deleteNote,
+    deleteNotes,
     deleteLatestReadingActivity,
     updateLatestReadingActivity
 } from "../controllers/bookController.js"
@@ -21,6 +22,7 @@ import validateCreateNote from "../middlewares/validateCreateNote.js"
 import validateUpdateNote from "../middlewares/validateUpdateNote.js"
 import validateUpdateActivity from "../middlewares/validateUpdateActivity.js"
 import validateDeleteBooks from "../middlewares/validateDeleteBooks.js"
+import validateDeleteNotes from "../middlewares/validateDeleteNotes.js"
 
 import verifyToken from "../middlewares/verifyToken.js"
 
@@ -60,6 +62,10 @@ router
         updateNote
     )
     .delete("/:id/notes/:noteId", deleteNote)
+    .delete("/:id/notes/", 
+        validateDeleteNotes,
+        deleteNotes
+    )
     .patch("/:id/reading-activity/latest", 
         validateUpdateActivity,
         updateLatestReadingActivity

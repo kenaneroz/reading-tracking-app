@@ -11,7 +11,8 @@ import {
 import {
     createNoteService,
     updateNoteService,
-    deleteNoteService
+    deleteNoteService,
+    deleteNotesService
 } from "../services/noteService.js"
 
 import {
@@ -89,7 +90,7 @@ export async function deleteBooks(req, res) {
     const bookIds = req.body
     const userId = req.userId
     const deletedBooks = await deleteBooksService(bookIds, userId)
-    console.log(req.userId)
+    
     res.json({
         success: true,
         message: "Book/s deleted successfully",
@@ -124,6 +125,22 @@ export async function deleteNote(req, res) {
         success: true,
         message: "Note deleted successfully",
         data: deletedNote
+    })
+}
+
+export async function deleteNotes(req, res) {
+    const noteIds = req.body
+    const deletedCount = await deleteNotesService(req.params.id, req.userId, noteIds)
+
+    const message =
+        deletedCount > 0
+            ? "Selected notes deleted successfully"
+            : "No selected notes were found"
+
+    res.json({
+        success: true,
+        message ,
+        data: { deletedCount }
     })
 }
 

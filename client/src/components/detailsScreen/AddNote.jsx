@@ -11,7 +11,7 @@ import Button from "../shared/Button"
 import { useBooks } from "../../context/BookContext"
 import validateAddNote from "../../utils/validators/validateAddNote.js"
 
-export default function AddNote({ book, closeAddNotePopup }) {
+export default function AddNote({ book, hideAddNotePopup }) {
     const { addNote } = useBooks()
 
     const [formData, setFormData] = useState({
@@ -40,7 +40,7 @@ export default function AddNote({ book, closeAddNotePopup }) {
                 content: formData.content.trim(),
                 page: formData.page
             })
-            closeAddNotePopup()
+            hideAddNotePopup()
         } catch (error) {
             setErrors(error.errors || {})
             console.log(error)
@@ -48,7 +48,7 @@ export default function AddNote({ book, closeAddNotePopup }) {
             setIsLoading(false)
         }
     }
-
+    
     return (
         <Modal>
             <HugeiconsIcon 
@@ -56,7 +56,7 @@ export default function AddNote({ book, closeAddNotePopup }) {
                 size={24} 
                 strokeWidth={1.5} 
                 className="cursor-pointer text-espresso" 
-                onClick={closeAddNotePopup} 
+                onClick={hideAddNotePopup} 
             />
             
             <div className="mt-8">

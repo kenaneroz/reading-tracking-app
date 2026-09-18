@@ -210,7 +210,7 @@ export async function deleteBooksService(bookIds, userId) {
     }
 
     const covers = booksToDelete
-        .filter(b => !b.cover.includes("default"))
+        .filter(book => !book.cover.includes("default"))
 
     if (covers.length > 0) {
         await deleteMultipleFromCloudinary(covers)
