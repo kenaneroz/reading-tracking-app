@@ -89,12 +89,17 @@ export async function deleteBook(req, res) {
 export async function deleteBooks(req, res) {
     const bookIds = req.body
     const userId = req.userId
-    const deletedBooks = await deleteBooksService(bookIds, userId)
+    const deletedCount = await deleteBooksService(bookIds, userId)
     
+    const message =
+        deletedCount > 0
+            ? "Selected books deleted successfully"
+            : "No selected books were found"
+
     res.json({
         success: true,
-        message: "Book/s deleted successfully",
-        data: deletedBooks
+        message,
+        data: { deletedCount }
     })
 }
 

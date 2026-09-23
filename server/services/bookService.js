@@ -203,11 +203,9 @@ export async function deleteBooksService(bookIds, userId) {
     const booksToDelete = await Book.find({
         _id: { $in: bookIds },
         userId: userId
-    })
+    }) 
 
-    if (!booksToDelete.length) {
-        throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
-    }
+    if (booksToDelete.length === 0) return 0
 
     const covers = booksToDelete
         .filter(book => !book.cover.includes("default"))
@@ -216,10 +214,10 @@ export async function deleteBooksService(bookIds, userId) {
         await deleteMultipleFromCloudinary(covers)
     }
 
-    await Book.deleteMany({
+    const result = await Book.deleteMany({
         _id: { $in: bookIds },
         userId: userId
     })
 
-    return booksToDelete
+    return result.deletedCount
 }

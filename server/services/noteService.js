@@ -107,6 +107,8 @@ export async function deleteNotesService(id, userId, noteIds) {
         throw new AppError(BOOK_ERRORS.NOT_FOUND, 404)
     }
 
+    if (book.notes.length === 0) return 0
+
     const initialCount = book.notes.length
 
     book.notes = book.notes
@@ -115,6 +117,8 @@ export async function deleteNotesService(id, userId, noteIds) {
         )
 
     const deletedCount = initialCount - book.notes.length
+
+    if (deletedCount === 0) return 0
 
     await book.save()
 
