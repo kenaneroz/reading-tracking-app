@@ -1,21 +1,45 @@
+import { ERRORS } from "../../../shared/constants/errorMessages.js"
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
 async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
     const isFormData = body instanceof FormData
 
-    const response = await fetch(
-        `${API_URL}${endpoint}`, 
-        {
-            method,
-            headers: {
-                ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
-            },
-            credentials: "include",
-            ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
-        }
-    )
+    let response
 
-    const result = await response.json()
+    try {
+        response = await fetch(
+            `${API_URL}${endpoint}`,
+            {
+                method,
+                headers: {
+                    ...(body !== undefined && !isFormData && { "Content-Type": "application/json" }),
+                },
+                credentials: "include",
+                ...(body !== undefined && { body: isFormData ? body : JSON.stringify(body) })
+            }
+        )
+    } catch (error) {
+        throw {
+            success: false,
+            statusCode: 0,
+            message: ERRORS.NETWORK_ERROR,
+            errors: null
+        }
+    }
+
+    let result
+
+    try {
+        result = await response.json()
+    } catch (error) {
+        throw {
+            success: false,
+            statusCode: response.status || 500,
+            message: ERRORS.SERVER_ERROR,
+            errors: null
+        }
+    }
 
     if (!response.ok) {
         if (isRetry) {
@@ -23,17 +47,39 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
         }
 
         if (response.status === 401) {
-            const response = await fetch(
-                `${API_URL}/auth/refresh`, 
-                { 
-                    method: "POST",
-                    credentials: "include" 
-                }
-            )
+            let refreshResponse
 
-            if (!response.ok) {
-                const result = await response.json()
-                throw result
+            try {
+                refreshResponse = await fetch(
+                    `${API_URL}/auth/refresh`,
+                    {
+                        method: "POST",
+                        credentials: "include"
+                    }
+                )
+            } catch (error) {
+                throw {
+                    success: false,
+                    statusCode: 0,
+                    message: ERRORS.NETWORK_ERROR,
+                    errors: null
+                }
+            }
+
+            if (!refreshResponse.ok) {
+                let refreshResult
+
+                try {
+                    refreshResult = await refreshResponse.json()
+                } catch (e) {
+                    refreshResult = {
+                        success: false,
+                        statusCode: refreshResponse.status,
+                        message: ERRORS.SERVER_ERROR,
+                        errors: null
+                    }
+                }
+                throw refreshResult
             }
 
             return apiFetch(endpoint, { method, body }, true)

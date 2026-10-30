@@ -12,9 +12,12 @@ import { useNavigate } from "react-router-dom"
 
 import { useAuth } from "../context/authContext"
 import { useGoogleLogin } from "@react-oauth/google"
+import ErrorMessage from "../components/shared/ErrorMessage"
+
+import validateRegister from "../utils/validators/validateRegister.js"
 
 export default function RegisterScreen() {
-    const { register, googleAuth } = useAuth() 
+    const { register, googleAuth } = useAuth()
     const [formData, setFormData] = useState({
         name: "",
         surname: "",
@@ -27,19 +30,30 @@ export default function RegisterScreen() {
     const navigate = useNavigate()
 
     async function handleRegister(e) {
-        setIsRegistering(true)
-        setErrors({})
         e.preventDefault()
+        setErrors({})
 
+        const validationErrors = validateRegister(formData)
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors)
+            return
+        }
+
+        setIsRegistering(true)
         try {
             await register(formData)
         } catch (error) {
-           setErrors(error.errors || {})
-           console.log(error)
+            if (error.statusCode === 500 || error.statusCode === 0) {
+                setErrors({ general: error.message })
+            } else {
+                setErrors(error.errors || {})
+            }
+            console.log(error)
         } finally {
             setIsRegistering(false)
         }
     }
+
     const handleCustomGoogleRegister = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             setIsRegistering(true)
@@ -73,44 +87,43 @@ export default function RegisterScreen() {
                 <div className="mt-8">
                     <div className="flex flex-col gap-5">
                         <div className="flex items-center gap-3">
-                            <Input 
+                            <Input
                                 id="name"
                                 label="Name"
                                 placeholder="Ellison"
                                 value={formData.name}
-                                onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                                 errorMessage={errors.name}
                             />
 
-                            <Input 
+                            <Input
                                 id="surname"
                                 label="Surname"
                                 placeholder="Elliot"
                                 value={formData.surname}
-                                onChange={(e) => setFormData(prev => ({...prev, surname: e.target.value}))}
+                                onChange={(e) => setFormData(prev => ({ ...prev, surname: e.target.value }))}
                                 errorMessage={errors.surname}
                             />
                         </div>
 
-                        <Input 
+                        <Input
                             type="email"
                             id="email"
                             label="Email"
                             placeholder="name@example.com"
                             value={formData.email}
-                            onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
+                            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                             errorMessage={errors.email}
                         />
 
-                        <PasswordInput 
+                        <PasswordInput
                             id="password"
                             label="Password"
                             placeholder="Your password"
                             value={formData.password}
-                            onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                            onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                             errorMessage={errors.password}
                         />
-
                     </div>
 
                     <Button
@@ -120,6 +133,10 @@ export default function RegisterScreen() {
                     >
                         <span>{isRegistering ? "Registering..." : "Register"}</span>
                     </Button>
+
+                    {errors.general &&
+                        <ErrorMessage message={errors.general} />
+                    }
                 </div>
 
 
@@ -142,10 +159,10 @@ export default function RegisterScreen() {
                 </div>
 
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
-                    Already have an account?  <span 
+                    Already have an account?  <span
                         className="cursor-pointer text-espresso font-semibold"
                         onClick={() => navigate("/login")}
-                    > 
+                    >
                         Log in
                     </span>
                 </p>

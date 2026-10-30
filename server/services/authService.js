@@ -32,6 +32,10 @@ function generateAccessToken(userId) {
     )
 }
 
+function hashToken(token) {
+    return crypto.createHash("sha256").update(token).digest("hex")
+}
+
 export async function getUserService(userId) {
     const user = await User.findById(userId).select("-password")
 
@@ -68,21 +72,25 @@ export async function registerService(data) {
         email,
         password: hashedPassword
     })
+    const userObject = newUser.toObject()
+    delete userObject.password
 
     const refreshToken = generateRefreshToken(newUser._id)
     const accessToken = generateAccessToken(newUser._id)
 
+    const hashedRefreshToken = hashToken(refreshToken)
+
     await Token.create({
         userId: newUser._id,
         type: "refresh-token",
-        token: refreshToken,
+        token: hashedRefreshToken,
         expiresAt: Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN_MS)
     })
 
     return {
         refreshToken,
-        accessToken, 
-        newUser
+        accessToken,
+        userObject
     }
 }
 

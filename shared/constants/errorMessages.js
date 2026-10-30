@@ -6,6 +6,8 @@ export const ERRORS = {
     INVALID_FIELDS: "Invalid fields in request",
     INVALID_ID: "Invalid ID",
     INVALID_DATA: "Invalid data entry",
+    SERVER_ERROR: "Something went wrong. Please try again.",
+    NETWORK_ERROR: "Unable to connect to the server. Please check your internet connection.",
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
@@ -58,24 +60,27 @@ export const FILE_ERRORS = {
 
 export const NAME_ERRORS = {
     REQUIRED:       "Name is required",
+    NOT_STRING:     "Name must be a text value",
     TOO_SHORT:      "Name must be at least 2 characters long",
     TOO_LONG:       "Name cannot be longer than 50 characters",
-    LETTERS_ONLY:   "Name must consist only of letters",
+    INVALID:        "Invalid name",
 }
 
 // ─── Field: Surname ───────────────────────────────────────────────────────────
 
 export const SURNAME_ERRORS = {
     REQUIRED:       "Surname is required",
+    NOT_STRING:     "Surname must be a text value",
     TOO_SHORT:      "Surname must be at least 2 characters long",
     TOO_LONG:       "Surname cannot be longer than 50 characters",
-    LETTERS_ONLY:   "Surname must consist only of letters",
+    INVALID:        "Invalid surname",
 }
 
 // ─── Field: Email ─────────────────────────────────────────────────────────────
 
 export const EMAIL_ERRORS = {
     REQUIRED:   "Email is required",
+    NOT_STRING: "Email must be a text value",
     TOO_LONG:   "Email cannot be longer than 254 characters",
     INVALID:    "Invalid email address",
 }
@@ -84,8 +89,10 @@ export const EMAIL_ERRORS = {
 
 export const PASSWORD_ERRORS = {
     REQUIRED:           "Password is required",
+    NOT_STRING:         "Password must be a text value",
+    NO_SPACES:          "Password cannot contain spaces",
     TOO_SHORT:          "Password must be at least 8 characters long",
-    TOO_LONG:           "Password cannot be longer than 128 characters",
+    TOO_LONG:           "Password cannot be longer than 64 characters",
     NO_UPPERCASE:       "Password must contain at least one uppercase letter",
     NO_LOWERCASE:       "Password must contain at least one lowercase letter",
     NO_NUMBER:          "Password must contain at least one number",

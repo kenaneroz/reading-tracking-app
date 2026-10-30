@@ -33,7 +33,7 @@ export async function register(req, res) {
     const {
         accessToken,
         refreshToken,
-        newUser
+        userObject
     } = await registerService(req.body)
 
     res.cookie(
@@ -56,10 +56,11 @@ export async function register(req, res) {
             sameSite
         }
     )
+
     res.status(201).json({
         success: true,
         message: "Registration successful",
-        data: newUser
+        data: userObject
     })
 }
 
