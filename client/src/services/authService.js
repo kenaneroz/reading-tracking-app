@@ -46,7 +46,8 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
             throw result
         }
 
-        if (response.status === 401) {
+
+        if (response.status === 401 && endpoint !== "/auth/login") {
             let refreshResponse
 
             try {
@@ -87,26 +88,26 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
 
         throw result
     }
-    
+
     return result.data
 }
 
 export async function getUser() {
     return apiFetch(
-        "/auth/me", 
+        "/auth/me",
     )
 }
 
 export async function register(data) {
     return apiFetch(
-        "/auth/register", 
+        "/auth/register",
         { method: 'POST', body: data }
     )
 }
 
 export async function login(data) {
     return apiFetch(
-        "/auth/login", 
+        "/auth/login",
         { method: 'POST', body: data }
     )
 }
@@ -137,15 +138,15 @@ export async function updateProfile(data) {
 
 export async function updateEmail(data) {
     return apiFetch(
-        "/auth/me/email", 
-        { method: 'PATCH', body: data }, 
+        "/auth/me/email",
+        { method: 'PATCH', body: data },
     )
 }
 
 export async function updatePassword(data) {
     return apiFetch(
-        "/auth/me/password", 
-        { method: 'PATCH', body: data }, 
+        "/auth/me/password",
+        { method: 'PATCH', body: data },
     )
 }
 
@@ -171,14 +172,14 @@ export async function verifyDeleteAccountToken(deleteAccountToken) {
 
 export async function forgotPassword(data) {
     return apiFetch(
-        "/auth/forgot-password", 
+        "/auth/forgot-password",
         { method: 'POST', body: data }
     )
 }
 
 export async function resetPassword(resetPasswordToken, data) {
     return apiFetch(
-        `/auth/reset-password?token=${resetPasswordToken}`, 
+        `/auth/reset-password?token=${resetPasswordToken}`,
         { method: 'PATCH', body: data }
     )
 }

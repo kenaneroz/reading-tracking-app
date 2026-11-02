@@ -1,8 +1,5 @@
 import { useState } from "react"
 
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft02Icon } from "@hugeicons/core-free-icons"
-
 import Input from "../components/shared/form/Input"
 import PasswordInput from "../components/shared/form/PasswordInput"
 import Button from "../components/shared/Button"
@@ -151,6 +148,7 @@ export default function RegisterScreen() {
                 <div className="mt-6 flex flex-col gap-3">
                     <Button
                         variant="outline"
+                        disabled={isRegistering}
                         onClick={handleCustomGoogleRegister}
                     >
                         <img src="/google-icon-logo.svg" alt="" className="h-5 w-5" />
@@ -161,7 +159,7 @@ export default function RegisterScreen() {
                 <p className="text-body-sm text-taupe mt-8 mb-10 text-center">
                     Already have an account?  <span
                         className="cursor-pointer text-espresso font-semibold"
-                        onClick={() => navigate("/login")}
+                        onClick={() => !isRegistering && navigate("/login")}
                     >
                         Log in
                     </span>

@@ -11,7 +11,8 @@ export default function validateRegister(formData) {
 
     if (typeof name === "string") name = name.trim()
     if (typeof surname === "string") surname = surname.trim()
-    if (typeof email === "string") email = email.trim()
+    if (typeof email === "string") email = email.trim().toLowerCase()
+    if (typeof password === "string") password = password.trim()
 
     const nameSurnameRegex = /^\p{L}+(?:['-]\p{L}+)*$/u
 
@@ -53,7 +54,7 @@ export default function validateRegister(formData) {
 
     if (password != null && typeof password !== "string") {
         errors.password = PASSWORD_ERRORS.NOT_STRING
-    } else if (password == null || password.trim() === "") {
+    } else if (password == null || password === "") {
         errors.password = PASSWORD_ERRORS.REQUIRED
     } else if (/\s/.test(password)) {
         errors.password = PASSWORD_ERRORS.NO_SPACES

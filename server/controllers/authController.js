@@ -68,7 +68,7 @@ export async function login(req, res) {
     const {
         accessToken,
         refreshToken,
-        user
+        userObject
     } = await loginService(req.body)
 
     res.cookie(
@@ -95,7 +95,7 @@ export async function login(req, res) {
     res.status(200).json({
         success: true,
         message: "Login successful",
-        data: user
+        data: userObject
     })
 }
 

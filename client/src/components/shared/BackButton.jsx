@@ -7,16 +7,16 @@ export default function BackButton({ disabled, background = "light" }) {
     const navigate = useNavigate()
 
     return (
-        <button 
+        <button
             disabled={disabled}
+            onClick={() => navigate(-1)}
         >
-            <HugeiconsIcon 
-                icon={ArrowLeft02Icon} 
-                size={24} 
-                strokeWidth={1.5} 
+            <HugeiconsIcon
+                icon={ArrowLeft02Icon}
+                size={24}
+                strokeWidth={1.5}
                 className={` ${disabled ? "cursor-not-allowed" : "cursor-pointer"} 
                     ${background === "light" ? "text-taupe hover:text-espresso" : "text-cream/80 hover:text-cream"} `}
-                onClick={() => navigate(-1)}
             />
 
         </button>

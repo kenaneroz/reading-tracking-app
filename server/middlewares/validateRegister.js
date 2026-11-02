@@ -12,9 +12,9 @@ export default function validateRegister(req, res, next) {
 
     if (typeof name === "string") name = name.trim()
     if (typeof surname === "string") surname = surname.trim()
-    if (typeof email === "string") email = email.trim()
+    if (typeof email === "string") email = email.trim().toLowerCase()
 
-    req.body = { ...req.body, name, surname, email, password }
+    req.body = { ...req.body, name, surname, email }
 
     const nameSurnameRegex = /^\p{L}+(?:['-]\p{L}+)*$/u
 

@@ -15,19 +15,19 @@ import jwt from "jsonwebtoken"
 
 import { uploadToCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } from "../utils/cloudinaryUtils.js"
 import { AUTH_ERRORS, ERRORS } from "../../shared/constants/errorMessages.js"
- 
+
 function generateRefreshToken(userId) {
     return jwt.sign(
-        { userId: userId }, 
-        process.env.JWT_REFRESH_SECRET, 
+        { userId: userId },
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
     )
 }
 
 function generateAccessToken(userId) {
     return jwt.sign(
-        { userId: userId }, 
-        process.env.JWT_ACCESS_SECRET, 
+        { userId: userId },
+        process.env.JWT_ACCESS_SECRET,
         { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
     )
 }
@@ -50,15 +50,15 @@ export async function registerService(data) {
     const {
         name,
         surname,
-        email, 
+        email,
         password,
     } = data
 
     const existingUser = await User.findOne({ email })
     if (existingUser) {
         throw new AppError(
-            ERRORS.VALIDATION_FAILED, 
-            400, 
+            ERRORS.VALIDATION_FAILED,
+            400,
             { email: AUTH_ERRORS.EMAIL_IN_USE }
         )
     }
@@ -97,26 +97,26 @@ export async function registerService(data) {
 export async function loginService(data) {
     const {
         email,
-        password 
+        password
     } = data
 
     const user = await User.findOne({ email }).select("+password")
     if (!user) {
         throw new AppError(
-            ERRORS.VALIDATION_FAILED, 
-            400, 
+            ERRORS.VALIDATION_FAILED,
+            401,
             {
                 email: AUTH_ERRORS.INVALID_CREDENTIALS,
                 password: AUTH_ERRORS.INVALID_CREDENTIALS
             }
         )
     }
-    
+
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
         throw new AppError(
-            ERRORS.VALIDATION_FAILED, 
-            400, 
+            ERRORS.VALIDATION_FAILED,
+            401,
             {
                 email: AUTH_ERRORS.INVALID_CREDENTIALS,
                 password: AUTH_ERRORS.INVALID_CREDENTIALS
@@ -127,23 +127,28 @@ export async function loginService(data) {
     const refreshToken = generateRefreshToken(user._id)
     const accessToken = generateAccessToken(user._id)
 
+    const hashedRefreshToken = hashToken(refreshToken)
+
     await Token.create({
         userId: user._id,
         type: "refresh-token",
-        token: refreshToken,
+        token: hashedRefreshToken,
         expiresAt: Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN_MS)
     })
+
+    const userObject = user.toObject()
+    delete userObject.password
 
     return {
         refreshToken,
         accessToken,
-        user
+        userObject
     }
 }
 
 export async function googleAuthService(access_token) {
     const response = await fetch(
-        "https://www.googleapis.com/oauth2/v3/userinfo", 
+        "https://www.googleapis.com/oauth2/v3/userinfo",
         { headers: { Authorization: `Bearer ${access_token}` } }
     )
 
@@ -151,15 +156,15 @@ export async function googleAuthService(access_token) {
 
     if (!response.ok) {
         throw new AppError(
-            "Invalid Google token", 
+            "Invalid Google token",
             400
         )
     }
 
-    const { 
-        given_name, 
-        family_name, 
-        email 
+    const {
+        given_name,
+        family_name,
+        email
     } = result
 
     let user = await User.findOne({ email })
@@ -173,10 +178,10 @@ export async function googleAuthService(access_token) {
                 password: Math.random().toString(36).slice(-10) + "Google1!"
             }
         )
-    } 
+    }
 
     const refreshToken = generateRefreshToken(user._id)
-    const accessToken = generateAccessToken(user._id)   
+    const accessToken = generateAccessToken(user._id)
 
     await Token.create({
         userId: user._id,
@@ -250,7 +255,7 @@ export async function updateUserService(userId, data) {
                 { currentPassword: AUTH_ERRORS.WRONG_CURRENT_PASSWORD }
             )
         }
-        
+
         if (updateData.currentPassword === updateData.newPassword) {
             throw new AppError(
                 ERRORS.VALIDATION_FAILED,
@@ -298,10 +303,10 @@ export async function requestDeleteAccountService(userId) {
     const link = `${process.env.CLIENT_URL}/confirm-delete-account?token=${rawToken}`
 
     await resend.emails.send({
-      from: "noreply@reading-tracking-app.kenaneroz.com",
-      to: user.email,
-      subject: "Delete account – Reading Tracking App",
-      html: `<p>To confirm deleting your account <a href="${link}">click here</a>. The link expires in 15 minutes.</p>`,
+        from: "noreply@reading-tracking-app.kenaneroz.com",
+        to: user.email,
+        subject: "Delete account – Reading Tracking App",
+        html: `<p>To confirm deleting your account <a href="${link}">click here</a>. The link expires in 15 minutes.</p>`,
     })
 
     return true
@@ -313,7 +318,7 @@ export async function confirmDeleteAccountService(userId, token) {
     if (!user) {
         throw new AppError(AUTH_ERRORS.USER_NOT_FOUND, 404)
     }
- 
+
     const hashedToken = crypto
         .createHash("sha256")
         .update(token)
@@ -361,7 +366,7 @@ export async function confirmDeleteAccountService(userId, token) {
 }
 
 export async function forgotPasswordService(email) {
-    const user = await User.findOne( { email: email })
+    const user = await User.findOne({ email: email })
 
     if (!user) {
         return true
@@ -385,10 +390,10 @@ export async function forgotPasswordService(email) {
     const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${rawToken}`
 
     await resend.emails.send({
-      from: "noreply@reading-tracking-app.kenaneroz.com",
-      to: user.email,
-      subject: "Reset password – Reading Tracking App",
-      html: `<p>To reset your password <a href="${resetLink}">click here</a>. The link expires in 5 minutes.</p>`,
+        from: "noreply@reading-tracking-app.kenaneroz.com",
+        to: user.email,
+        subject: "Reset password – Reading Tracking App",
+        html: `<p>To reset your password <a href="${resetLink}">click here</a>. The link expires in 5 minutes.</p>`,
     })
 
     return true
@@ -397,7 +402,7 @@ export async function forgotPasswordService(email) {
 export async function resetPasswordService(token, data) {
     if (!token) {
         throw new AppError(
-            ERRORS.VALIDATION_FAILED, 
+            ERRORS.VALIDATION_FAILED,
             400,
             {
                 link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
@@ -410,18 +415,18 @@ export async function resetPasswordService(token, data) {
         .update(token)
         .digest("hex")
 
-    const t = await Token.findOne( { type: "reset-password", token: hashedToken })
+    const t = await Token.findOne({ type: "reset-password", token: hashedToken })
 
-    if (!t || 
+    if (!t ||
         t.expiresAt < Date.now()
     ) {
         throw new AppError(
-            ERRORS.VALIDATION_FAILED, 
+            ERRORS.VALIDATION_FAILED,
             400,
             {
                 link: AUTH_ERRORS.INVALID_OR_EXPIRED_LINK
             }
-        )    
+        )
     }
 
     const user = await User.findById(t.userId)
@@ -440,7 +445,7 @@ export async function resetPasswordService(token, data) {
             ERRORS.VALIDATION_FAILED,
             400,
             { newPassword: AUTH_ERRORS.SAME_PASSWORD }
-        )        
+        )
     }
 
     await Token.deleteOne({ _id: t._id })
