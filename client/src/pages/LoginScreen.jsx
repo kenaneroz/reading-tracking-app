@@ -39,11 +39,7 @@ export default function LoginScreen() {
             await login(formData)
             navigate("/home")
         } catch (error) {
-            if (error.statusCode === 500 || error.statusCode === 0) {
-                setErrors({ general: error.message })
-            } else {
-                setErrors(error.errors || {})
-            }
+            setErrors(error.errors || {})
             console.log(error)
         } finally {
             setIsLoggingIn(false)
@@ -81,7 +77,10 @@ export default function LoginScreen() {
                     <p className="text-body-sm text-taupe mt-2">Log in to continue your tracking journey.</p>
                 </div>
 
-                <div className="mt-8">
+                <form
+                    onSubmit={handleLogin}
+                    className="mt-8"
+                >
                     <div className="flex flex-col gap-5">
                         <Input
                             type="email"
@@ -113,7 +112,7 @@ export default function LoginScreen() {
                     </div>
 
                     <Button
-                        onClick={handleLogin}
+                        type="submit"
                         className="mt-6"
                         disabled={isLoggingIn}
                     >
@@ -123,7 +122,7 @@ export default function LoginScreen() {
                     {errors.general &&
                         <ErrorMessage message={errors.general} />
                     }
-                </div>
+                </form>
 
 
                 <div className="flex items-center gap-3 mt-6">
@@ -154,6 +153,6 @@ export default function LoginScreen() {
                     </span>
                 </p>
             </div>
-        </div>
+        </div >
     )
 }

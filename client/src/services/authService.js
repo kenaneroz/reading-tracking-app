@@ -24,7 +24,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
             success: false,
             statusCode: 0,
             message: ERRORS.NETWORK_ERROR,
-            errors: null
+            errors: { general: ERRORS.NETWORK_ERROR }
         }
     }
 
@@ -37,7 +37,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
             success: false,
             statusCode: response.status || 500,
             message: ERRORS.SERVER_ERROR,
-            errors: null
+            errors: { general: ERRORS.SERVER_ERROR }
         }
     }
 
@@ -63,7 +63,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
                     success: false,
                     statusCode: 0,
                     message: ERRORS.NETWORK_ERROR,
-                    errors: null
+                    errors: { general: ERRORS.NETWORK_ERROR }
                 }
             }
 
@@ -77,7 +77,7 @@ async function apiFetch(endpoint, { method = 'GET', body } = {}, isRetry) {
                         success: false,
                         statusCode: refreshResponse.status,
                         message: ERRORS.SERVER_ERROR,
-                        errors: null
+                        errors: { general: ERRORS.SERVER_ERROR }
                     }
                 }
                 throw refreshResult

@@ -1,8 +1,8 @@
 import express from "express"
 
-import { 
+import {
     getUser,
-    register, 
+    register,
     login,
     googleAuth,
     updatePp,
@@ -25,6 +25,7 @@ import validateForgotPassword from "../middlewares/validateForgotPassword.js"
 import validateResetPassword from "../middlewares/validateResetPassword.js"
 import { uploadSingleImage } from "../middlewares/upload.js"
 
+import { rateLimiter } from "../middlewares/rateLimiter.js"
 import verifyToken from "../middlewares/verifyToken.js"
 import verifyResetToken from "../middlewares/verifyResetToken.js"
 import verifyDeleteAccountToken from "../middlewares/verifyDeleteAccountToken.js"
@@ -32,12 +33,14 @@ import verifyDeleteAccountToken from "../middlewares/verifyDeleteAccountToken.js
 const router = express.Router()
 
 router
-    .post("/register", 
-        validateRegister, 
+    .post("/register",
+        rateLimiter,
+        validateRegister,
         register
     )
-    .post("/login", 
-        validateLogin, 
+    .post("/login",
+        rateLimiter,
+        validateLogin,
         login
     )
     .post("/google",
@@ -77,12 +80,12 @@ router
         validateUpdatePassword,
         updateUser
     )
-    .post("/forgot-password", 
+    .post("/forgot-password",
         validateForgotPassword,
         forgotPassword
     )
     .get("/reset-password/verify-token", verifyResetToken)
-    .patch("/reset-password", 
+    .patch("/reset-password",
         validateResetPassword,
         resetPassword
     )

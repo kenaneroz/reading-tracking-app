@@ -124,6 +124,12 @@ export async function loginService(data) {
         )
     }
 
+    await Token.deleteMany({
+        userId: user._id,
+        type: "refresh-token",
+        expiresAt: { $lt: new Date() }
+    })
+
     const refreshToken = generateRefreshToken(user._id)
     const accessToken = generateAccessToken(user._id)
 

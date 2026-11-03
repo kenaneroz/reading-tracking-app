@@ -40,11 +40,7 @@ export default function RegisterScreen() {
         try {
             await register(formData)
         } catch (error) {
-            if (error.statusCode === 500 || error.statusCode === 0) {
-                setErrors({ general: error.message })
-            } else {
-                setErrors(error.errors || {})
-            }
+            setErrors(error.errors || {})
             console.log(error)
         } finally {
             setIsRegistering(false)
@@ -81,7 +77,10 @@ export default function RegisterScreen() {
                     <p className="text-body-sm text-taupe mt-2">Track your books, see your stats, build the habit.</p>
                 </div>
 
-                <div className="mt-8">
+                <form
+                    onSubmit={handleRegister}
+                    className="mt-8"
+                >
                     <div className="flex flex-col gap-5">
                         <div className="flex items-center gap-3">
                             <Input
@@ -124,7 +123,7 @@ export default function RegisterScreen() {
                     </div>
 
                     <Button
-                        onClick={handleRegister}
+                        type="submit"
                         className="mt-7"
                         disabled={isRegistering}
                     >
@@ -134,7 +133,7 @@ export default function RegisterScreen() {
                     {errors.general &&
                         <ErrorMessage message={errors.general} />
                     }
-                </div>
+                </form>
 
 
                 <div className="flex items-center gap-3 mt-6">
